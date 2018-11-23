@@ -53,6 +53,10 @@ export default class Asteroid extends PhysicalObject2D {
         }
     }
 
+    syncTo(other) {
+        super.syncTo(other);
+    }
+
     toString() {
         return `Asteroid::${super.toString()} Level${this.level}`;
     }

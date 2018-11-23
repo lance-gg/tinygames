@@ -24,6 +24,10 @@ class Paddle extends DynamicObject {
             health: { type: BaseTypes.TYPES.INT16 }
         }, super.netScheme);
     }
+
+    syncTo(other) {
+        super.syncTo(other);
+    }
 }
 
 // a game object to represent the ball
@@ -37,6 +41,10 @@ class Ball extends DynamicObject {
     // avoid gradual synchronization of velocity
     get bending() {
         return { velocity: { percent: 0.0 } };
+    }
+
+    syncTo(other) {
+        super.syncTo(other);
     }
 }
 

@@ -29,6 +29,10 @@ export default class Bullet extends PhysicalObject2D {
         game.physicsEngine.world.removeBody(this.physicsObj);
     }
 
+    syncTo(other) {
+        super.syncTo(other);
+    }
+
     toString() {
         return `Bullet::${super.toString()}`;
     }
