@@ -1,0 +1,50 @@
+{
+  "name": "wiggle",
+  "version": "2.0.1",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "description": "An HTML5 multiplayer snakes-game based on Lance",
+  "main": "main.js",
+  "dependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-module-resolver": "^2.7.1",
+    "babel-preset-env": "^1.7.0",
+    "express": "^4.14.0",
+    "lance-gg": "^3.0.10",
+    "query-string": "^4.2.3",
+    "socket.io": "^2.1.1",
+    "webpack": "^3.8.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-watch": "^2.0.7",
+    "babelify": "^7.3.0",
+    "eslint": "^3.16.1",
+    "eslint-config-google": "^0.7.1"
+  },
+  "scripts": {
+    "start": "babel-node main.js --presets env",
+    "start-debug": "babel-node main.js --inspect-brk --presets env",
+    "start-dev": "babel-watch main.js --presets env",
+    "nodemon": "nodemon main.js --exec babel-node --presets env",
+    "postinstall": "webpack --display-error-details",
+    "build": "webpack",
+    "dev": "webpack --watch",
+    "stats": "webpack --env production --profile --json > stats.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "game",
+    "lance",
+    "lance-gg",
+    "multiplayer",
+    "websockets"
+  ],
+  "author": "Gary Weiss",
+  "license": "Apache-2.0"
+}
