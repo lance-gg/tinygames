@@ -1,7 +1,7 @@
 import querystring from 'query-string';
+import Trace from 'lance/lib/Trace';
 import WiggleClientEngine from '../client/WiggleClientEngine';
 import WiggleGameEngine from '../common/WiggleGameEngine';
-import Trace from 'lance/lib/Trace';
 const qsOptions = querystring.parse(location.search);
 
 // default options, overwritten by query-string options
