@@ -16,7 +16,6 @@ class Paddle extends DynamicObject {
 
     constructor(gameEngine, options, props) {
         super(gameEngine, options, props);
-        this.health = 15;
     }
 
     static get netScheme() {
@@ -27,6 +26,7 @@ class Paddle extends DynamicObject {
 
     syncTo(other) {
         super.syncTo(other);
+        this.health = other.health;
     }
 }
 
@@ -35,7 +35,6 @@ class Ball extends DynamicObject {
 
     constructor(gameEngine, options, props) {
         super(gameEngine, options, props);
-        this.velocity.set(2, 2);
     }
 
     // avoid gradual synchronization of velocity
@@ -142,7 +141,10 @@ export default class Game extends GameEngine {
         // create the paddles and the ball
         this.addObjectToWorld(new Paddle(this, null, { position: new TwoVector(PADDING, 0) }));
         this.addObjectToWorld(new Paddle(this, null, { position: new TwoVector(WIDTH - PADDING, 0) }));
-        this.addObjectToWorld(new Ball(this, null, { position: new TwoVector(WIDTH /2, HEIGHT / 2) }));
+        this.addObjectToWorld(new Ball(this, null, {
+            position: new TwoVector(WIDTH /2, HEIGHT / 2),
+            velocity: new TwoVector(2, 2)
+        }));
     }
 
     // attach newly connected player to next available paddle
