@@ -12,8 +12,8 @@ run-game () {
     cd /var/games/tinygames/$1/dist && aws s3 sync --acl public-read --delete . s3://$1.lance.gg
 
      # invalidate CDN
-    aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id ESBEDKJR2DSZF --paths "/*"
+    aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id $2 --paths "/*"
 }
 
-run-game asteroids
-run-game wiggle
+run-game asteroids ESBEDKJR2DSZF
+run-game wiggle E2EWSSN9O8YLLP
