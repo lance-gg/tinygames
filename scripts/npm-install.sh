@@ -17,4 +17,3 @@ run-game () {
 
 run-game asteroids
 run-game wiggle
-run-game pong

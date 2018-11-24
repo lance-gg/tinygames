@@ -11,4 +11,3 @@ run-game () {
 
 run-game asteroids 3002
 run-game wiggle 3003
-run-game pong 3004
