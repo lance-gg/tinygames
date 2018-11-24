@@ -29,7 +29,7 @@ export default class WiggleServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
         let playerWiggle = this.gameEngine.world.queryObject({ playerId });
-        this.gameEngine.removeObjectFromWorld(playerWiggle.id);
+        if (playerWiggle) this.gameEngine.removeObjectFromWorld(playerWiggle.id);
     }
 
     // Eating Food:
