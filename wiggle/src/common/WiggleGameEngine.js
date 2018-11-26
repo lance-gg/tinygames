@@ -47,22 +47,14 @@ export default class WiggleGameEngine extends GameEngine {
                 obj.bodyParts.push(obj.position.clone());
                 while (obj.bodyLength < obj.bodyParts.length) obj.bodyParts.shift();
 
-                // calculate next position
-                switch (obj.direction) {
-                case 'up':
-                    obj.position.y += this.moveDist; break;
-                case 'down':
-                    obj.position.y -= this.moveDist; break;
-                case 'right':
-                    obj.position.x += this.moveDist; break;
-                case 'left':
-                    obj.position.x -= this.moveDist; break;
-                }
-
-                if (obj.position.y > this.spaceHeight / 2) obj.direction = 'down';
-                if (obj.position.x > this.spaceWidth / 2) obj.direction = 'left';
-                if (obj.position.y < -this.spaceHeight / 2) obj.direction = 'up';
-                if (obj.position.x < -this.spaceWidth / 2) obj.direction = 'right';
+                let angle = +obj.direction;
+                let move = new TwoVector(Math.cos(angle), Math.sin(angle));
+                move.multiplyScalar(0.05);
+                obj.position.add(move);
+                obj.position.y = Math.min(obj.position.y, this.spaceHeight / 2);
+                obj.position.y = Math.max(obj.position.y, -this.spaceHeight / 2);
+                obj.position.x = Math.min(obj.position.x, this.spaceWidth / 2);
+                obj.position.x = Math.max(obj.position.x, -this.spaceWidth / 2);
             }
         });
     }

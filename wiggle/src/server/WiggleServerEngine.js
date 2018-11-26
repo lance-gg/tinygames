@@ -20,7 +20,7 @@ export default class WiggleServerEngine extends ServerEngine {
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
         let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
-        player.direction = 'up';
+        player.direction = '0';
         player.bodyLength = this.gameEngine.startBodyLength;
         player.playerId = socket.playerId;
         this.gameEngine.addObjectToWorld(player);

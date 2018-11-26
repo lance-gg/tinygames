@@ -22,7 +22,6 @@ export default class WiggleRenderer extends Renderer {
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 2 / game.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
-
     }
 
     draw(t, dt) {

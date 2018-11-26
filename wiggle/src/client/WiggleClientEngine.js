@@ -1,18 +1,32 @@
 import ClientEngine from 'lance/ClientEngine';
 import WiggleRenderer from '../client/WiggleRenderer';
-import KeyboardControls from 'lance/controls/KeyboardControls';
 
 export default class WiggleClientEngine extends ClientEngine {
 
     constructor(gameEngine, options) {
         super(gameEngine, options, WiggleRenderer);
+        this.mouseX = null;
+        this.mouseY = null;
 
-        this.controls = new KeyboardControls(this);
-        this.controls.bindKey('up', 'up', { repeat: true } );
-        this.controls.bindKey('down', 'down', { repeat: true } );
-        this.controls.bindKey('left', 'left', { repeat: true });
-        this.controls.bindKey('right', 'right', { repeat: true });
-        this.controls.bindKey('space', 'space');
+        document.addEventListener('mousemove', this.updateMouseXY.bind(this), false);
+        document.addEventListener('mouseenter', this.updateMouseXY.bind(this), false);
+        this.gameEngine.on('client__preStep', this.sendMouseAngle.bind(this));
+    }
+
+    updateMouseXY(e) {
+        this.mouseX = e.pageX;
+        this.mouseY = e.pageY;
+    }
+
+    sendMouseAngle() {
+        let player = this.gameEngine.world.queryObject({ playerId: this.gameEngine.playerId });
+        if (this.mouseY === null || player === null) return;
+
+        let mouseX = (this.mouseX - document.body.clientWidth/2) / this.gameEngine.zoom * window.devicePixelRatio;
+        let mouseY = (document.body.clientHeight/2 - this.mouseY) / this.gameEngine.zoom * window.devicePixelRatio;
+
+        let angle = Math.atan2(mouseY - player.position.y, mouseX - player.position.x);
+        this.sendInput(String(angle), { movement: true });
     }
 
 }
