@@ -49,6 +49,8 @@ export default class WiggleRenderer extends Renderer {
     }
 
     drawWiggle(w) {
+
+        // draw head and body
         let x = w.position.x;
         let y = w.position.y;
         this.drawCircle(x, y, game.headRadius, true);
@@ -57,7 +59,11 @@ export default class WiggleRenderer extends Renderer {
             this.drawCircle(nextPos.x, nextPos.y, game.bodyRadius, true);
         }
 
+        // draw eyes
         let angle = +w.direction;
+        if (w.direction === 'stop') {
+            angle = - Math.PI / 2;
+        }
         let eye1 = new TwoVector(Math.cos(angle + game.eyeAngle), Math.sin(angle + game.eyeAngle));
         let eye2 = new TwoVector(Math.cos(angle - game.eyeAngle), Math.sin(angle - game.eyeAngle));
         eye1.multiplyScalar(game.eyeDist).add(w.position);

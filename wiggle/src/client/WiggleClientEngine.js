@@ -24,9 +24,14 @@ export default class WiggleClientEngine extends ClientEngine {
 
         let mouseX = (this.mouseX - document.body.clientWidth/2) / this.zoom;
         let mouseY = (this.mouseY - document.body.clientHeight/2) / this.zoom;
+        let dx = mouseY - player.position.y;
+        let dy = mouseX - player.position.x;
+        if (Math.sqrt(dx * dx + dy * dy) < 0.5) {
+            this.sendInput('stop', { movement: true });
+            return;
+        }
 
-        let angle = Math.atan2(mouseY - player.position.y, mouseX - player.position.x);
+        let angle = Math.atan2(dx, dy);
         this.sendInput(String(angle), { movement: true });
     }
-
 }

@@ -44,6 +44,8 @@ export default class WiggleGameEngine extends GameEngine {
         this.world.forEachObject((id, obj) => {
             if (obj instanceof Wiggle) {
 
+                if (obj.direction === 'stop') return;
+
                 // add a body part and trim the length
                 obj.bodyParts.push(obj.position.clone());
                 while (obj.bodyLength < obj.bodyParts.length) obj.bodyParts.shift();
