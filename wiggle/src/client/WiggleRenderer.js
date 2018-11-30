@@ -12,15 +12,15 @@ export default class WiggleRenderer extends Renderer {
         super(gameEngine, clientEngine);
         game = gameEngine;
         canvas = document.createElement('canvas');
-        canvas.width = window.innerWidth * window.devicePixelRatio;
-        canvas.height = window.innerHeight * window.devicePixelRatio;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         document.body.insertBefore(canvas, document.getElementById('logo'));
         game.w = canvas.width;
         game.h = canvas.height;
-        game.zoom = game.h / game.spaceHeight;
-        if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
+        clientEngine.zoom = game.h / game.spaceHeight;
+        if (game.w / game.spaceWidth < clientEngine.zoom) clientEngine.zoom = game.w / game.spaceWidth;
         ctx = canvas.getContext('2d');
-        ctx.lineWidth = 2 / game.zoom;
+        ctx.lineWidth = 2 / clientEngine.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
     }
 
@@ -35,7 +35,7 @@ export default class WiggleRenderer extends Renderer {
         // goes from top to bottom, while physics does the opposite.
         ctx.save();
         ctx.translate(game.w/2, game.h/2); // Translate to the center
-        ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
+        ctx.scale(clientEngine.zoom, clientEngine.zoom);  // Zoom in and flip y axis
 
         // Draw all things
         game.world.forEachObject((id, obj) => {

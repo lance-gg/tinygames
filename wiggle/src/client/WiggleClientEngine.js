@@ -22,8 +22,8 @@ export default class WiggleClientEngine extends ClientEngine {
         let player = this.gameEngine.world.queryObject({ playerId: this.gameEngine.playerId });
         if (this.mouseY === null || player === null) return;
 
-        let mouseX = (this.mouseX - document.body.clientWidth/2) / this.gameEngine.zoom * window.devicePixelRatio;
-        let mouseY = (document.body.clientHeight/2 - this.mouseY) / this.gameEngine.zoom * window.devicePixelRatio;
+        let mouseX = (this.mouseX - document.body.clientWidth/2) / this.zoom;
+        let mouseY = (this.mouseY - document.body.clientHeight/2) / this.zoom;
 
         let angle = Math.atan2(mouseY - player.position.y, mouseX - player.position.x);
         this.sendInput(String(angle), { movement: true });
