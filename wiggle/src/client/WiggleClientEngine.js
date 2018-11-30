@@ -27,11 +27,11 @@ export default class WiggleClientEngine extends ClientEngine {
         let dx = mouseY - player.position.y;
         let dy = mouseX - player.position.x;
         if (Math.sqrt(dx * dx + dy * dy) < 0.5) {
-            this.sendInput('stop', { movement: true });
+            this.sendInput(this.gameEngine.directionStop, { movement: true });
             return;
         }
 
         let angle = Math.atan2(dx, dy);
-        this.sendInput(String(angle), { movement: true });
+        this.sendInput(angle, { movement: true });
     }
 }

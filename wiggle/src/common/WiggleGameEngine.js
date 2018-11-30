@@ -17,7 +17,7 @@ export default class WiggleGameEngine extends GameEngine {
             eyeDist: 0.08, eyeRadius: 0.03, eyeAngle: 0.5,
             spaceWidth: 16, spaceHeight: 9, moveDist: 0.06,
             foodCount: 16, eatDistance: 0.3, collideDistance: 0.3,
-            startBodyLength: 10
+            startBodyLength: 10, aiCount: 1, directionStop: 100
         });
     }
 
@@ -44,14 +44,13 @@ export default class WiggleGameEngine extends GameEngine {
         this.world.forEachObject((id, obj) => {
             if (obj instanceof Wiggle) {
 
-                if (obj.direction === 'stop') return;
+                if (obj.direction === this.directionStop) return;
 
                 // add a body part and trim the length
                 obj.bodyParts.push(obj.position.clone());
                 while (obj.bodyLength < obj.bodyParts.length) obj.bodyParts.shift();
 
-                let angle = +obj.direction;
-                let move = new TwoVector(Math.cos(angle), Math.sin(angle));
+                let move = new TwoVector(Math.cos(obj.direction), Math.sin(obj.direction));
                 move.multiplyScalar(0.05);
                 obj.position.add(move);
                 obj.position.y = Math.min(obj.position.y, this.spaceHeight / 2);

@@ -61,7 +61,7 @@ export default class WiggleRenderer extends Renderer {
 
         // draw eyes
         let angle = +w.direction;
-        if (w.direction === 'stop') {
+        if (w.direction === game.directionStop) {
             angle = - Math.PI / 2;
         }
         let eye1 = new TwoVector(Math.cos(angle + game.eyeAngle), Math.sin(angle + game.eyeAngle));

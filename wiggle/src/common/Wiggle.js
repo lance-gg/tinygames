@@ -3,14 +3,9 @@ import DynamicObject from 'lance/serialize/DynamicObject';
 
 export default class Wiggle extends DynamicObject {
 
-    // the direction contains only 4 possible strings:
-    //     up, down, left, right
-    // this is not efficient, but simplifies learning
-    // the array of bodyParts provides the direction of
-    // the next part in the body.
     static get netScheme() {
         return Object.assign({
-            direction: { type: BaseTypes.TYPES.STRING },
+            direction: { type: BaseTypes.TYPES.FLOAT32 },
             bodyLength: { type: BaseTypes.TYPES.INT16 }
         }, super.netScheme);
     }

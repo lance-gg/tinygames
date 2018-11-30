@@ -9,18 +9,28 @@ export default class WiggleServerEngine extends ServerEngine {
         this.gameEngine.on('postStep', this.stepLogic.bind(this));
     }
 
+    // create food and AI robots
     start() {
         super.start();
         for (let f = 0; f < this.gameEngine.foodCount; f++) {
             let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
             this.gameEngine.addObjectToWorld(newF);
         }
+        for (let ai = 0; ai < this.gameEngine.aiCount; ai++) {
+            console.log('adding AI');
+            let newAI = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
+            newAI.AI = true;
+            newAI.direction = 0;
+            newAI.bodyLength = this.gameEngine.startBodyLength;
+            newAI.playerId = 0;
+            this.gameEngine.addObjectToWorld(newAI);
+        }
     }
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
         let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
-        player.direction = '0';
+        player.direction = 0;
         player.bodyLength = this.gameEngine.startBodyLength;
         player.playerId = socket.playerId;
         this.gameEngine.addObjectToWorld(player);
@@ -77,6 +87,13 @@ export default class WiggleServerEngine extends ServerEngine {
                 if (distance.length() < this.gameEngine.eatDistance) {
                     this.wiggleEatFood(w, f);
                 }
+            }
+
+            // move AI wiggles
+            if (w.AI && Math.random() < 0.02) {
+                w.direction += (Math.random() - 0.9)/2;
+                if (w.direction > Math.PI * 2) w.direction -= Math.PI * 2;
+                if (w.direction < 0) w.direction += Math.PI * 2;
             }
         }
     }
