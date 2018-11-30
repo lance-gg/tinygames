@@ -1,4 +1,5 @@
 import Renderer from 'lance/render/Renderer';
+import TwoVector from 'lance/serialize/TwoVector';
 import Wiggle from '../common/Wiggle';
 import Food from '../common/Food';
 
@@ -35,7 +36,7 @@ export default class WiggleRenderer extends Renderer {
         // goes from top to bottom, while physics does the opposite.
         ctx.save();
         ctx.translate(game.w/2, game.h/2); // Translate to the center
-        ctx.scale(clientEngine.zoom, clientEngine.zoom);  // Zoom in and flip y axis
+        ctx.scale(this.clientEngine.zoom, this.clientEngine.zoom);  // Zoom in and flip y axis
 
         // Draw all things
         game.world.forEachObject((id, obj) => {
@@ -55,6 +56,16 @@ export default class WiggleRenderer extends Renderer {
             let nextPos = w.bodyParts[i];
             this.drawCircle(nextPos.x, nextPos.y, game.bodyRadius, true);
         }
+
+        let angle = +w.direction;
+        let eye1 = new TwoVector(Math.cos(angle + game.eyeAngle), Math.sin(angle + game.eyeAngle));
+        let eye2 = new TwoVector(Math.cos(angle - game.eyeAngle), Math.sin(angle - game.eyeAngle));
+        eye1.multiplyScalar(game.eyeDist).add(w.position);
+        eye2.multiplyScalar(game.eyeDist).add(w.position);
+        ctx.fillStyle = 'black';
+        this.drawCircle(eye1.x, eye1.y, game.eyeRadius, true);
+        this.drawCircle(eye2.x, eye2.y, game.eyeRadius, true);
+        ctx.fillStyle = 'white';
     }
 
     drawFood(f) {
