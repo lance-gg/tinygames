@@ -72,6 +72,11 @@ export default class WiggleRenderer extends Renderer {
         this.drawCircle(eye1.x, eye1.y, game.eyeRadius, true);
         this.drawCircle(eye2.x, eye2.y, game.eyeRadius, true);
         ctx.fillStyle = 'white';
+
+        // update status
+        if (w.playerId === this.gameEngine.playerId) {
+            document.getElementById('wiggle-length').innerHTML = 'Wiggle Length: ' + w.bodyParts.length;
+        }
     }
 
     drawFood(f) {
