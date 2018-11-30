@@ -17,7 +17,7 @@ export default class WiggleGameEngine extends GameEngine {
             eyeDist: 0.08, eyeRadius: 0.03, eyeAngle: 0.5,
             spaceWidth: 16, spaceHeight: 9, moveDist: 0.06,
             foodCount: 16, eatDistance: 0.3, collideDistance: 0.3,
-            startBodyLength: 10, aiCount: 1, directionStop: 100
+            startBodyLength: 10, aiCount: 3, directionStop: 100
         });
     }
 
