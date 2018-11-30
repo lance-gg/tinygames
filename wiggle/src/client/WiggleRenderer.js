@@ -75,7 +75,9 @@ export default class WiggleRenderer extends Renderer {
     }
 
     drawFood(f) {
-        this.drawCircle(f.position.x, f.position.y, game.foodRadius, false);
+        ctx.strokeStyle = ctx.fillStyle = 'Orange';
+        this.drawCircle(f.position.x, f.position.y, game.foodRadius, true);
+        ctx.strokeStyle = ctx.fillStyle = 'White';
     }
 
     drawCircle(x, y, radius, fill) {
