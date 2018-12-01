@@ -6,6 +6,7 @@ import Food from '../common/Food';
 let ctx = null;
 let canvas = null;
 let game = null;
+let c = 0;
 
 export default class WiggleRenderer extends Renderer {
 
@@ -48,14 +49,22 @@ export default class WiggleRenderer extends Renderer {
 
     }
 
+    rainbowColors() {
+        c += 0.005;
+        return `rgb(${(Math.cos(c) + 1) * 120},100,200)`;
+    }
+
     drawWiggle(w) {
 
         // draw head and body
+        let isPlayer = w.playerId === this.gameEngine.playerId;
         let x = w.position.x;
         let y = w.position.y;
+        if (isPlayer) ctx.fillStyle = this.rainbowColors();
         this.drawCircle(x, y, game.headRadius, true);
         for (let i = 0; i < w.bodyParts.length; i++) {
             let nextPos = w.bodyParts[i];
+            if (isPlayer) ctx.fillStyle = this.rainbowColors();
             this.drawCircle(nextPos.x, nextPos.y, game.bodyRadius, true);
         }
 
@@ -74,7 +83,7 @@ export default class WiggleRenderer extends Renderer {
         ctx.fillStyle = 'white';
 
         // update status
-        if (w.playerId === this.gameEngine.playerId) {
+        if (isPlayer) {
             document.getElementById('wiggle-length').innerHTML = 'Wiggle Length: ' + w.bodyParts.length;
         }
     }
