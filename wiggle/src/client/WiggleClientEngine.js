@@ -10,10 +10,13 @@ export default class WiggleClientEngine extends ClientEngine {
 
         document.addEventListener('mousemove', this.updateMouseXY.bind(this), false);
         document.addEventListener('mouseenter', this.updateMouseXY.bind(this), false);
+        document.addEventListener('touchmove', this.updateMouseXY.bind(this), false);
+        document.addEventListener('touchenter', this.updateMouseXY.bind(this), false);
         this.gameEngine.on('client__preStep', this.sendMouseAngle.bind(this));
     }
 
     updateMouseXY(e) {
+        if (e.touches) e = e.touches.item(0);
         this.mouseX = e.pageX;
         this.mouseY = e.pageY;
     }
