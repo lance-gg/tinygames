@@ -51,7 +51,8 @@ export default class WiggleRenderer extends Renderer {
 
     rainbowColors() {
         c += 0.005;
-        return `rgb(${(Math.cos(c) + 1) * 120},100,200)`;
+        let zeroTo240 = Math.floor((Math.cos(c) + 1) * 120);
+        return `rgb(${zeroTo240},100,200)`;
     }
 
     drawWiggle(w) {
