@@ -18,7 +18,8 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // game variables
         Object.assign(this, {
-            aiCount: 2,
+            aiCount: 2, spaceWidth: 160, spaceHeight: 90,
+            walkSpeed: 2
         });
     }
 
@@ -95,9 +96,9 @@ export default class BrawlerGameEngine extends GameEngine {
     // create fighter
     addFighter(playerId) {
         let f = new Fighter(this, null, {
-            playerId: playerId,
             position: this.randomPosition()
         });
+        f.playerId = playerId;
         f.swingAxe = 0;
         this.addObjectToWorld(f);
         return f;

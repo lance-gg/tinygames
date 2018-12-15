@@ -10,23 +10,24 @@ export default class BrawlerRenderer extends Renderer {
     constructor(gameEngine, clientEngine) {
         super(gameEngine, clientEngine);
         game = gameEngine;
+        this.sprites = {};
 
         // remove instructions on first input
         game.once('client__processInput', () => {
-            document.getElementById('instructions').classList.add('hidden');
+            document.getElementById('joinGame').classList.add('hidden');
         });
     }
 
     get ASSETPATHS() {
         return {
             fighter: 'assets/adventure_girl/png/Idle (1).png',
-            platform: 'assets/deserttielset/png/Tile/2.png'
+            platform: 'assets/deserttileset/png/Tile/2.png'
         };
     }
 
     init() {
         this.viewportWidth = window.innerWidth;
-        this.viewportHeight = window.innerHeight;
+        this.viewportHeight = this.viewportWidth / this.gameEngine.spaceWidth * this.gameEngine.spaceHeight;
 
         this.stage = new PIXI.Container();
 
@@ -71,7 +72,7 @@ export default class BrawlerRenderer extends Renderer {
 
     setRendererSize() {
         this.viewportWidth = window.innerWidth;
-        this.viewportHeight = window.innerHeight;
+        this.viewportHeight = this.viewportWidth / this.gameEngine.spaceWidth * this.gameEngine.spaceHeight;
         this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
@@ -84,6 +85,7 @@ export default class BrawlerRenderer extends Renderer {
         let sprite = new PIXI.Container();
         sprite.platformSprite = new PIXI.Sprite(PIXI.loader.resources.platform.texture);
         sprite.addChild(sprite.platformSprite);
+        sprite.scale.set(0.1, 0.1);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);
@@ -93,6 +95,7 @@ export default class BrawlerRenderer extends Renderer {
         let sprite = new PIXI.Container();
         sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
         sprite.addChild(sprite.fighterSprite);
+        sprite.scale.set(0.1, 0.1);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);
@@ -109,6 +112,8 @@ export default class BrawlerRenderer extends Renderer {
     draw(t, dt) {
         super.draw(t, dt);
 
+        if (!this.isReady) return; // assets might not have been loaded yet
+
         // Draw all things
         game.world.forEachObject((id, obj) => {
             let sprite = this.sprites[obj.id];
@@ -116,11 +121,14 @@ export default class BrawlerRenderer extends Renderer {
                 sprite.x = obj.position.x;
                 sprite.y = obj.position.y;
             } else if (obj instanceof Platform) {
+                sprite.x = obj.position.x;
+                sprite.y = obj.position.y;
             }
         });
 
-        // update status and restore
+        // update status and render
         this.updateStatus();
+        this.renderer.render(this.stage);
     }
 
     updateStatus() {
@@ -147,5 +155,4 @@ export default class BrawlerRenderer extends Renderer {
 
 function isMacintosh() { return navigator.platform.indexOf('Mac') > -1; }
 function isWindows() { return navigator.platform.indexOf('Win') > -1; }
-function isIPhoneIPad() { return navigator.platform.match(/i(Phone|Pod)/i) !== null; }
 function isTouchDevice() { return 'ontouchstart' in window || navigator.maxTouchPoints; }

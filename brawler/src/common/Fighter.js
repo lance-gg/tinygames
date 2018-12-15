@@ -1,7 +1,6 @@
 import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
 import Renderer from 'lance/render/Renderer';
-let game = null;
 
 export default class Fighter extends DynamicObject {
 
@@ -20,7 +19,6 @@ export default class Fighter extends DynamicObject {
     }
 
     onRemoveFromWorld(gameEngine) {
-        game.physicsEngine.world.removeBody(this.physicsObj);
     }
 
     toString() {

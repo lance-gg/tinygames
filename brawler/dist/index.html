@@ -3,8 +3,39 @@
         <title>Lance//Pixi Brawler</title>
         <meta charset="utf-8">
         <style>
-        html, body {
-            position: fixed;
+        html,body{
+        	padding: 0;
+        	margin: 0;
+        	overflow: hidden;
+        	font-family: "proxima-nova", sans-serif;
+        }
+        .hidden {
+          display: none;
+        }
+        #tryAgain, #joinGame, #reconnect{
+        	position: absolute;
+        	left: 50%;
+        	top: 50%;
+        	opacity: 0;
+        	pointer-events: none;
+        	transform: translateX(-50%) translateY(-50%);
+        }
+        #joinGame {
+        	pointer-events: all;
+        	opacity: 1;
+        }
+        .hud{
+        	position: absolute;
+        	top: 0;
+        	left: 0;
+        	width: 20rem;
+        	font-size: 12px;
+        	padding: 1rem;
+        	color: #fff;
+        	font-family: arial, sans-serif;
+        	opacity: 0;
+
+        	transition: all 0.5s ease-in;
         }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
