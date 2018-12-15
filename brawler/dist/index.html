@@ -1,65 +1,29 @@
 <html>
     <head>
-        <title>Lance//P2 Asteroids</title>
+        <title>Lance//Pixi Brawler</title>
         <meta charset="utf-8">
         <style>
-          body {
-            background-color: black;
-            margin:0;
-            padding:0;
-            overflow: hidden;
-            color:white;
-            font-family:"Courier New", Courier, monospace;
-            font-size: 24px;
-          }
-          a {
-            color:white;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          canvas {
-            width:100%;
-            height:100%;
-            position:absolute;
-          }
-          .textBox {
-            margin:10px;
-            display: inline-block;
-          }
-          .textBox.centered {
-            width:500px;
-            height:100px;
-            margin-left: -250px;
-            margin-top: -50px;
-            position: absolute;
-            top:50%;
-            left:50%;
-            vertical-align: middle;
-            text-align: center;
-          }
-          .textBox.bottomRight {
-            position:absolute;
-            right:0;
-            bottom:0;
-          }
-          .textBox.bottomLeft {
-            position:absolute;
-            left:0;
-            bottom:0;
-          }
-          .hidden {
-            display: none;
-          }
+        html, body {
+            position: fixed;
+        }
         </style>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     </head>
-    <body>
-        <div id="logo" class="textBox bottomRight">POWERED BY <a href="https://github.com/schteppe/p2.js">P2.JS</a> PHYSICS + <br><a href="https://lance.gg">LANCE.GG</a> MULTIPLAYER</div>
-        <div id="logo" class="textBox bottomLeft">GAME BY <a href="https://twitter.com/schteppe">@SCHTEPPE</a> + <br><a href="https://twitter.com/LanceGG_">@LANCEGG_</a></div>
-        <div id="level" class="textBox"></div>
-        <div id="lives" class="textBox"></div>
-        <div id="gameover" class="textBox centered hidden">GAME OVER</div>
-        <div id="instructions" class="textBox centered">ARROW KEYS = CONTROL SHIP<br/>SPACE = SHOOT</div>
-        <script src="bundle.js" type="text/javascript"></script>
+    <body class="">
+        <div id="guiContainer">
+            <button id="joinGame">Join Game</button>
+            <button id="tryAgain" disabled>Try again</button>
+            <button id="reconnect" disabled>Reconnect</button>
+
+            <div class="hud">
+                <div>Latency: <span class="latencyData">N/A</span></div>
+                <div>Latency (avg): <span class="averageLatencyData">N/A</span></div>
+            </div>
+            <div class="score"></div>
+            <div class="keysContainer"></div>
+            <h2>This is a live JavaScript multiplayer game</h2>
+        </div>
+        <div class="pixiContainer"></div>
+        <script type="text/javascript" src="bundle.js"></script>
     </body>
 </html>

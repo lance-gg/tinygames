@@ -1,5 +1,6 @@
+import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
-
+import Renderer from 'lance/render/Renderer';
 let game = null;
 
 export default class Platform extends DynamicObject {
@@ -36,9 +37,10 @@ export default class Platform extends DynamicObject {
 
     syncTo(other) {
         super.syncTo(other);
+        this.width = other.width;
     }
 
     toString() {
-        return `Asteroid::${super.toString()} Level${this.level}`;
+        return `Platform::${super.toString()} Width=${this.width}`;
     }
 }

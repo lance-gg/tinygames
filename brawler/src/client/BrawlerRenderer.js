@@ -1,8 +1,8 @@
-import PIXI from 'pixi';
 import Renderer from 'lance/render/Renderer';
 import Fighter from './../common/Fighter';
 import Platform from './../common/Platform';
 
+let PIXI = require('pixi.js');
 let game = null;
 
 export default class BrawlerRenderer extends Renderer {
@@ -29,10 +29,6 @@ export default class BrawlerRenderer extends Renderer {
         this.viewportHeight = window.innerHeight;
 
         this.stage = new PIXI.Container();
-        this.layer1 = new PIXI.Container();
-        this.layer2 = new PIXI.Container();
-
-        this.stage.addChild(this.layer1, this.layer2);
 
         if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
             this.onDOMLoaded();
@@ -53,7 +49,7 @@ export default class BrawlerRenderer extends Renderer {
                 this.isReady = true;
                 this.setupStage();
 
-                if (Utils.isTouchDevice()) {
+                if (isTouchDevice()) {
                     document.body.classList.add('touch');
                 } else if (isMacintosh()) {
                     document.body.classList.add('mac');
@@ -67,6 +63,16 @@ export default class BrawlerRenderer extends Renderer {
             });
         });
 
+    }
+
+    setupStage() {
+        window.addEventListener('resize', this.setRendererSize.bind(this));
+    }
+
+    setRendererSize() {
+        this.viewportWidth = window.innerWidth;
+        this.viewportHeight = window.innerHeight;
+        this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
     onDOMLoaded() {
@@ -138,3 +144,8 @@ export default class BrawlerRenderer extends Renderer {
         document.getElementById('instructions').classList.add('hidden');
     }
 }
+
+function isMacintosh() { return navigator.platform.indexOf('Mac') > -1; }
+function isWindows() { return navigator.platform.indexOf('Win') > -1; }
+function isIPhoneIPad() { return navigator.platform.match(/i(Phone|Pod)/i) !== null; }
+function isTouchDevice() { return 'ontouchstart' in window || navigator.maxTouchPoints; }

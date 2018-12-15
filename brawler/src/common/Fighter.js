@@ -1,6 +1,6 @@
 import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
-
+import Renderer from 'lance/render/Renderer';
 let game = null;
 
 export default class Fighter extends DynamicObject {
@@ -24,11 +24,12 @@ export default class Fighter extends DynamicObject {
     }
 
     toString() {
-        return `Ship::${super.toString()} lives=${this.lives}`;
+        return `Fighter::${super.toString()} health=${this.health} swing=${this.swingAxe}`;
     }
 
     syncTo(other) {
         super.syncTo(other);
-        this.lives = other.lives;
+        this.health = other.health;
+        this.swingAxe = other.swingAxe;
     }
 }

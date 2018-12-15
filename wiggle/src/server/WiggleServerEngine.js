@@ -17,7 +17,7 @@ export default class WiggleServerEngine extends ServerEngine {
             this.gameEngine.addObjectToWorld(newF);
         }
         for (let ai = 0; ai < this.gameEngine.aiCount; ai++)
-            this.addAI()
+            this.addAI();
     }
 
     addAI() {

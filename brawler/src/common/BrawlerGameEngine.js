@@ -2,14 +2,19 @@ import GameEngine from 'lance/GameEngine';
 import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
 import TwoVector from 'lance/serialize/TwoVector';
 import Fighter from './Fighter';
+import Platform from './Platform';
 
 export default class BrawlerGameEngine extends GameEngine {
 
     constructor(options) {
         super(options);
 
-        this.physicsEngine = new SimplePhysicsEngine({ gameEngine: this });
+        this.physicsEngine = new SimplePhysicsEngine({
+            gameEngine: this,
+            collisions: { type: 'brute' }
+        });
         this.on('postStep', this.warpAll.bind(this));
+        this.on('collisionStart', this.handleCollision.bind(this));
 
         // game variables
         Object.assign(this, {
@@ -27,6 +32,10 @@ export default class BrawlerGameEngine extends GameEngine {
             if(p.y < -this.spaceHeight/2) p.y = this.spaceHeight/2;
             obj.refreshToPhysics();
         });
+    }
+
+    handleCollision(evt) {
+        console.log(`collision: ${evt}`);
     }
 
     registerClasses(serializer) {
@@ -90,7 +99,7 @@ export default class BrawlerGameEngine extends GameEngine {
             position: this.randomPosition()
         });
         f.swingAxe = 0;
-        this.addObjectToWorld(s);
+        this.addObjectToWorld(f);
         return f;
     }
 
