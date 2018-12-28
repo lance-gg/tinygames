@@ -10,13 +10,13 @@ export default class BrawlerServerEngine extends ServerEngine {
         super.start();
 
         // add floor
-        this.gameEngine.addPlatform({ x: 0, y: -10, width: 100 });
+        this.gameEngine.addPlatform({ x: 0, y: 10, width: 100 });
 
         // add platforms
         this.gameEngine.addPlatform({ x: 10, y: 10, width: 20 });
         this.gameEngine.addPlatform({ x: 20, y: 20, width: 20 });
-        this.gameEngine.addPlatform({ x: 60, y: 20, width: 20 });
-        this.gameEngine.addPlatform({ x: 70, y: 10, width: 20 });
+        // this.gameEngine.addPlatform({ x: 60, y: 20, width: 20 });
+        // this.gameEngine.addPlatform({ x: 70, y: 10, width: 20 });
 
         // add AI fighters
         this.aiFighters = [];

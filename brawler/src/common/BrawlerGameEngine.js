@@ -18,7 +18,7 @@ export default class BrawlerGameEngine extends GameEngine {
 
         this.physicsEngine = new SimplePhysicsEngine({
             gravity: new TwoVector(0, -0.1),
-            collision: { type: 'bruteForce', autoResolve: true },
+            collisions: { type: 'bruteForce', autoResolve: true },
             gameEngine: this
         });
         this.on('collisionStart', this.handleCollision.bind(this));
@@ -109,7 +109,7 @@ export default class BrawlerGameEngine extends GameEngine {
     }
 
     randomPosition() {
-        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 2);
+        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 40);
     }
 
 }
