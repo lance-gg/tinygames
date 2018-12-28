@@ -1,4 +1,3 @@
-import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
 import Renderer from 'lance/render/Renderer';
 let game = null;
@@ -6,9 +5,7 @@ let game = null;
 export default class Platform extends DynamicObject {
 
     static get netScheme() {
-        return Object.assign({
-            width: { type: BaseTypes.TYPES.INT8 }
-        }, super.netScheme);
+        return super.netScheme;
     }
 
     onAddToWorld(gameEngine) {

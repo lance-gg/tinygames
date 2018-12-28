@@ -9,30 +9,19 @@ export default class BrawlerGameEngine extends GameEngine {
     constructor(options) {
         super(options);
 
-        this.physicsEngine = new SimplePhysicsEngine({
-            gameEngine: this,
-            collisions: { type: 'brute' }
-        });
-        this.on('postStep', this.warpAll.bind(this));
-        this.on('collisionStart', this.handleCollision.bind(this));
-
         // game variables
         Object.assign(this, {
             aiCount: 2, spaceWidth: 160, spaceHeight: 90,
+            fighterWidth: 2, fighterHeight: 4, jumpSpeed: 2,
             walkSpeed: 2
         });
-    }
 
-    // If the body is out of space bounds, warp it to the other side
-    warpAll() {
-        this.world.forEachObject((id, obj) => {
-            let p = obj.position;
-            if(p.x > this.spaceWidth/2) p.x = -this.spaceWidth/2;
-            if(p.y > this.spaceHeight/2) p.y = -this.spaceHeight/2;
-            if(p.x < -this.spaceWidth /2) p.x = this.spaceWidth/2;
-            if(p.y < -this.spaceHeight/2) p.y = this.spaceHeight/2;
-            obj.refreshToPhysics();
+        this.physicsEngine = new SimplePhysicsEngine({
+            gravity: new TwoVector(0, -0.1),
+            collision: { type: 'bruteForce', autoResolve: true },
+            gameEngine: this
         });
+        this.on('collisionStart', this.handleCollision.bind(this));
     }
 
     handleCollision(evt) {
@@ -56,10 +45,11 @@ export default class BrawlerGameEngine extends GameEngine {
             if (inputData.input === 'right') fighter.position.x += this.walkSpeed;
             else if (inputData.input === 'left') fighter.position.x -= this.walkSpeed;
             else if (inputData.input === 'up') {
-                if (fighter.velocity.length() !== 0) fighter.velocity.y = 1;
+                if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
             } else if (inputData.input === 'space') {
                 if (fighter.swingAxe === 0) fighter.swingAxe = 10;
             }
+            fighter.refreshToPhysics();
         }
     }
 
@@ -99,6 +89,8 @@ export default class BrawlerGameEngine extends GameEngine {
             position: this.randomPosition()
         });
         f.playerId = playerId;
+        f.height = this.fighterHeight;
+        f.width = this.fighterWidth;
         f.swingAxe = 0;
         this.addObjectToWorld(f);
         return f;
@@ -110,12 +102,14 @@ export default class BrawlerGameEngine extends GameEngine {
             playerId: 0, position: new TwoVector(desc.x, desc.y)
         });
         p.width = desc.width;
+        p.height = 10;
+        p.isStatic = 1;
         this.addObjectToWorld(p);
         return p;
     }
 
     randomPosition() {
-        return new TwoVector(Math.random() * this.spaceWidth, 0);
+        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 2);
     }
 
 }

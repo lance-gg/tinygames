@@ -26,8 +26,10 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     init() {
+        this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
+        this.aspectRatio = this.gameEngine.spaceWidth / this.gameEngine.spaceHeight;
         this.viewportWidth = window.innerWidth;
-        this.viewportHeight = this.viewportWidth / this.gameEngine.spaceWidth * this.gameEngine.spaceHeight;
+        this.viewportHeight = this.viewportWidth / this.aspectRatio;
 
         this.stage = new PIXI.Container();
 
@@ -71,8 +73,9 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     setRendererSize() {
+        this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
         this.viewportWidth = window.innerWidth;
-        this.viewportHeight = this.viewportWidth / this.gameEngine.spaceWidth * this.gameEngine.spaceHeight;
+        this.viewportHeight = this.viewportWidth / this.aspectRatio;
         this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
@@ -118,11 +121,11 @@ export default class BrawlerRenderer extends Renderer {
         game.world.forEachObject((id, obj) => {
             let sprite = this.sprites[obj.id];
             if (obj instanceof Fighter) {
-                sprite.x = obj.position.x;
-                sprite.y = obj.position.y;
+                sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
+                sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             } else if (obj instanceof Platform) {
-                sprite.x = obj.position.x;
-                sprite.y = obj.position.y;
+                sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
+                sprite.y = this.viewportHeight - (obj.position.y - obj.height) * this.pixelsPerSpaceUnit;
             }
         });
 
