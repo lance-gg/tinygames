@@ -22,7 +22,10 @@ export default class BrawlerRenderer extends Renderer {
         return {
             background: 'assets/deserttileset/png/BG.png',
             fighter: 'assets/adventure_girl/png/Idle (1).png',
-            platform: 'assets/deserttileset/png/Tile/2.png'
+            platform: 'assets/deserttileset/png/Tile/2.png',
+            jumpSheet: 'assets/adventure_girl/png/Jump.json',
+            idleSheet: 'assets/adventure_girl/png/Idle.json',
+            meleeSheet: 'assets/adventure_girl/png/Melee.json'
         };
     }
 
@@ -45,6 +48,9 @@ export default class BrawlerRenderer extends Renderer {
         }
 
         return new Promise((resolve, reject)=>{
+            // PIXI.loader
+            //    .add('spritesheet', 'required/assets/mc.json')
+            //     .load(onAssetsLoaded);
             PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
                 return{
                     name: x,
@@ -115,9 +121,16 @@ export default class BrawlerRenderer extends Renderer {
         console.log(`adding fighter on Renderer ${obj.toString()}`);
         console.log(`in pixels ${obj.width * this.pixelsPerSpaceUnit} x ${obj.height * this.pixelsPerSpaceUnit}`);
         let sprite = new PIXI.Container();
-        sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
+        // sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
+        let textures = [];
+        let sheet = PIXI.loader.resources.jumpSheet;
+        for (let t of Object.keys(sheet.textures))
+            textures.push(sheet.textures[t]);
+        sprite.fighterSprite = new PIXI.extras.AnimatedSprite(textures);
         sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit;
         sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
+        sprite.fighterSprite.scale.set(0.12, 0.1);
+        sprite.fighterSprite.anchor.set(0.2, 0.0);
         sprite.addChild(sprite.fighterSprite);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
@@ -143,6 +156,7 @@ export default class BrawlerRenderer extends Renderer {
             if (obj instanceof Fighter) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
+                sprite.fighterSprite.gotoAndStop(Math.floor(t/1000) % 9);
             } else if (obj instanceof Platform) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;

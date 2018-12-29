@@ -10,9 +10,13 @@ export default class BrawlerGameEngine extends GameEngine {
         super(options);
 
         // game variables
+        // note, fighter image is 641:542
         Object.assign(this, {
             aiCount: 2, spaceWidth: 160, spaceHeight: 90,
-            fighterWidth: 10, fighterHeight: 16, jumpSpeed: 2,
+            fighterWidth: 10,
+            fighterHeight: 12,
+        //    fighterHeight: 12.8,
+            jumpSpeed: 2,
             walkSpeed: 0.4
         });
 
