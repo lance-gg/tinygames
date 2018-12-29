@@ -123,13 +123,13 @@ export default class BrawlerRenderer extends Renderer {
         let sprite = new PIXI.Container();
         // sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
         let textures = [];
-        let sheet = PIXI.loader.resources.jumpSheet;
+        let sheet = PIXI.loader.resources.meleeSheet;
         for (let t of Object.keys(sheet.textures))
             textures.push(sheet.textures[t]);
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(textures);
-        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit;
+        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit * 1.6;
         sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
-        sprite.fighterSprite.scale.set(0.12, 0.1);
+        // sprite.fighterSprite.scale.set(0.12, 0.1);
         sprite.fighterSprite.anchor.set(0.2, 0.0);
         sprite.addChild(sprite.fighterSprite);
         this.sprites[obj.id] = sprite;
@@ -156,7 +156,9 @@ export default class BrawlerRenderer extends Renderer {
             if (obj instanceof Fighter) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
-                sprite.fighterSprite.gotoAndStop(Math.floor(t/1000) % 9);
+                if (obj.swingAxe > 0)
+                    console.log(`rendering swing-frame ${Math.floor(obj.swingAxe/10)}`);
+                sprite.fighterSprite.gotoAndStop(Math.floor(obj.swingAxe/10));
             } else if (obj instanceof Platform) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
