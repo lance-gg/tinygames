@@ -1,6 +1,5 @@
 import DynamicObject from 'lance/serialize/DynamicObject';
 import Renderer from 'lance/render/Renderer';
-let game = null;
 
 export default class Platform extends DynamicObject {
 
@@ -15,29 +14,11 @@ export default class Platform extends DynamicObject {
         }
     }
 
-    // on remove-from-world, remove the physics body
-    onRemoveFromWorld() {
-        game.physicsEngine.world.removeBody(this.physicsObj);
-    }
-
-    // Adds random .verts to an asteroid body
-    addAsteroidVerts() {
-        this.physicsObj.verts = [];
-        let radius = this.physicsObj.shapes[0].radius;
-        for (let j=0; j < game.numAsteroidVerts; j++) {
-            let angle = j*2*Math.PI / game.numAsteroidVerts;
-            let xv = radius*Math.cos(angle) + game.rand()*radius*0.4;
-            let yv = radius*Math.sin(angle) + game.rand()*radius*0.4;
-            this.physicsObj.verts.push([xv, yv]);
-        }
-    }
-
     syncTo(other) {
         super.syncTo(other);
-        this.width = other.width;
     }
 
     toString() {
-        return `Platform::${super.toString()} Width=${this.width}`;
+        return `Platform::${super.toString()} Width=${this.width} Height=${this.height}`;
     }
 }

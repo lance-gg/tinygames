@@ -12,12 +12,12 @@ export default class BrawlerGameEngine extends GameEngine {
         // game variables
         Object.assign(this, {
             aiCount: 2, spaceWidth: 160, spaceHeight: 90,
-            fighterWidth: 2, fighterHeight: 4, jumpSpeed: 2,
-            walkSpeed: 2
+            fighterWidth: 10, fighterHeight: 16, jumpSpeed: 2,
+            walkSpeed: 0.4
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
-            gravity: new TwoVector(0, -0.1),
+            gravity: new TwoVector(0, -0.05),
             collisions: { type: 'bruteForce', autoResolve: true },
             gameEngine: this
         });
@@ -25,7 +25,7 @@ export default class BrawlerGameEngine extends GameEngine {
     }
 
     handleCollision(evt) {
-        console.log(`collision: ${evt}`);
+        console.log(`collision: o1=${evt.o1.toString()} o2=${evt.o2.toString()}`);
     }
 
     registerClasses(serializer) {
@@ -109,7 +109,7 @@ export default class BrawlerGameEngine extends GameEngine {
     }
 
     randomPosition() {
-        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 40);
+        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 70);
     }
 
 }

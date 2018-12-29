@@ -20,6 +20,7 @@ export default class BrawlerRenderer extends Renderer {
 
     get ASSETPATHS() {
         return {
+            background: 'assets/deserttileset/png/BG.png',
             fighter: 'assets/adventure_girl/png/Idle (1).png',
             platform: 'assets/deserttileset/png/Tile/2.png'
         };
@@ -27,9 +28,11 @@ export default class BrawlerRenderer extends Renderer {
 
     init() {
         this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
-        this.aspectRatio = this.gameEngine.spaceWidth / this.gameEngine.spaceHeight;
-        this.viewportWidth = window.innerWidth;
-        this.viewportHeight = this.viewportWidth / this.aspectRatio;
+        if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
+            this.pixelsPerSpaceUnit = window.innerHeight / this.gameEngine.spaceHeight;
+        }
+        this.viewportWidth = this.gameEngine.spaceWidth * this.pixelsPerSpaceUnit;
+        this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
 
         this.stage = new PIXI.Container();
 
@@ -70,12 +73,20 @@ export default class BrawlerRenderer extends Renderer {
 
     setupStage() {
         window.addEventListener('resize', this.setRendererSize.bind(this));
+        this.stage.backgroundSprite = new PIXI.Sprite(PIXI.loader.resources.background.texture);
+        this.stage.backgroundSprite.width = this.viewportWidth;
+        this.stage.backgroundSprite.height = this.viewportHeight;
+        this.stage.addChild(this.stage.backgroundSprite);
     }
 
     setRendererSize() {
         this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
-        this.viewportWidth = window.innerWidth;
-        this.viewportHeight = this.viewportWidth / this.aspectRatio;
+        if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
+            this.pixelsPerSpaceUnit = window.innerHeight / this.gameEngine.spaceHeight;
+        }
+        this.viewportWidth = this.gameEngine.spaceWidth * this.pixelsPerSpaceUnit;
+        this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
+
         this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
@@ -85,20 +96,29 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     addPlatform(obj) {
+        console.log(`adding platform on Renderer ${obj.toString()}`);
+        console.log(`in pixels ${obj.width * this.pixelsPerSpaceUnit} x ${obj.height * this.pixelsPerSpaceUnit}`);
         let sprite = new PIXI.Container();
-        sprite.platformSprite = new PIXI.Sprite(PIXI.loader.resources.platform.texture);
+        // sprite.platformSprite = new PIXI.Sprite(PIXI.loader.resources.platform.texture);
+        sprite.platformSprite = new PIXI.extras.TilingSprite(
+            PIXI.loader.resources.platform.texture,
+            obj.width * this.pixelsPerSpaceUnit,
+            obj.height * this.pixelsPerSpaceUnit
+        );
         sprite.addChild(sprite.platformSprite);
-        sprite.scale.set(0.1, 0.1);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);
     }
 
     addFighter(obj) {
+        console.log(`adding fighter on Renderer ${obj.toString()}`);
+        console.log(`in pixels ${obj.width * this.pixelsPerSpaceUnit} x ${obj.height * this.pixelsPerSpaceUnit}`);
         let sprite = new PIXI.Container();
         sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
+        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit;
+        sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
         sprite.addChild(sprite.fighterSprite);
-        sprite.scale.set(0.1, 0.1);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);
@@ -125,7 +145,7 @@ export default class BrawlerRenderer extends Renderer {
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             } else if (obj instanceof Platform) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
-                sprite.y = this.viewportHeight - (obj.position.y - obj.height) * this.pixelsPerSpaceUnit;
+                sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             }
         });
 
