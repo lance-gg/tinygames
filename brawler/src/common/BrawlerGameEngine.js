@@ -14,7 +14,7 @@ export default class BrawlerGameEngine extends GameEngine {
         Object.assign(this, {
             aiCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
-            walkSpeed: 0.6
+            walkSpeed: 0.6, killDistance: 15
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
@@ -71,13 +71,24 @@ export default class BrawlerGameEngine extends GameEngine {
         if (stepInfo.isReenact)
             return;
 
-        this.world.forEachObject((id, obj) => {
-            if (obj instanceof Fighter) {
-                obj.progress--;
-                if (obj.progress < 0)
-                    obj.progress += 60;
+        let fighters = this.world.queryObjects({ instanceType: Fighter });
+        for (let f1 of fighters) {
+            f1.progress--;
+            if (f1.progress < 0) {
+                f1.progress += 60;
+                f1.action = Fighter.ACTIONS.indexOf('IDLE');
             }
-        });
+
+            // check if the fighter has killed another fighter
+            if (f1.action === Fighter.ACTIONS.indexOf('FIGHT')) {
+                for (let f2 of fighters) {
+                    if (f2 !== f1 && Math.abs(f1.position.x - f2.position.x) <= this.killDistance) {
+                        console.log(`fighter ${f1.toString()} killed ${f2.toString()}. so sorry.`);
+                        f2.action = Fighter.ACTIONS.indexOf('DIE');
+                    }
+                }
+            }
+        }
     }
 
     // create fighter
