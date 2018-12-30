@@ -47,15 +47,17 @@ export default class BrawlerGameEngine extends GameEngine {
             let nextAction = null;
             if (inputData.input === 'right') {
                 fighter.position.x += this.walkSpeed;
-                nextAction = Fighter.ACTIONS['RUN'];
+                nextAction = Fighter.ACTIONS.indexOf('RUN');
             } else if (inputData.input === 'left') {
                 fighter.position.x -= this.walkSpeed;
-                nextAction = Fighter.ACTIONS['RUN'];
+                nextAction = Fighter.ACTIONS.indexOf('RUN');
             } else if (inputData.input === 'up') {
                 if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
-                nextAction = Fighter.ACTIONS['JUMP'];
+                nextAction = Fighter.ACTIONS.indexOf('JUMP');
             } else if (inputData.input === 'space') {
-                nextAction = Fighter.ACTIONS['FIGHT'];
+                nextAction = Fighter.ACTIONS.indexOf('FIGHT');
+            } else {
+                nextAction = Fighter.ACTIONS.indexOf('IDLE');
             }
             if (fighter.action !== nextAction)
                 fighter.progress = 60;

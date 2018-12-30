@@ -4,12 +4,8 @@ import Renderer from 'lance/render/Renderer';
 
 export default class Fighter extends DynamicObject {
 
-    // action can be one of:
-    // 1: idle
-    // 2: jump
-    // 3: fight
-    // 4: run
-    // 5: die
+    // action is one of:
+    // idle, jump, fight, run, die
     static get netScheme() {
         return Object.assign({
             health: { type: BaseTypes.TYPES.INT8 },
@@ -19,9 +15,7 @@ export default class Fighter extends DynamicObject {
     }
 
     static get ACTIONS() {
-        return {
-            IDLE: 1, JUMP: 2, FIGHT: 3, RUN: 4, DIE: 5
-        };
+        return ['IDLE', 'JUMP', 'FIGHT', 'RUN', 'DIE'];
     }
 
     onAddToWorld(gameEngine) {
