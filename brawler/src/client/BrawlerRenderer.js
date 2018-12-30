@@ -48,9 +48,6 @@ export default class BrawlerRenderer extends Renderer {
         }
 
         return new Promise((resolve, reject)=>{
-            // PIXI.loader
-            //    .add('spritesheet', 'required/assets/mc.json')
-            //     .load(onAssetsLoaded);
             PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
                 return{
                     name: x,
@@ -102,10 +99,7 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     addPlatform(obj) {
-        console.log(`adding platform on Renderer ${obj.toString()}`);
-        console.log(`in pixels ${obj.width * this.pixelsPerSpaceUnit} x ${obj.height * this.pixelsPerSpaceUnit}`);
         let sprite = new PIXI.Container();
-        // sprite.platformSprite = new PIXI.Sprite(PIXI.loader.resources.platform.texture);
         sprite.platformSprite = new PIXI.extras.TilingSprite(
             PIXI.loader.resources.platform.texture,
             obj.width * this.pixelsPerSpaceUnit,
@@ -118,10 +112,7 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     addFighter(obj) {
-        console.log(`adding fighter on Renderer ${obj.toString()}`);
-        console.log(`in pixels ${obj.width * this.pixelsPerSpaceUnit} x ${obj.height * this.pixelsPerSpaceUnit}`);
         let sprite = new PIXI.Container();
-        // sprite.fighterSprite = new PIXI.Sprite(PIXI.loader.resources.fighter.texture);
         let textures = [];
         let sheet = PIXI.loader.resources.meleeSheet;
         for (let t of Object.keys(sheet.textures))
@@ -129,7 +120,6 @@ export default class BrawlerRenderer extends Renderer {
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(textures);
         sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit * 1.6;
         sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
-        // sprite.fighterSprite.scale.set(0.12, 0.1);
         sprite.fighterSprite.anchor.set(0.2, 0.0);
         sprite.addChild(sprite.fighterSprite);
         this.sprites[obj.id] = sprite;
@@ -156,9 +146,7 @@ export default class BrawlerRenderer extends Renderer {
             if (obj instanceof Fighter) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
-                if (obj.swingAxe > 0)
-                    console.log(`rendering swing-frame ${Math.floor(obj.swingAxe/10)}`);
-                sprite.fighterSprite.gotoAndStop(Math.floor(obj.swingAxe/10));
+                sprite.fighterSprite.gotoAndStop(Math.floor(obj.progress/10));
             } else if (obj instanceof Platform) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;

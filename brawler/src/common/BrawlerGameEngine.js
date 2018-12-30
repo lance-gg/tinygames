@@ -44,13 +44,22 @@ export default class BrawlerGameEngine extends GameEngine {
         // up - jump; space - swing the axe
         let fighter = this.world.queryObject({ playerId: playerId, instanceType: Fighter });
         if (fighter) {
-            if (inputData.input === 'right') fighter.position.x += this.walkSpeed;
-            else if (inputData.input === 'left') fighter.position.x -= this.walkSpeed;
-            else if (inputData.input === 'up') {
+            let nextAction = null;
+            if (inputData.input === 'right') {
+                fighter.position.x += this.walkSpeed;
+                nextAction = Fighter.ACTIONS['RUN'];
+            } else if (inputData.input === 'left') {
+                fighter.position.x -= this.walkSpeed;
+                nextAction = Fighter.ACTIONS['RUN'];
+            } else if (inputData.input === 'up') {
                 if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
+                nextAction = Fighter.ACTIONS['JUMP'];
             } else if (inputData.input === 'space') {
-                if (fighter.swingAxe === 0) fighter.swingAxe = 60;
+                nextAction = Fighter.ACTIONS['FIGHT'];
             }
+            if (fighter.action !== nextAction)
+                fighter.progress = 60;
+            fighter.action = nextAction;
             fighter.refreshToPhysics();
         }
     }
@@ -62,7 +71,9 @@ export default class BrawlerGameEngine extends GameEngine {
 
         this.world.forEachObject((id, obj) => {
             if (obj instanceof Fighter) {
-                if (obj.swingAxe > 0) obj.swingAxe--;
+                obj.progress--;
+                if (obj.progress < 0)
+                    obj.progress += 60;
             }
         });
     }
