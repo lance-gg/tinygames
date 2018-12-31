@@ -16,7 +16,7 @@ let requestHandler = server.listen(PORT, () => console.log(`Listening on ${ PORT
 const io = socketIO(requestHandler);
 
 // Game Instances
-const gameEngine = new BrawlerGameEngine({ traceLevel: Trace.TRACE_ALL });
+const gameEngine = new BrawlerGameEngine({ traceLevel: Trace.TRACE_NONE });
 const serverEngine = new BrawlerServerEngine(io, gameEngine, { debug: {}, updateRate: 6 });
 
 // start the game

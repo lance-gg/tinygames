@@ -27,7 +27,7 @@ export default class BrawlerGameEngine extends GameEngine {
     }
 
     handleCollision(evt) {
-        console.log(`collision: o1=${evt.o1.toString()} o2=${evt.o2.toString()}`);
+        // console.log(`collision: o1=${evt.o1.toString()} o2=${evt.o2.toString()}`);
     }
 
     registerClasses(serializer) {
@@ -71,6 +71,7 @@ export default class BrawlerGameEngine extends GameEngine {
         if (stepInfo.isReenact)
             return;
 
+        // advance animation progress for all fighters
         let fighters = this.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
             f1.progress--;
@@ -83,7 +84,6 @@ export default class BrawlerGameEngine extends GameEngine {
             if (f1.action === Fighter.ACTIONS.indexOf('FIGHT')) {
                 for (let f2 of fighters) {
                     if (f2 !== f1 && Math.abs(f1.position.x - f2.position.x) <= this.killDistance) {
-                        console.log(`fighter ${f1.toString()} killed ${f2.toString()}. so sorry.`);
                         f2.action = Fighter.ACTIONS.indexOf('DIE');
                     }
                 }
@@ -119,5 +119,4 @@ export default class BrawlerGameEngine extends GameEngine {
     randomPosition() {
         return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 70);
     }
-
 }

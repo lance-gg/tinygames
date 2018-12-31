@@ -11,17 +11,11 @@ export default class BrawlerRenderer extends Renderer {
         super(gameEngine, clientEngine);
         game = gameEngine;
         this.sprites = {};
-
-        // remove instructions on first input
-        game.once('client__processInput', () => {
-            document.getElementById('joinGame').classList.add('hidden');
-        });
     }
 
     get ASSETPATHS() {
         return {
             background: 'assets/deserttileset/png/BG.png',
-            fighter: 'assets/adventure_girl/png/Idle (1).png',
             platform: 'assets/deserttileset/png/Tile/2.png',
             idleSheet: 'assets/adventure_girl/png/Idle.json',
             jumpSheet: 'assets/adventure_girl/png/Jump.json',
@@ -31,27 +25,30 @@ export default class BrawlerRenderer extends Renderer {
         };
     }
 
-    init() {
+    setDimensions() {
         this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
         if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
             this.pixelsPerSpaceUnit = window.innerHeight / this.gameEngine.spaceHeight;
         }
         this.viewportWidth = this.gameEngine.spaceWidth * this.pixelsPerSpaceUnit;
         this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
+    }
 
+    init() {
+        this.setDimensions();
         this.stage = new PIXI.Container();
 
         if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
             this.onDOMLoaded();
         } else {
-            document.addEventListener('DOMContentLoaded', ()=>{
+            document.addEventListener('DOMContentLoaded', () => {
                 this.onDOMLoaded();
             });
         }
 
-        return new Promise((resolve, reject)=>{
-            PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
-                return{
+        return new Promise((resolve, reject) => {
+            PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x) => {
+                return {
                     name: x,
                     url: this.ASSETPATHS[x]
                 };
@@ -68,16 +65,11 @@ export default class BrawlerRenderer extends Renderer {
                     DIE: Object.values(PIXI.loader.resources.dieSheet.textures)
                 };
 
-                if (isTouchDevice()) {
-                    document.body.classList.add('touch');
-                } else if (isMacintosh()) {
-                    document.body.classList.add('mac');
-                } else if (isWindows()) {
-                    document.body.classList.add('pc');
-                }
+                if (isTouchDevice()) document.body.classList.add('touch');
+                else if (isMacintosh()) document.body.classList.add('mac');
+                else if (isWindows()) document.body.classList.add('pc');
 
                 resolve();
-
                 this.gameEngine.emit('renderer.ready');
             });
         });
@@ -85,22 +77,14 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     setupStage() {
-        window.addEventListener('resize', this.setRendererSize.bind(this));
+        window.addEventListener('resize', () => {
+            this.setDimensions();
+            this.renderer.resize(this.viewportWidth, this.viewportHeight);
+        });
         this.stage.backgroundSprite = new PIXI.Sprite(PIXI.loader.resources.background.texture);
         this.stage.backgroundSprite.width = this.viewportWidth;
         this.stage.backgroundSprite.height = this.viewportHeight;
         this.stage.addChild(this.stage.backgroundSprite);
-    }
-
-    setRendererSize() {
-        this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
-        if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
-            this.pixelsPerSpaceUnit = window.innerHeight / this.gameEngine.spaceHeight;
-        }
-        this.viewportWidth = this.gameEngine.spaceWidth * this.pixelsPerSpaceUnit;
-        this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
-
-        this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
     onDOMLoaded() {
@@ -124,7 +108,7 @@ export default class BrawlerRenderer extends Renderer {
     addFighter(obj) {
         let sprite = new PIXI.Container();
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE);
-        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit * 1.6;
+        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit * 1.6; // TODO: size of fighter is not size of sprite
         sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
         sprite.fighterSprite.anchor.set(0.2, 0.0);
         sprite.addChild(sprite.fighterSprite);
@@ -160,30 +144,7 @@ export default class BrawlerRenderer extends Renderer {
             }
         });
 
-        // update status and render
-        this.updateStatus();
         this.renderer.render(this.stage);
-    }
-
-    updateStatus() {
-
-        let playerShip = this.gameEngine.world.queryObject({ playerId: this.gameEngine.playerId });
-
-        if (!playerShip) {
-            if (this.lives !== undefined)
-                document.getElementById('gameover').classList.remove('hidden');
-            return;
-        }
-
-        // update lives if necessary
-        if (playerShip.playerId === this.gameEngine.playerId && this.lives !== playerShip.lives) {
-            document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
-            this.lives = playerShip.lives;
-        }
-    }
-
-    removeInstructions() {
-        document.getElementById('instructions').classList.add('hidden');
     }
 }
 
