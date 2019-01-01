@@ -47,9 +47,11 @@ export default class BrawlerGameEngine extends GameEngine {
             let nextAction = null;
             if (inputData.input === 'right') {
                 fighter.position.x += this.walkSpeed;
+                fighter.direction = 1;
                 nextAction = Fighter.ACTIONS.indexOf('RUN');
             } else if (inputData.input === 'left') {
                 fighter.position.x -= this.walkSpeed;
+                fighter.direction = -1;
                 nextAction = Fighter.ACTIONS.indexOf('RUN');
             } else if (inputData.input === 'up') {
                 if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
@@ -99,7 +101,9 @@ export default class BrawlerGameEngine extends GameEngine {
         f.playerId = playerId;
         f.height = this.fighterHeight;
         f.width = this.fighterWidth;
-        f.swingAxe = 0;
+        f.direction = 1;
+        f.progress = 0;
+        f.action = 0;
         this.addObjectToWorld(f);
         return f;
     }

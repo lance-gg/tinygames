@@ -11,6 +11,7 @@ export default class BrawlerRenderer extends Renderer {
         super(gameEngine, clientEngine);
         game = gameEngine;
         this.sprites = {};
+        this.fighterSpriteScale = 1;
     }
 
     get ASSETPATHS() {
@@ -108,8 +109,8 @@ export default class BrawlerRenderer extends Renderer {
     addFighter(obj) {
         let sprite = new PIXI.Container();
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE);
-        sprite.fighterSprite.width = obj.width * this.pixelsPerSpaceUnit * 1.6; // TODO: size of fighter is not size of sprite
-        sprite.fighterSprite.height = obj.height * this.pixelsPerSpaceUnit;
+        this.fighterSpriteScale = obj.height * this.pixelsPerSpaceUnit / sprite.fighterSprite.height;
+        sprite.fighterSprite.scale.set(this.fighterSpriteScale, this.fighterSpriteScale);
         sprite.fighterSprite.anchor.set(0.2, 0.0);
         sprite.addChild(sprite.fighterSprite);
         this.sprites[obj.id] = sprite;
@@ -138,6 +139,8 @@ export default class BrawlerRenderer extends Renderer {
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
                 sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
                 sprite.fighterSprite.gotoAndStop(Math.floor(obj.progress/10));
+                sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
+                sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
             } else if (obj instanceof Platform) {
                 sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
                 sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
