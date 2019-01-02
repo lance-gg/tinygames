@@ -26,6 +26,7 @@ export default class BrawlerRenderer extends Renderer {
         };
     }
 
+    // expand viewport to maximize width or height
     setDimensions() {
         this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
         if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
@@ -35,17 +36,15 @@ export default class BrawlerRenderer extends Renderer {
         this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
     }
 
+    // initialize renderer.
     init() {
         this.setDimensions();
         this.stage = new PIXI.Container();
 
-        if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
+        if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive')
             this.onDOMLoaded();
-        } else {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.onDOMLoaded();
-            });
-        }
+        else
+            document.addEventListener('DOMContentLoaded', this.onDOMLoaded.bind(this));
 
         return new Promise((resolve, reject) => {
             PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x) => {
@@ -77,6 +76,7 @@ export default class BrawlerRenderer extends Renderer {
 
     }
 
+    // add background sprite
     setupStage() {
         window.addEventListener('resize', () => {
             this.setDimensions();
@@ -93,6 +93,7 @@ export default class BrawlerRenderer extends Renderer {
         document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
+    // add a single platform game object
     addPlatform(obj) {
         let sprite = new PIXI.Container();
         sprite.platformSprite = new PIXI.extras.TilingSprite(
@@ -106,6 +107,7 @@ export default class BrawlerRenderer extends Renderer {
         this.stage.addChild(sprite);
     }
 
+    // add a single fighter game object
     addFighter(obj) {
         let sprite = new PIXI.Container();
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE);
@@ -118,6 +120,7 @@ export default class BrawlerRenderer extends Renderer {
         this.stage.addChild(sprite);
     }
 
+    // remove a fighter
     removeFighter(obj) {
         let sprite = this.sprites(obj.id);
         if (sprite) {
@@ -126,24 +129,21 @@ export default class BrawlerRenderer extends Renderer {
         }
     }
 
+    // draw all game objects
     draw(t, dt) {
         super.draw(t, dt);
 
         if (!this.isReady) return; // assets might not have been loaded yet
 
-        // Draw all things
         game.world.forEachObject((id, obj) => {
             let sprite = this.sprites[obj.id];
+            sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
+            sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             if (obj instanceof Fighter) {
-                sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
-                sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
                 sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
                 sprite.fighterSprite.gotoAndStop(Math.floor(obj.progress/10));
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
                 sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
-            } else if (obj instanceof Platform) {
-                sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
-                sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             }
         });
 

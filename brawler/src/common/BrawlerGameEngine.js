@@ -10,7 +10,6 @@ export default class BrawlerGameEngine extends GameEngine {
         super(options);
 
         // game variables
-        // note, fighter image is 641:542
         Object.assign(this, {
             aiCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
@@ -40,8 +39,9 @@ export default class BrawlerGameEngine extends GameEngine {
         super.processInput(inputData, playerId);
 
         // handle keyboard presses:
-        // right, left - move fighter
-        // up - jump; space - swing the axe
+        // right, left - set direction and move fighter in that direction.
+        // up          - start jump sequence
+        // space       - start the fight sequence
         let fighter = this.world.queryObject({ playerId: playerId, instanceType: Fighter });
         if (fighter) {
             let nextAction = null;
@@ -62,12 +62,13 @@ export default class BrawlerGameEngine extends GameEngine {
                 nextAction = Fighter.ACTIONS.indexOf('IDLE');
             }
             if (fighter.action !== nextAction)
-                fighter.progress = 60;
+                fighter.progress = 70;
             fighter.action = nextAction;
             fighter.refreshToPhysics();
         }
     }
 
+    // logic for every game step
     moveAll(stepInfo) {
 
         if (stepInfo.isReenact)
@@ -78,16 +79,21 @@ export default class BrawlerGameEngine extends GameEngine {
         for (let f1 of fighters) {
             f1.progress--;
             if (f1.progress < 0) {
-                f1.progress += 60;
+                f1.progress += 70;
                 f1.action = Fighter.ACTIONS.indexOf('IDLE');
             }
+
+            // check bounds
+            f1.position.x = Math.max(f1.position.x, 0);
+            f1.position.x = Math.min(f1.position.x, this.spaceWidth - this.fighterWidth);
 
             // check if the fighter has killed another fighter
             if (f1.action === Fighter.ACTIONS.indexOf('FIGHT')) {
                 for (let f2 of fighters) {
-                    if (f2 !== f1 && Math.abs(f1.position.x - f2.position.x) <= this.killDistance) {
+                    let dx = Math.abs(f1.position.x - f2.position.x);
+                    let dy = Math.abs(f1.position.y - f2.position.y);
+                    if (f2 !== f1 && dx <= this.killDistance && dy <= this.killDistance)
                         f2.action = Fighter.ACTIONS.indexOf('DIE');
-                    }
                 }
             }
         }
@@ -95,10 +101,7 @@ export default class BrawlerGameEngine extends GameEngine {
 
     // create fighter
     addFighter(playerId) {
-        let f = new Fighter(this, null, {
-            position: this.randomPosition()
-        });
-        f.playerId = playerId;
+        let f = new Fighter(this, null, { playerId, position: this.randomPosition() });
         f.height = this.fighterHeight;
         f.width = this.fighterWidth;
         f.direction = 1;
@@ -110,9 +113,7 @@ export default class BrawlerGameEngine extends GameEngine {
 
     // create a platform
     addPlatform(desc) {
-        let p = new Platform(this, null, {
-            playerId: 0, position: new TwoVector(desc.x, desc.y)
-        });
+        let p = new Platform(this, null, { playerId: 0, position: new TwoVector(desc.x, desc.y) });
         p.width = desc.width;
         p.height = 10;
         p.isStatic = 1;
@@ -120,6 +121,7 @@ export default class BrawlerGameEngine extends GameEngine {
         return p;
     }
 
+    // random position for new object
     randomPosition() {
         return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 70);
     }

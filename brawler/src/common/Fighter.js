@@ -4,8 +4,9 @@ import Renderer from 'lance/render/Renderer';
 
 export default class Fighter extends DynamicObject {
 
-    // action is one of:
-    // idle, jump, fight, run, die
+    // direction is 1 or -1
+    // action is one of: idle, jump, fight, run, die
+    // progress is used for the animation
     static get netScheme() {
         return Object.assign({
             direction: { type: BaseTypes.TYPES.INT8 },
@@ -20,9 +21,7 @@ export default class Fighter extends DynamicObject {
 
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
-        if (renderer) {
-            renderer.addFighter(this);
-        }
+        if (renderer) renderer.addFighter(this);
     }
 
     onRemoveFromWorld(gameEngine) {

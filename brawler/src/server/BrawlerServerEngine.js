@@ -19,16 +19,13 @@ export default class BrawlerServerEngine extends ServerEngine {
         this.gameEngine.addPlatform({ x: 130, y: 20, width: 20 });
 
         // add AI fighters
+        // TODO: add AI logic - currently not implemented
         this.aiFighters = [];
         for (let i = 0; i < this.gameEngine.aiCount; i++) {
             let f = this.gameEngine.addFighter(0);
             f.AI = true;
             this.aiFighters.push(f);
         }
-    }
-
-    kill(ship) {
-        if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
     }
 
     onPlayerConnected(socket) {

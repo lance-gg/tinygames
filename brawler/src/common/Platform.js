@@ -9,9 +9,7 @@ export default class Platform extends DynamicObject {
 
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
-        if (renderer) {
-            renderer.addPlatform(this);
-        }
+        if (renderer) renderer.addPlatform(this);
     }
 
     syncTo(other) {
