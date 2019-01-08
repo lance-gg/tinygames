@@ -30,6 +30,7 @@ export default class WiggleClientEngine extends ClientEngine {
     }
 
     updateMouseXY(e) {
+        e.preventDefault();
         if (e.touches) e = e.touches.item(0);
         this.mouseX = e.pageX;
         this.mouseY = e.pageY;
