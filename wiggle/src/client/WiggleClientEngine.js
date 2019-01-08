@@ -5,6 +5,20 @@ export default class WiggleClientEngine extends ClientEngine {
 
     constructor(gameEngine, options) {
         super(gameEngine, options, WiggleRenderer);
+
+        // show try-again button
+        gameEngine.on('objectDestroyed', (obj) => {
+            if (obj.playerId === gameEngine.playerId) {
+                document.body.classList.add('lostGame');
+                document.querySelector('#tryAgain').disabled = false;
+            }
+        });
+
+        // restart game
+        document.querySelector('#tryAgain').addEventListener('click', () => {
+            window.location.reload();
+        });
+
         this.mouseX = null;
         this.mouseY = null;
 
