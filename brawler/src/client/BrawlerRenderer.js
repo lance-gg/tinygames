@@ -29,11 +29,11 @@ export default class BrawlerRenderer extends Renderer {
     // expand viewport to maximize width or height
     setDimensions() {
         this.pixelsPerSpaceUnit = window.innerWidth / this.gameEngine.spaceWidth;
-        if (window.innerHeight < this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit) {
-            this.pixelsPerSpaceUnit = window.innerHeight / this.gameEngine.spaceHeight;
+        if (window.innerHeight < game.spaceHeight * this.pixelsPerSpaceUnit) {
+            this.pixelsPerSpaceUnit = window.innerHeight / game.spaceHeight;
         }
-        this.viewportWidth = this.gameEngine.spaceWidth * this.pixelsPerSpaceUnit;
-        this.viewportHeight = this.gameEngine.spaceHeight * this.pixelsPerSpaceUnit;
+        this.viewportWidth = game.spaceWidth * this.pixelsPerSpaceUnit;
+        this.viewportHeight = game.spaceHeight * this.pixelsPerSpaceUnit;
     }
 
     // initialize renderer.
@@ -141,7 +141,9 @@ export default class BrawlerRenderer extends Renderer {
             sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             if (obj instanceof Fighter) {
                 sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
-                sprite.fighterSprite.gotoAndStop(Math.floor(obj.progress/10));
+                sprite.fighterSprite.gotoAndStop(game.animationFrames - Math.floor(obj.progress/game.animationSpeed));
+
+console.log(`${Fighter.ACTIONS[obj.action]} - ${game.animationFrames - Math.floor(obj.progress/game.animationSpeed)}`);
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
                 sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
             }

@@ -11,9 +11,10 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // game variables
         Object.assign(this, {
-            aiCount: 2, spaceWidth: 160, spaceHeight: 90,
+            aiCount: 0, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
-            walkSpeed: 0.6, killDistance: 15
+            walkSpeed: 0.6, killDistance: 15,
+            animationFrames: 6, animationSpeed: 5
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
@@ -62,7 +63,7 @@ export default class BrawlerGameEngine extends GameEngine {
                 nextAction = Fighter.ACTIONS.indexOf('IDLE');
             }
             if (fighter.action !== nextAction)
-                fighter.progress = 70;
+                fighter.progress = this.animationFrames * this.animationSpeed - 1;
             fighter.action = nextAction;
             fighter.refreshToPhysics();
         }
