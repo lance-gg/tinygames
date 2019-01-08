@@ -25,6 +25,33 @@
 
         	transition: all 0.5s ease-in;
         }
+        #tryAgain{
+          font-family:"Courier", Courier, sans-serif;
+          font-size: 20px;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          opacity: 0;
+          pointer-events: none;
+          border-radius: 4px;
+          transform: translateX(-50%) translateY(-50%);
+          position: absolute;
+          background-color: rgba(#68b2f8, 0.2);
+          padding: 0.2rem 1.8rem 0.1rem 1.8rem;
+          font-size: 1.2rem;
+          transition: all 0.5s ease-out;
+          border: 1;
+          border-style:solid;
+          box-shadow: none;
+          background-color: transparent;
+          color: white;
+          outline: none;
+          white-space: nowrap;
+        }
+        .lostGame #tryAgain{
+            opacity: 1;
+            pointer-events: all;
+        }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     </head>
@@ -38,6 +65,7 @@
             <div class="keysContainer"></div>
         </div>
         <div class="pixiContainer"></div>
+        <button id="tryAgain" disabled>Try Again ?</button>
         <script type="text/javascript" src="bundle.js"></script>
     </body>
 </html>
