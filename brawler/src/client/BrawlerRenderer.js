@@ -141,9 +141,11 @@ export default class BrawlerRenderer extends Renderer {
             sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             if (obj instanceof Fighter) {
                 sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
-                sprite.fighterSprite.gotoAndStop(game.animationFrames - Math.floor(obj.progress/game.animationSpeed));
+                let textureCount = sprite.fighterSprite.textures.length;
+                let image = Math.floor((100 - obj.progress)/100 * textureCount);
+                sprite.fighterSprite.gotoAndStop(image);
 
-console.log(`${Fighter.ACTIONS[obj.action]} - ${game.animationFrames - Math.floor(obj.progress/game.animationSpeed)}`);
+                // console.log(`${Fighter.ACTIONS[obj.action]} - ${image}`);
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
                 sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
             }
