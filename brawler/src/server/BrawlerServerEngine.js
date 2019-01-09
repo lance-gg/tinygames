@@ -33,7 +33,21 @@ export default class BrawlerServerEngine extends ServerEngine {
         }
     }
 
-    // check if any fighter killed another
+    // check if fighter f1 killed f2
+    checkKills(f1, f2) {
+
+        if (f1.action !== Fighter.ACTIONS.indexOf('FIGHT')) return;
+
+        let dx = Math.abs(f1.position.x - f2.position.x);
+        let dy = Math.abs(f1.position.y - f2.position.y);
+        if (f2 !== f1 && f2.action !== Fighter.ACTIONS.indexOf('DIE') &&
+            dx <= game.killDistance && dy <= game.killDistance) {
+            f2.action = Fighter.ACTIONS.indexOf('DIE');
+            f2.progress = 100;
+        }
+    }
+
+    // post-step state transitions
     postStep() {
 
         let fighters = game.world.queryObjects({ instanceType: Fighter });
@@ -49,11 +63,13 @@ export default class BrawlerServerEngine extends ServerEngine {
                 f1.progress = 100;
 
                 // end of dying sequence
-                if (f1.action === Fighter.ACTIONS.indexOf('DIE'))
+                if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
                     game.removeObjectFromWorld(f1);
+                    continue;
+                }
 
                 // if no input applied on this turn, switch to idle
-                if (game.inputsApplied.indexOf(f1.playerId) < 0)
+                if (!inputApplied)
                     f1.action = Fighter.ACTIONS.indexOf('IDLE');
             }
 
@@ -61,18 +77,9 @@ export default class BrawlerServerEngine extends ServerEngine {
             f1.position.x = Math.max(f1.position.x, 0);
             f1.position.x = Math.min(f1.position.x, game.spaceWidth - game.fighterWidth);
 
-            // check if the fighter has killed another fighter
-            if (f1.action === Fighter.ACTIONS.indexOf('FIGHT')) {
-                for (let f2 of fighters) {
-                    let dx = Math.abs(f1.position.x - f2.position.x);
-                    let dy = Math.abs(f1.position.y - f2.position.y);
-                    if (f2 !== f1 && f2.action !== Fighter.ACTIONS.indexOf('DIE') &&
-                        dx <= game.killDistance && dy <= game.killDistance) {
-                        f2.action = Fighter.ACTIONS.indexOf('DIE');
-                        f2.progress = 100;
-                    }
-                }
-            }
+            // check for kills
+            for (let f2 of fighters)
+                this.checkKills(f1, f2);
         }
 
         // reset input list
