@@ -1,6 +1,5 @@
 import Renderer from 'lance/render/Renderer';
 import Fighter from './../common/Fighter';
-import Platform from './../common/Platform';
 
 let PIXI = require('pixi.js');
 let game = null;
