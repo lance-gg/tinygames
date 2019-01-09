@@ -122,7 +122,7 @@ export default class BrawlerRenderer extends Renderer {
 
     // remove a fighter
     removeFighter(obj) {
-        let sprite = this.sprites(obj.id);
+        let sprite = this.sprites[obj.id];
         if (sprite) {
             if (sprite.fighterSprite) sprite.fighterSprite.destroy();
             sprite.destroy();

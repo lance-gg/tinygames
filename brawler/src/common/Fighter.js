@@ -25,6 +25,8 @@ export default class Fighter extends DynamicObject {
     }
 
     onRemoveFromWorld(gameEngine) {
+        let renderer = Renderer.getInstance();
+        if (renderer) renderer.removeFighter(this);
     }
 
     toString() {

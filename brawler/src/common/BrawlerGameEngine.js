@@ -11,7 +11,7 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // game variables
         Object.assign(this, {
-            aiCount: 0, spaceWidth: 160, spaceHeight: 90,
+            aiCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
             walkSpeed: 0.6, killDistance: 15
         });
@@ -21,12 +21,7 @@ export default class BrawlerGameEngine extends GameEngine {
             collisions: { type: 'bruteForce', autoResolve: true },
             gameEngine: this
         });
-        this.on('collisionStart', this.handleCollision.bind(this));
         this.on('preStep', this.moveAll.bind(this));
-    }
-
-    handleCollision(evt) {
-        // console.log(`collision: o1=${evt.o1.toString()} o2=${evt.o2.toString()}`);
     }
 
     registerClasses(serializer) {
@@ -65,6 +60,9 @@ export default class BrawlerGameEngine extends GameEngine {
                 fighter.progress = 100;
             fighter.action = nextAction;
             fighter.refreshToPhysics();
+
+            // remember that an input was applied on this turn
+            this.inputApplied = true;
         }
     }
 
@@ -77,26 +75,32 @@ export default class BrawlerGameEngine extends GameEngine {
         // advance animation progress for all fighters
         let fighters = this.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
+
+            // if no input applied and we were running, switch to idle
+            if (!this.inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
+                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+
+            // update action progress
             f1.progress -= 3;
             if (f1.progress < 0) {
                 f1.progress += 100;
-                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+
+                // end of dying sequence
+                if (f1.action === Fighter.ACTIONS.indexOf('DIE'))
+                    this.removeObjectFromWorld(f1);
+
+                // if no input applied on this turn, switch to idle
+                if (!this.inputApplied)
+                    f1.action = Fighter.ACTIONS.indexOf('IDLE');
             }
 
             // check bounds
             f1.position.x = Math.max(f1.position.x, 0);
             f1.position.x = Math.min(f1.position.x, this.spaceWidth - this.fighterWidth);
-
-            // check if the fighter has killed another fighter
-            if (f1.action === Fighter.ACTIONS.indexOf('FIGHT')) {
-                for (let f2 of fighters) {
-                    let dx = Math.abs(f1.position.x - f2.position.x);
-                    let dy = Math.abs(f1.position.y - f2.position.y);
-                    if (f2 !== f1 && dx <= this.killDistance && dy <= this.killDistance)
-                        f2.action = Fighter.ACTIONS.indexOf('DIE');
-                }
-            }
         }
+
+        // reset the inputApplied test
+        this.inputApplied = false;
     }
 
     // create fighter
