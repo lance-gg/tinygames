@@ -24,12 +24,10 @@ export default class BrawlerServerEngine extends ServerEngine {
         game.addPlatform({ x: 130, y: 25, width: 20 });
 
         // add AI fighters
-        // TODO: add AI logic - currently not implemented
-        this.aiFighters = [];
         for (let i = 0; i < game.aiCount; i++) {
             let f = game.addFighter(0);
             f.AI = true;
-            this.aiFighters.push(f);
+            f.direction = 1;
         }
     }
 
@@ -44,6 +42,40 @@ export default class BrawlerServerEngine extends ServerEngine {
             dx <= game.killDistance && dy <= game.killDistance) {
             f2.action = Fighter.ACTIONS.indexOf('DIE');
             f2.progress = 100;
+        }
+    }
+
+    // handle AI fighter state change
+    updateAIAction(f1) {
+
+        // AI robots keep walking
+        if (f1.action === Fighter.ACTIONS.indexOf('RUN'))
+            f1.position.x += game.walkSpeed * f1.direction;
+
+        // end-of-action handling
+        if (f1.progress === 0) {
+            f1.progress = 100;
+
+            // end of dying sequence
+            if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
+
+                // AI fighters come back to life
+                if (f1.AI) {
+                    let f = game.addFighter(0);
+                    f.AI = true;
+                    f.direction = 1;
+                }
+                game.removeObjectFromWorld(f1);
+                return;
+            }
+
+            // choose direction and action
+            if (Math.random() > 0.7) f1.direction *= -1;
+            let nextAction = Math.floor(Fighter.ACTIONS.length * Math.random());
+            if (nextAction !== Fighter.ACTIONS.indexOf('DIE'))
+                f1.action = nextAction;
+            if (nextAction === Fighter.ACTIONS.indexOf('JUMP') && f1.velocity.length() === 0)
+                f1.velocity.y = game.jumpSpeed;
         }
     }
 
@@ -77,8 +109,13 @@ export default class BrawlerServerEngine extends ServerEngine {
         let fighters = game.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
 
-            // updates to action, and check bounds
-            this.updateFighterAction(f1);
+            // updates to action
+            if (f1.AI)
+                this.updateAIAction(f1);
+            else
+                this.updateFighterAction(f1);
+
+            // check world bounds
             f1.position.x = Math.max(f1.position.x, 0);
             f1.position.x = Math.min(f1.position.x, game.spaceWidth - game.fighterWidth);
 
