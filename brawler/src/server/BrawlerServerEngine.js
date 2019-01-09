@@ -47,39 +47,43 @@ export default class BrawlerServerEngine extends ServerEngine {
         }
     }
 
+    // handle fighter state change
+    updateFighterAction(f1) {
+
+        // if no input applied and we were running, switch to idle
+        let inputApplied = game.inputsApplied.indexOf(f1.playerId) >= 0;
+        if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
+            f1.action = Fighter.ACTIONS.indexOf('IDLE');
+
+        // end-of-action handling
+        if (f1.progress === 0) {
+            f1.progress = 100;
+
+            // end of dying sequence
+            if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
+                game.removeObjectFromWorld(f1);
+                return;
+            }
+
+            // if no input applied on this turn, switch to idle
+            if (!inputApplied)
+                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+        }
+    }
+
     // post-step state transitions
     postStep() {
 
         let fighters = game.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
 
-            // if no input applied and we were running, switch to idle
-            let inputApplied = game.inputsApplied.indexOf(f1.playerId) >= 0;
-            if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
-                f1.action = Fighter.ACTIONS.indexOf('IDLE');
-
-            // progress handling
-            if (f1.progress === 0) {
-                f1.progress = 100;
-
-                // end of dying sequence
-                if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
-                    game.removeObjectFromWorld(f1);
-                    continue;
-                }
-
-                // if no input applied on this turn, switch to idle
-                if (!inputApplied)
-                    f1.action = Fighter.ACTIONS.indexOf('IDLE');
-            }
-
-            // check bounds
+            // updates to action, and check bounds
+            this.updateFighterAction(f1);
             f1.position.x = Math.max(f1.position.x, 0);
             f1.position.x = Math.min(f1.position.x, game.spaceWidth - game.fighterWidth);
 
             // check for kills
-            for (let f2 of fighters)
-                this.checkKills(f1, f2);
+            for (let f2 of fighters) this.checkKills(f1, f2);
         }
 
         // reset input list
