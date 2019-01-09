@@ -17,3 +17,4 @@ run-game () {
 
 run-game asteroids ESBEDKJR2DSZF
 run-game wiggle E2EWSSN9O8YLLP
+run-game brawler E3T8BVLDOS80MN

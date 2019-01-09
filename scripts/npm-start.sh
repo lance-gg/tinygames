@@ -12,3 +12,4 @@ run-game () {
 
 run-game asteroids 3002
 run-game wiggle 3004
+run-game brawler 3006
