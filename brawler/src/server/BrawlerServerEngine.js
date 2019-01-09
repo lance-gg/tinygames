@@ -8,7 +8,7 @@ export default class BrawlerServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
         super(io, gameEngine, inputOptions);
         game = gameEngine;
-        game.on('postStep', this.checkKills.bind(this));
+        game.on('postStep', this.postStep.bind(this));
     }
 
     start() {
@@ -18,10 +18,10 @@ export default class BrawlerServerEngine extends ServerEngine {
         game.addPlatform({ x: 0, y: 0, width: 160 });
 
         // add platforms
-        game.addPlatform({ x: 10, y: 20, width: 20 });
+        game.addPlatform({ x: 10, y: 25, width: 20 });
         game.addPlatform({ x: 50, y: 35, width: 20 });
         game.addPlatform({ x: 90, y: 35, width: 20 });
-        game.addPlatform({ x: 130, y: 20, width: 20 });
+        game.addPlatform({ x: 130, y: 25, width: 20 });
 
         // add AI fighters
         // TODO: add AI logic - currently not implemented
@@ -34,10 +34,28 @@ export default class BrawlerServerEngine extends ServerEngine {
     }
 
     // check if any fighter killed another
-    checkKills() {
+    postStep() {
 
         let fighters = game.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
+
+            // if no input applied and we were running, switch to idle
+            let inputApplied = game.inputsApplied.indexOf(f1.playerId) >= 0;
+            if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
+                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+
+            // progress handling
+            if (f1.progress === 0) {
+                f1.progress = 100;
+
+                // end of dying sequence
+                if (f1.action === Fighter.ACTIONS.indexOf('DIE'))
+                    game.removeObjectFromWorld(f1);
+
+                // if no input applied on this turn, switch to idle
+                if (game.inputsApplied.indexOf(f1.playerId) < 0)
+                    f1.action = Fighter.ACTIONS.indexOf('IDLE');
+            }
 
             // check bounds
             f1.position.x = Math.max(f1.position.x, 0);
@@ -56,6 +74,9 @@ export default class BrawlerServerEngine extends ServerEngine {
                 }
             }
         }
+
+        // reset input list
+        game.inputsApplied = [];
     }
 
     onPlayerConnected(socket) {

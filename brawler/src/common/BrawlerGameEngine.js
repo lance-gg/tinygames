@@ -21,6 +21,8 @@ export default class BrawlerGameEngine extends GameEngine {
             collisions: { type: 'bruteForce', autoResolve: true },
             gameEngine: this
         });
+
+        this.inputsApplied = [];
         this.on('preStep', this.moveAll.bind(this));
     }
 
@@ -62,7 +64,7 @@ export default class BrawlerGameEngine extends GameEngine {
             fighter.refreshToPhysics();
 
             // remember that an input was applied on this turn
-            this.inputApplied = true;
+            this.inputsApplied.push(playerId);
         }
     }
 
@@ -74,33 +76,12 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // advance animation progress for all fighters
         let fighters = this.world.queryObjects({ instanceType: Fighter });
+
+        // update action progress
         for (let f1 of fighters) {
-
-            // if no input applied and we were running, switch to idle
-            if (!this.inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
-                f1.action = Fighter.ACTIONS.indexOf('IDLE');
-
-            // update action progress
             f1.progress -= 3;
-            if (f1.progress < 0) {
-                f1.progress += 100;
-
-                // end of dying sequence
-                if (f1.action === Fighter.ACTIONS.indexOf('DIE'))
-                    this.removeObjectFromWorld(f1);
-
-                // if no input applied on this turn, switch to idle
-                if (!this.inputApplied)
-                    f1.action = Fighter.ACTIONS.indexOf('IDLE');
-            }
-
-            // check bounds
-            f1.position.x = Math.max(f1.position.x, 0);
-            f1.position.x = Math.min(f1.position.x, this.spaceWidth - this.fighterWidth);
+            if (f1.progress < 0) f1.progress = 0;
         }
-
-        // reset the inputApplied test
-        this.inputApplied = false;
     }
 
     // create fighter
