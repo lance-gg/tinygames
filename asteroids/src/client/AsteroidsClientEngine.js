@@ -5,7 +5,6 @@ import KeyboardControls from 'lance/controls/KeyboardControls';
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;
 const steerThreshold = 0.05;
-const frameThreshold = 4;
 
 export default class AsteroidsClientEngine extends ClientEngine {
 
@@ -14,15 +13,20 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
         //  Game input
         if (isTouchDevice()) {
+            document.querySelector('#instructionsMobile').classList.remove('hidden');
 
             this.actions = new Set();
 
             this.fireButton = document.querySelector('.fireButton');
+            this.fireButton.style.opacity = 1;
+            this.boostButton = document.querySelector('.boostButton');
+            this.boostButton.style.opacity = 1;
             window.addEventListener('deviceorientation', this.handleOrientation.bind(this));
             this.fireButton.addEventListener('touchstart', () => this.actions.add('space'), false);
-            this.fireButton.addEventListener('touchend', () => this.actions.delete('space'), false);
+            this.boostButton.addEventListener('touchstart', () => this.actions.add('up'), false);
             this.gameEngine.on('client__preStep', this.preStep.bind(this));
         } else {
+            document.querySelector('#instructions').classList.remove('hidden');
             this.controls = new KeyboardControls(this);
             this.controls.bindKey('up', 'up', { repeat: true } );
             this.controls.bindKey('down', 'down', { repeat: true } );

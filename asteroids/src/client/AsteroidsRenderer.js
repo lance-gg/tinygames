@@ -75,6 +75,7 @@ export default class AsteroidsRenderer extends Renderer {
 
     removeInstructions() {
         document.getElementById('instructions').classList.add('hidden');
+        document.getElementById('instructionsMobile').classList.add('hidden');
     }
 
     drawShip(body) {
