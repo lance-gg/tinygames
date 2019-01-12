@@ -50,6 +50,22 @@
           .hidden {
             display: none;
           }
+          .fireButton{
+            opacity: 1;
+            transition: all 0.5s ease-in;
+            background: #fff;
+            width: 3rem;
+            height: 3rem;
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid #ff2f95;
+            border-radius: 5rem;
+            content: "FIRE";
+            color: #ff2f95;
+          }
+
         </style>
 
     </head>
@@ -60,6 +76,7 @@
         <div id="lives" class="textBox"></div>
         <div id="gameover" class="textBox centered hidden">GAME OVER</div>
         <div id="instructions" class="textBox centered">ARROW KEYS = CONTROL SHIP<br/>SPACE = SHOOT</div>
+        <div class="fireButton"></div>
         <script src="bundle.js" type="text/javascript"></script>
     </body>
 </html>

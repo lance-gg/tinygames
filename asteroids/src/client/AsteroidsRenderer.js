@@ -27,9 +27,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.strokeStyle = ctx.fillStyle = 'white';
 
         // remove instructions on first input
-        game.once('client__processInput', () => {
-            document.getElementById('instructions').classList.add('hidden');
-        });
+        setTimeout(this.removeInstructions.bind(this), 5000);
     }
 
     draw(t, dt) {
