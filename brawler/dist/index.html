@@ -22,7 +22,6 @@
         	color: #fff;
         	font-family: arial, sans-serif;
         	opacity: 0;
-
         	transition: all 0.5s ease-in;
         }
         .messages {
@@ -50,12 +49,11 @@
             top: 5%;
         }
         #tryAgain {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          opacity: 0;
-          pointer-events: none;
-
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            opacity: 0;
+            pointer-events: none;
         }
         .lostGame #tryAgain{
             opacity: 1;
@@ -75,7 +73,7 @@
         </div>
         <div class="pixiContainer"></div>
         <button id="tryAgain" class="messages" disabled>GAME OVER<br/>Try Again ?</button>
-        <div id="killsStatus" class="messages">Kills: 100</div>
+        <div id="killsStatus" class="messages">Kills: 0</div>
         <script type="text/javascript" src="bundle.js"></script>
     </body>
 </html>
