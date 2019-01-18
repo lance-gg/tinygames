@@ -25,29 +25,37 @@
 
         	transition: all 0.5s ease-in;
         }
-        #tryAgain{
-          font-family:"Courier", Courier, sans-serif;
-          font-size: 20px;
+        .messages {
+            font-family:"Courier", Courier, sans-serif;
+            font-size: 20px;
+            transform: translateX(-50%) translateY(-50%);
+            background-color: rgba(#68b2f8, 0.2);
+            padding: 0.2rem 1.8rem 0.1rem 1.8rem;
+            font-size: 1.2rem;
+            transition: all 0.5s ease-out;
+            border: 1;
+            border-style:solid;
+            border-color: black;
+            border-radius: 4px;
+            box-shadow: none;
+            background-color: transparent;
+            color: black;
+            outline: none;
+            white-space: nowrap;
+        }
+        #killsStatus {
+            position: absolute;
+            opacity: 1;
+            left: 90%;
+            top: 5%;
+        }
+        #tryAgain {
           position: absolute;
           left: 50%;
           top: 50%;
           opacity: 0;
           pointer-events: none;
-          border-radius: 4px;
-          transform: translateX(-50%) translateY(-50%);
-          position: absolute;
-          background-color: rgba(#68b2f8, 0.2);
-          padding: 0.2rem 1.8rem 0.1rem 1.8rem;
-          font-size: 1.2rem;
-          transition: all 0.5s ease-out;
-          border: 1;
-          border-style:solid;
-          border-color: black;
-          box-shadow: none;
-          background-color: transparent;
-          color: black;
-          outline: none;
-          white-space: nowrap;
+
         }
         .lostGame #tryAgain{
             opacity: 1;
@@ -66,7 +74,8 @@
             <div class="keysContainer"></div>
         </div>
         <div class="pixiContainer"></div>
-        <button id="tryAgain" disabled>GAME OVER<br/>Try Again ?</button>
+        <button id="tryAgain" class="messages" disabled>GAME OVER<br/>Try Again ?</button>
+        <div id="killsStatus" class="messages">Kills: 100</div>
         <script type="text/javascript" src="bundle.js"></script>
     </body>
 </html>

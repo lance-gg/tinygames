@@ -149,17 +149,21 @@ export default class BrawlerRenderer extends Renderer {
             sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
             sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             if (obj instanceof Fighter) {
-                if (obj.isDino)
+                if (obj.isDino) {
                     sprite.fighterSprite.textures = this.textures['DINO_' + Fighter.ACTIONS[obj.action]];
-                else
+                    sprite.y += 20;
+                } else {
                     sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
+                }
                 let textureCount = sprite.fighterSprite.textures.length;
                 let image = Math.floor((100 - obj.progress)/100 * textureCount);
                 sprite.fighterSprite.gotoAndStop(image);
 
-                // console.log(`${Fighter.ACTIONS[obj.action]} - ${image}`);
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
                 sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
+
+                if (obj.playerId === this.gameEngine.playerId)
+                    document.getElementById('killsStatus').innerHTML = `kills: ${obj.kills}`;
             }
         });
 
