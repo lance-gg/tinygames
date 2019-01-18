@@ -45,31 +45,17 @@ export default class AsteroidsClientEngine extends ClientEngine {
         let isPortrait = window.innerHeight > window.innerWidth;
         let beta = event.beta;  // In degree in the range [-180,180]
         let gamma = event.gamma; // In degree in the range [-90,90]
-
-        let steerValue;
+        let flip = gamma > 0;
+        let steerValue = Math.max(-1, Math.min(1, beta / betaTiltThreshold)) * (flip?-1:1);
         if (isPortrait) {
-            let flip = beta < 0;
+            flip = beta < 0;
             steerValue = Math.max(-1, Math.min(1, gamma / gammaTiltThreshold)) * (flip?-1:1);
-        } else {
-            let flip = gamma > 0;
-            steerValue = Math.max(-1, Math.min(1, beta / betaTiltThreshold)) * (flip?-1:1);
         }
 
-        // prevent hypesensitive steering on mobile
-        // let x = Math.abs(steerValue);
-        // let frameStep = Math.round(frameThreshold-x*x*frameThreshold);
-        // let shouldSteer = this.renderer.frameNum % frameStep == 0;
-        let shouldSteer = true;
-
-        if (shouldSteer) {
-            this.actions.delete('left');
-            this.actions.delete('right');
-            if (steerValue < -steerThreshold) {
-                this.actions.add('left');
-            } else if (steerValue > steerThreshold) {
-                this.actions.add('right');
-            }
-        }
+        this.actions.delete('left');
+        this.actions.delete('right');
+        if (steerValue < -steerThreshold) this.actions.add('left');
+        else if (steerValue > steerThreshold) this.actions.add('right');
     }
 
     // our pre-step is to process inputs that are "currently pressed" during the game step
