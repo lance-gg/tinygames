@@ -11,9 +11,9 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // game variables
         Object.assign(this, {
-            aiCount: 2, spaceWidth: 160, spaceHeight: 90,
+            dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
-            walkSpeed: 0.6, killDistance: 15
+            walkSpeed: 0.6, killDistance: 30, dinoKillDistance: 12
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
@@ -92,6 +92,7 @@ export default class BrawlerGameEngine extends GameEngine {
         f.direction = 1;
         f.progress = 0;
         f.action = 0;
+        f.kills = 0;
         this.addObjectToWorld(f);
         return f;
     }

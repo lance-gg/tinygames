@@ -11,7 +11,9 @@ export default class Fighter extends DynamicObject {
         return Object.assign({
             direction: { type: BaseTypes.TYPES.INT8 },
             action: { type: BaseTypes.TYPES.INT8 },
-            progress: { type: BaseTypes.TYPES.INT8 }
+            progress: { type: BaseTypes.TYPES.INT8 },
+            kills: { type: BaseTypes.TYPES.INT8 },
+            isDino: { type: BaseTypes.TYPES.INT8 }
         }, super.netScheme);
     }
 
@@ -30,7 +32,8 @@ export default class Fighter extends DynamicObject {
     }
 
     toString() {
-        return `Fighter::${super.toString()} direction=${this.direction} action=${this.action} progress=${this.progress}`;
+        const fighterType = this.isDino?'Dino':'Fighter';
+        return `${fighterType}::${super.toString()} direction=${this.direction} action=${this.action} progress=${this.progress}`;
     }
 
     syncTo(other) {
@@ -38,5 +41,7 @@ export default class Fighter extends DynamicObject {
         this.direction = other.direction;
         this.action = other.action;
         this.progress = other.progress;
+        this.isDino = other.isDino;
+        this.kills = other.kills;
     }
 }

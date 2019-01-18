@@ -23,10 +23,10 @@ export default class BrawlerServerEngine extends ServerEngine {
         game.addPlatform({ x: 90, y: 35, width: 20 });
         game.addPlatform({ x: 130, y: 25, width: 20 });
 
-        // add AI fighters
-        for (let i = 0; i < game.aiCount; i++) {
+        // add dinos
+        for (let i = 0; i < game.dinoCount; i++) {
             let f = game.addFighter(0);
-            f.AI = true;
+            f.isDino = true;
             f.direction = 1;
         }
     }
@@ -34,21 +34,32 @@ export default class BrawlerServerEngine extends ServerEngine {
     // check if fighter f1 killed f2
     checkKills(f1, f2) {
 
-        if (f1.action !== Fighter.ACTIONS.indexOf('FIGHT')) return;
+        // if f2 is already dying, exit
+        if (f1 === f2 || f2.action === Fighter.ACTIONS.indexOf('DIE'))
+            return;
+
+        // kill distance is different for fighters and dino's
+        let killDistance = null;
+        if (f1.action === Fighter.ACTIONS.indexOf('FIGHT'))
+            killDistance = game.killDistance;
+        else if (f1.isDino && !f2.isDino)
+            killDistance = game.dinoKillDistance;
+
+        if (killDistance === null) return;
 
         let dx = Math.abs(f1.position.x - f2.position.x);
         let dy = Math.abs(f1.position.y - f2.position.y);
-        if (f2 !== f1 && f2.action !== Fighter.ACTIONS.indexOf('DIE') &&
-            dx <= game.killDistance && dy <= game.killDistance) {
+        if (dx <= killDistance && dy <= killDistance) {
+            f1.kills++;
             f2.action = Fighter.ACTIONS.indexOf('DIE');
             f2.progress = 100;
         }
     }
 
-    // handle AI fighter state change
-    updateAIAction(f1) {
+    // handle Dino state change
+    updateDinoAction(f1) {
 
-        // AI robots keep walking
+        // Dinos keep walking
         if (f1.action === Fighter.ACTIONS.indexOf('RUN'))
             f1.position.x += game.walkSpeed * f1.direction;
 
@@ -59,10 +70,10 @@ export default class BrawlerServerEngine extends ServerEngine {
             // end of dying sequence
             if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
 
-                // AI fighters come back to life
-                if (f1.AI) {
+                // Dino fighters come back to life
+                if (f1.isDino) {
                     let f = game.addFighter(0);
-                    f.AI = true;
+                    f.isDino = true;
                     f.direction = 1;
                 }
                 game.removeObjectFromWorld(f1);
@@ -72,7 +83,7 @@ export default class BrawlerServerEngine extends ServerEngine {
             // choose direction and action
             if (Math.random() > 0.7) f1.direction *= -1;
             let nextAction = Math.floor(Fighter.ACTIONS.length * Math.random());
-            if (nextAction !== Fighter.ACTIONS.indexOf('DIE'))
+            if (nextAction !== Fighter.ACTIONS.indexOf('DIE') && nextAction !== Fighter.ACTIONS.indexOf('FIGHT'))
                 f1.action = nextAction;
             if (nextAction === Fighter.ACTIONS.indexOf('JUMP') && f1.velocity.length() === 0)
                 f1.velocity.y = game.jumpSpeed;
@@ -110,8 +121,8 @@ export default class BrawlerServerEngine extends ServerEngine {
         for (let f1 of fighters) {
 
             // updates to action
-            if (f1.AI)
-                this.updateAIAction(f1);
+            if (f1.isDino)
+                this.updateDinoAction(f1);
             else
                 this.updateFighterAction(f1);
 

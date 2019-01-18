@@ -21,7 +21,12 @@ export default class BrawlerRenderer extends Renderer {
             jumpSheet: 'assets/adventure_girl/png/Jump.json',
             meleeSheet: 'assets/adventure_girl/png/Melee.json',
             runSheet: 'assets/adventure_girl/png/Run.json',
-            dieSheet: 'assets/adventure_girl/png/Dead.json'
+            dieSheet: 'assets/adventure_girl/png/Dead.json',
+            dinoIdleSheet: 'assets/dino/png/Idle.json',
+            dinoJumpSheet: 'assets/dino/png/Jump.json',
+            dinoWalkSheet: 'assets/dino/png/Walk.json',
+            dinoRunSheet: 'assets/dino/png/Run.json',
+            dinoDieSheet: 'assets/dino/png/Dead.json'
         };
     }
 
@@ -61,7 +66,12 @@ export default class BrawlerRenderer extends Renderer {
                     JUMP: Object.values(PIXI.loader.resources.jumpSheet.textures),
                     FIGHT: Object.values(PIXI.loader.resources.meleeSheet.textures),
                     RUN: Object.values(PIXI.loader.resources.runSheet.textures),
-                    DIE: Object.values(PIXI.loader.resources.dieSheet.textures)
+                    DIE: Object.values(PIXI.loader.resources.dieSheet.textures),
+                    DINO_IDLE: Object.values(PIXI.loader.resources.dinoIdleSheet.textures),
+                    DINO_WALK: Object.values(PIXI.loader.resources.dinoWalkSheet.textures),
+                    DINO_RUN: Object.values(PIXI.loader.resources.dinoRunSheet.textures),
+                    DINO_JUMP: Object.values(PIXI.loader.resources.dinoJumpSheet.textures),
+                    DINO_DIE: Object.values(PIXI.loader.resources.dinoDieSheet.textures)
                 };
 
                 if (isTouchDevice()) document.body.classList.add('touch');
@@ -139,7 +149,10 @@ export default class BrawlerRenderer extends Renderer {
             sprite.x = obj.position.x * this.pixelsPerSpaceUnit;
             sprite.y = this.viewportHeight - (obj.position.y + obj.height) * this.pixelsPerSpaceUnit;
             if (obj instanceof Fighter) {
-                sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
+                if (obj.isDino)
+                    sprite.fighterSprite.textures = this.textures['DINO_' + Fighter.ACTIONS[obj.action]];
+                else
+                    sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
                 let textureCount = sprite.fighterSprite.textures.length;
                 let image = Math.floor((100 - obj.progress)/100 * textureCount);
                 sprite.fighterSprite.gotoAndStop(image);
