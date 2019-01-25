@@ -13,7 +13,7 @@ export default class BrawlerGameEngine extends GameEngine {
         Object.assign(this, {
             dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
-            walkSpeed: 0.6, killDistance: 20, dinoKillDistance: 12
+            walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 10
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
