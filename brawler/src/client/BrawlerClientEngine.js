@@ -15,6 +15,11 @@ export default class BrawlerClientEngine extends ClientEngine {
             }
         });
 
+        // remove instructions
+        setTimeout(() => {
+            document.querySelector('#instructions').classList.add('hidden');
+        }, 5000);
+
         // restart game
         document.querySelector('#tryAgain').addEventListener('click', () => {
             window.location.reload();

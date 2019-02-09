@@ -38,6 +38,7 @@
             border-radius: 4px;
             box-shadow: none;
             background-color: transparent;
+            text-align: center;
             color: black;
             outline: none;
             white-space: nowrap;
@@ -47,6 +48,12 @@
             opacity: 1;
             left: 90%;
             top: 5%;
+        }
+        #instructions {
+            position: absolute;
+            opacity: 1;
+            left: 50%;
+            top: 20%;
         }
         #tryAgain {
             position: absolute;
@@ -74,6 +81,7 @@
         <div class="pixiContainer"></div>
         <button id="tryAgain" class="messages" disabled>GAME OVER<br/>Try Again ?</button>
         <div id="killsStatus" class="messages">Kills: 0</div>
+        <div id="instructions" class="messages">ARROW KEYS = MOVE AROUND<br/>SPACE = FIGHT!</div>
         <script type="text/javascript" src="bundle.js"></script>
     </body>
 </html>

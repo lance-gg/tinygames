@@ -13,7 +13,7 @@ export default class BrawlerGameEngine extends GameEngine {
         Object.assign(this, {
             dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 2,
-            walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 10
+            walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 12
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
@@ -42,8 +42,9 @@ export default class BrawlerGameEngine extends GameEngine {
         let fighter = this.world.queryObject({ playerId: playerId, instanceType: Fighter });
         if (fighter) {
 
-            // if fighter is dying, ignore actions
-            if (fighter.action === Fighter.ACTIONS.indexOf('DIE'))
+            // if fighter is dying or fighting, ignore actions
+            if (fighter.action === Fighter.ACTIONS.indexOf('DIE') ||
+                fighter.action === Fighter.ACTIONS.indexOf('FIGHT'))
                 return;
 
             let nextAction = null;
