@@ -31,6 +31,11 @@ export default class Fighter extends DynamicObject {
         if (renderer) renderer.removeFighter(this);
     }
 
+    // two dino's don't collide
+    collidesWith(other) {
+        return !(this.isDino && other.isDino);
+    }
+
     toString() {
         const fighterType = this.isDino?'Dino':'Fighter';
         return `${fighterType}::${super.toString()} direction=${this.direction} action=${this.action} progress=${this.progress}`;
