@@ -8,7 +8,10 @@ export default class WiggleGameEngine extends GameEngine {
 
     constructor(options) {
         super(options);
-        this.physicsEngine = new SimplePhysicsEngine({ gameEngine: this });
+        this.physicsEngine = new SimplePhysicsEngine({
+            gameEngine: this,
+            collisions: { autoResolve: false }
+        });
         this.on('preStep', this.moveAll.bind(this));
 
         // game variables
