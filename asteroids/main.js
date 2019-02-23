@@ -1,7 +1,7 @@
 import path from 'path';
 import express from 'express';
 import socketIO from 'socket.io';
-import Trace from 'lance/lib/Trace';
+import { Lib } from 'lance-gg/core';
 import AsteroidsServerEngine from './src/server/AsteroidsServerEngine';
 import AsteroidsGameEngine from './src/common/AsteroidsGameEngine';
 
@@ -16,7 +16,7 @@ let requestHandler = server.listen(PORT, () => console.log(`Listening on ${ PORT
 const io = socketIO(requestHandler);
 
 // Game Instances
-const gameEngine = new AsteroidsGameEngine({ traceLevel: Trace.TRACE_NONE });
+const gameEngine = new AsteroidsGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
 const serverEngine = new AsteroidsServerEngine(io, gameEngine, { debug: {}, updateRate: 6 });
 
 // start the game
