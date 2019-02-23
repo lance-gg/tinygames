@@ -1,5 +1,4 @@
-import PhysicalObject2D from 'lance/serialize/PhysicalObject2D';
-import BaseTypes from 'lance/serialize/BaseTypes';
+import { PhysicalObject2D, BaseTypes } from 'lance-gg/core';
 
 let game = null;
 let p2 = null;

@@ -1,6 +1,5 @@
-import ClientEngine from 'lance/ClientEngine';
+import { ClientEngine, KeyboardControls } from 'lance-gg/core';
 import AsteroidsRenderer from '../client/AsteroidsRenderer';
-import KeyboardControls from 'lance/controls/KeyboardControls';
 
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;

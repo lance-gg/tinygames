@@ -1,4 +1,4 @@
-import PhysicalObject2D from 'lance/serialize/PhysicalObject2D';
+import { PhysicalObject2D } from 'lance-gg/core';
 
 let game = null;
 let p2 = null;

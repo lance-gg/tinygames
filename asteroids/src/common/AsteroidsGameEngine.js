@@ -1,7 +1,5 @@
-import GameEngine from 'lance/GameEngine';
+import { GameEngine, P2PhysicsEngine, TwoVector } from 'lance-gg/core';
 import AsteroidsRenderer from '../client/AsteroidsRenderer';
-import P2PhysicsEngine from 'lance/physics/P2PhysicsEngine';
-import TwoVector from 'lance/serialize/TwoVector';
 import Asteroid from './Asteroid';
 import Bullet from './Bullet';
 import Ship from './Ship';
