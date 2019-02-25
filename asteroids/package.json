@@ -7,6 +7,7 @@
   "description": "An HTML5 multiplayer asteroids game based on Lance and P2",
   "main": "main.js",
   "dependencies": {
+    "@babel/core": "^7.3.3",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-module-resolver": "^2.7.1",

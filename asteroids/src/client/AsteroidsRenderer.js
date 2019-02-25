@@ -1,4 +1,4 @@
-import Renderer from 'lance/render/Renderer';
+import { Renderer } from 'lance-gg/core';
 import Asteroid from './../common/Asteroid';
 import Bullet from './../common/Bullet';
 import Ship from './../common/Ship';
