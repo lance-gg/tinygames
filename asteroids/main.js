@@ -1,7 +1,7 @@
 import path from 'path';
 import express from 'express';
 import socketIO from 'socket.io';
-import { Lib } from 'lance-gg/core';
+import { Lib } from 'lance-gg';
 import AsteroidsServerEngine from './src/server/AsteroidsServerEngine';
 import AsteroidsGameEngine from './src/common/AsteroidsGameEngine';
 

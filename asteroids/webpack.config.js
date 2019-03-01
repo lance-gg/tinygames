@@ -32,7 +32,7 @@ module.exports = {
                     plugins: [
                         ['module-resolver', {
                             'alias': {
-                                'lance-gg': './node_modules/lance-gg/dist/client'
+                                'lance-gg': './node_modules/lance-gg/dist/client/lance-gg'
                             }
                         }]
                     ]

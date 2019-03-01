@@ -6,7 +6,7 @@
     ["module-resolver", {
       "root": ["./src"],
       "alias": {
-        "lance-gg": "./node_modules/lance-gg/dist"
+        "lance-gg": "./node_modules/lance-gg/dist/server/lance-gg"
       }
     }]
   ]

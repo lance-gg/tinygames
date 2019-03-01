@@ -1,5 +1,4 @@
-import { GameEngine, P2PhysicsEngine, TwoVector } from 'lance-gg/core';
-import AsteroidsRenderer from '../client/AsteroidsRenderer';
+import { GameEngine, P2PhysicsEngine, TwoVector } from 'lance-gg';
 import Asteroid from './Asteroid';
 import Bullet from './Bullet';
 import Ship from './Ship';
@@ -50,41 +49,8 @@ export default class AsteroidsGameEngine extends GameEngine {
             if (inputData.input === 'up') playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
             else if (inputData.input === 'right') playerShip.physicsObj.angle -= this.shipTurnSpeed;
             else if (inputData.input === 'left') playerShip.physicsObj.angle += this.shipTurnSpeed;
-            else if (inputData.input === 'space') this.shoot(playerShip, inputData.messageIndex);
+            else if (inputData.input === 'space') this.emit('shoot', playerShip);
             playerShip.refreshFromPhysics();
-        }
-    }
-
-    // shooting creates a bullet
-    shoot(player, inputId) {
-
-        // don't create bullets on client side
-        if (AsteroidsRenderer.getInstance()) { return; }
-
-        let radius = player.physicsObj.shapes[0].radius;
-        let angle = player.physicsObj.angle + Math.PI / 2;
-        let bullet = new Bullet(this, {}, {
-            mass: 0.05,
-            position: new TwoVector(
-                radius * Math.cos(angle) + player.physicsObj.position[0],
-                radius * Math.sin(angle) + player.physicsObj.position[1]
-            ),
-            velocity: new TwoVector(
-                2 * Math.cos(angle) + player.physicsObj.velocity[0],
-                2 * Math.sin(angle) + player.physicsObj.velocity[1]
-            ),
-            angularVelocity: 0
-        });
-        bullet.inputId = inputId;
-        let obj = this.addObjectToWorld(bullet);
-        this.timer.add(this.bulletLifeTime, this.destroyBullet, this, [obj.id]);
-    }
-
-    // destroy the missile if it still exists
-    destroyBullet(bulletId) {
-        if (this.world.objects[bulletId]) {
-            this.trace.trace(() => `bullet[${bulletId}] destroyed`);
-            this.removeObjectFromWorld(bulletId);
         }
     }
 

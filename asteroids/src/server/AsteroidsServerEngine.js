@@ -1,4 +1,4 @@
-import { ServerEngine } from 'lance-gg/core';
+import { ServerEngine, TwoVector } from 'lance-gg';
 import Asteroid from '../common/Asteroid';
 import Bullet from '../common/Bullet';
 import Ship from '../common/Ship';
@@ -8,6 +8,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
+        gameEngine.on('shoot', this.shoot.bind(this));
     }
 
     start() {
@@ -37,6 +38,35 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.gameEngine.addAsteroids();
+    }
+
+    // shooting creates a bullet
+    shoot(player) {
+
+        let radius = player.physicsObj.shapes[0].radius;
+        let angle = player.physicsObj.angle + Math.PI / 2;
+        let bullet = new Bullet(this.gameEngine, {}, {
+            mass: 0.05,
+            position: new TwoVector(
+                radius * Math.cos(angle) + player.physicsObj.position[0],
+                radius * Math.sin(angle) + player.physicsObj.position[1]
+            ),
+            velocity: new TwoVector(
+                2 * Math.cos(angle) + player.physicsObj.velocity[0],
+                2 * Math.sin(angle) + player.physicsObj.velocity[1]
+            ),
+            angularVelocity: 0
+        });
+        let obj = this.gameEngine.addObjectToWorld(bullet);
+        this.gameEngine.timer.add(this.gameEngine.bulletLifeTime, this.destroyBullet, this, [obj.id]);
+    }
+
+    // destroy the missile if it still exists
+    destroyBullet(bulletId) {
+        if (this.gameEngine.world.objects[bulletId]) {
+            this.gameEngine.trace.trace(() => `bullet[${bulletId}] destroyed`);
+            this.gameEngine.removeObjectFromWorld(bulletId);
+        }
     }
 
     kill(ship) {

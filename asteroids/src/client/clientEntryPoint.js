@@ -1,5 +1,5 @@
 import querystring from 'query-string';
-import { Lib } from 'lance-gg/core.js';
+import { Lib } from 'lance-gg';
 import AsteroidsClientEngine from '../client/AsteroidsClientEngine';
 import AsteroidsGameEngine from '../common/AsteroidsGameEngine';
 const qsOptions = querystring.parse(location.search);
