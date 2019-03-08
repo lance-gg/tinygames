@@ -7,11 +7,6 @@ module.exports = {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js'
     },
-    resolve: {
-        alias: {
-            'lance-gg': './node_modules/lance-gg/dist/client/'
-        }
-    },
     module: {
         loaders: [
             { test: /\.css$/, loader: 'style!css' },
@@ -28,14 +23,7 @@ module.exports = {
                 ],
                 loader: 'babel-loader',
                 query: {
-                    presets: ['babel-preset-env'].map(require.resolve),
-                    plugins: [
-                        ['module-resolver', {
-                            'alias': {
-                                'lance-gg': './node_modules/lance-gg/dist/client/lance-gg'
-                            }
-                        }]
-                    ]
+                    presets: ['@babel/preset-env'].map(require.resolve)
                 }
             }
         ]
