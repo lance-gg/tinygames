@@ -6,3 +6,4 @@ yarn-error.log
 npm-debug.log
 *.trace
 **/*.png
+stats.json

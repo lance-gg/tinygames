@@ -24,11 +24,10 @@
   },
   "scripts": {
     "start": "node dist-server/main.js",
-    "start-debug": "node dist-server/main.js --inspect-brk",
+    "start-debug": "node --inspect-brk dist-server/main.js",
     "start-dev": "nodemon dist-server/main.js",
-    "postinstall": "webpack && babel src --out-dir dist-server",
-    "build": "webpack && babel src --out-dir dist-server",
-    "build-server": "babel src --out-dir dist-server",
+    "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
+    "build": "webpack && babel src --source-maps --out-dir dist-server",
     "stats": "webpack --env production --profile --json > stats.json"
   },
   "repository": {
