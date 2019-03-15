@@ -1,4 +1,4 @@
-import ServerEngine from 'lance/ServerEngine';
+import { ServerEngine } from 'lance-gg';
 import Fighter from '../common/Fighter';
 
 let game = null;

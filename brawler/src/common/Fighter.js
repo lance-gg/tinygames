@@ -1,6 +1,4 @@
-import BaseTypes from 'lance/serialize/BaseTypes';
-import DynamicObject from 'lance/serialize/DynamicObject';
-import Renderer from 'lance/render/Renderer';
+import { BaseTypes, DynamicObject, Renderer } from 'lance-gg';
 
 export default class Fighter extends DynamicObject {
 
@@ -22,13 +20,13 @@ export default class Fighter extends DynamicObject {
     }
 
     onAddToWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer) renderer.addFighter(this);
+        if (Renderer)
+            Renderer.getInstance().addFighter(this);
     }
 
     onRemoveFromWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer) renderer.removeFighter(this);
+        if (Renderer)
+            Renderer.getInstance().removeFighter(this);
     }
 
     // two dino's don't collide

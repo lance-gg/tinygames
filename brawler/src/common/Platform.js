@@ -1,5 +1,4 @@
-import DynamicObject from 'lance/serialize/DynamicObject';
-import Renderer from 'lance/render/Renderer';
+import { DynamicObject, Renderer } from 'lance-gg';
 
 export default class Platform extends DynamicObject {
 
@@ -8,8 +7,8 @@ export default class Platform extends DynamicObject {
     }
 
     onAddToWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer) renderer.addPlatform(this);
+        if (Renderer)
+            Renderer.getInstance().addPlatform(this);
     }
 
     syncTo(other) {

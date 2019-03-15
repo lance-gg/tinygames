@@ -1,6 +1,5 @@
-import ClientEngine from 'lance/ClientEngine';
+import { ClientEngine, KeyboardControls } from 'lance-gg';
 import BrawlerRenderer from '../client/BrawlerRenderer';
-import KeyboardControls from 'lance/controls/KeyboardControls';
 
 export default class BrawlerClientEngine extends ClientEngine {
 

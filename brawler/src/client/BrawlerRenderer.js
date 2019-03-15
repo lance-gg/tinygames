@@ -1,4 +1,4 @@
-import Renderer from 'lance/render/Renderer';
+import { Renderer } from 'lance-gg';
 import Fighter from './../common/Fighter';
 
 let PIXI = require('pixi.js');
