@@ -1,9 +1,4 @@
-import GameEngine from 'lance/GameEngine';
-import BaseTypes from 'lance/serialize/BaseTypes';
-import TwoVector from 'lance/serialize/TwoVector';
-import DynamicObject from 'lance/serialize/DynamicObject';
-import KeyboardControls from 'lance/controls/KeyboardControls';
-import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
+import { GameEngine, BaseTypes, TwoVector, DynamicObject, KeyboardControls, SimplePhysicsEngine } from 'lance-gg';
 
 const PADDING = 20;
 const WIDTH = 400;
@@ -139,8 +134,8 @@ export default class Game extends GameEngine {
     //
     serverSideInit() {
         // create the paddles and the ball
-        this.addObjectToWorld(new Paddle(this, null, { position: new TwoVector(PADDING, 0) }));
-        this.addObjectToWorld(new Paddle(this, null, { position: new TwoVector(WIDTH - PADDING, 0) }));
+        this.addObjectToWorld(new Paddle(this, null, { playerID: 0, position: new TwoVector(PADDING, 0) }));
+        this.addObjectToWorld(new Paddle(this, null, { playerID: 1, position: new TwoVector(WIDTH - PADDING, 0) }));
         this.addObjectToWorld(new Ball(this, null, {
             position: new TwoVector(WIDTH /2, HEIGHT / 2),
             velocity: new TwoVector(2, 2)

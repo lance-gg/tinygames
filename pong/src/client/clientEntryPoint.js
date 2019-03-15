@@ -1,14 +1,12 @@
 import querystring from 'query-string';
 import Game from '../common/Game';
-import Trace from 'lance/lib/Trace';
-import Renderer from 'lance/render/Renderer';
-import ClientEngine from 'lance/ClientEngine';
+import { Lib, Renderer, ClientEngine } from 'lance-gg';
 const qsOptions = querystring.parse(location.search);
 
 // default options, overwritten by query-string options
 // is sent to both game engine and client engine
 const defaults = {
-    traceLevel: Trace.TRACE_NONE,
+    traceLevel: Lib.Trace.TRACE_NONE,
     delayInputCount: 3,
     scheduler: 'render-schedule',
     syncOptions: {
