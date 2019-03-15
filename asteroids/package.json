@@ -10,7 +10,7 @@
     "@babel/node": "^7.2.2",
     "babel-loader": "^8.0.5",
     "express": "^4.14.0",
-    "lance-gg": "file:../../lance",
+    "lance-gg": "^4.0.0",
     "query-string": "^4.2.3",
     "socket.io": "^2.1.1",
     "webpack": "^3.8.1"
@@ -28,7 +28,8 @@
     "start-dev": "nodemon dist-server/main.js",
     "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
     "build": "webpack && babel src --source-maps --out-dir dist-server",
-    "stats": "webpack --env production --profile --json > stats.json"
+    "stats": "webpack --env production --profile --json > stats.json",
+    "dev": "webpack --watch"
   },
   "repository": {
     "type": "git",
