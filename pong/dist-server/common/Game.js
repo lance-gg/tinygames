@@ -41,9 +41,13 @@ function (_DynamicObject) {
   _inherits(Paddle, _DynamicObject);
 
   function Paddle(gameEngine, options, props) {
+    var _this;
+
     _classCallCheck(this, Paddle);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Paddle).call(this, gameEngine, options, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Paddle).call(this, gameEngine, options, props));
+    _this.health = 0;
+    return _this;
   }
 
   _createClass(Paddle, [{
@@ -105,30 +109,30 @@ function (_GameEngine) {
   _inherits(Game, _GameEngine);
 
   function Game(options) {
-    var _this;
+    var _this2;
 
     _classCallCheck(this, Game);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Game).call(this, options));
-    _this.physicsEngine = new _lanceGg.SimplePhysicsEngine({
-      gameEngine: _assertThisInitialized(_this)
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Game).call(this, options));
+    _this2.physicsEngine = new _lanceGg.SimplePhysicsEngine({
+      gameEngine: _assertThisInitialized(_this2)
     }); // common code
 
-    _this.on('postStep', _this.gameLogic.bind(_assertThisInitialized(_this))); // server-only code
+    _this2.on('postStep', _this2.gameLogic.bind(_assertThisInitialized(_this2))); // server-only code
 
 
-    _this.on('server__init', _this.serverSideInit.bind(_assertThisInitialized(_this)));
+    _this2.on('server__init', _this2.serverSideInit.bind(_assertThisInitialized(_this2)));
 
-    _this.on('server__playerJoined', _this.serverSidePlayerJoined.bind(_assertThisInitialized(_this)));
+    _this2.on('server__playerJoined', _this2.serverSidePlayerJoined.bind(_assertThisInitialized(_this2)));
 
-    _this.on('server__playerDisconnected', _this.serverSidePlayerDisconnected.bind(_assertThisInitialized(_this))); // client-only code
+    _this2.on('server__playerDisconnected', _this2.serverSidePlayerDisconnected.bind(_assertThisInitialized(_this2))); // client-only code
 
 
-    _this.on('client__rendererReady', _this.clientSideInit.bind(_assertThisInitialized(_this)));
+    _this2.on('client__rendererReady', _this2.clientSideInit.bind(_assertThisInitialized(_this2)));
 
-    _this.on('client__draw', _this.clientSideDraw.bind(_assertThisInitialized(_this)));
+    _this2.on('client__draw', _this2.clientSideDraw.bind(_assertThisInitialized(_this2)));
 
-    return _this;
+    return _this2;
   }
 
   _createClass(Game, [{
@@ -212,7 +216,7 @@ function (_GameEngine) {
         position: new _lanceGg.TwoVector(PADDING, 0)
       }));
       this.addObjectToWorld(new Paddle(this, null, {
-        playerID: 1,
+        playerID: 0,
         position: new _lanceGg.TwoVector(WIDTH - PADDING, 0)
       }));
       this.addObjectToWorld(new Ball(this, null, {

@@ -11,6 +11,7 @@ class Paddle extends DynamicObject {
 
     constructor(gameEngine, options, props) {
         super(gameEngine, options, props);
+        this.health = 0;
     }
 
     static get netScheme() {
@@ -135,7 +136,7 @@ export default class Game extends GameEngine {
     serverSideInit() {
         // create the paddles and the ball
         this.addObjectToWorld(new Paddle(this, null, { playerID: 0, position: new TwoVector(PADDING, 0) }));
-        this.addObjectToWorld(new Paddle(this, null, { playerID: 1, position: new TwoVector(WIDTH - PADDING, 0) }));
+        this.addObjectToWorld(new Paddle(this, null, { playerID: 0, position: new TwoVector(WIDTH - PADDING, 0) }));
         this.addObjectToWorld(new Ball(this, null, {
             position: new TwoVector(WIDTH /2, HEIGHT / 2),
             velocity: new TwoVector(2, 2)
