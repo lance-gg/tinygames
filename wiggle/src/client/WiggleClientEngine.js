@@ -1,4 +1,4 @@
-import ClientEngine from 'lance/ClientEngine';
+import { ClientEngine } from 'lance-gg';
 import WiggleRenderer from '../client/WiggleRenderer';
 
 export default class WiggleClientEngine extends ClientEngine {

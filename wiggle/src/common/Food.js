@@ -1,4 +1,4 @@
-import DynamicObject from 'lance/serialize/DynamicObject';
+import { DynamicObject } from 'lance-gg';
 
 export default class Food extends DynamicObject {
 

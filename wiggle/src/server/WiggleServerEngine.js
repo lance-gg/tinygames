@@ -1,4 +1,4 @@
-import ServerEngine from 'lance/ServerEngine';
+import { ServerEngine } from 'lance-gg';
 import Wiggle from '../common/Wiggle';
 import Food from '../common/Food';
 

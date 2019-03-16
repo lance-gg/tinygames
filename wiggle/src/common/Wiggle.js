@@ -1,5 +1,4 @@
-import BaseTypes from 'lance/serialize/BaseTypes';
-import DynamicObject from 'lance/serialize/DynamicObject';
+import { BaseTypes, DynamicObject } from 'lance-gg';
 
 export default class Wiggle extends DynamicObject {
 

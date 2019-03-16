@@ -1,5 +1,5 @@
 import querystring from 'query-string';
-import Trace from 'lance/lib/Trace';
+import { Lib } from 'lance-gg';
 import WiggleClientEngine from '../client/WiggleClientEngine';
 import WiggleGameEngine from '../common/WiggleGameEngine';
 const qsOptions = querystring.parse(location.search);
@@ -7,7 +7,7 @@ const qsOptions = querystring.parse(location.search);
 // default options, overwritten by query-string options
 // is sent to both game engine and client engine
 const defaults = {
-    traceLevel: Trace.TRACE_NONE,
+    traceLevel: Lib.Trace.TRACE_NONE,
     delayInputCount: 5,
     scheduler: 'render-schedule',
     syncOptions: {

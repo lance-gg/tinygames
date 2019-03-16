@@ -1,5 +1,4 @@
-import Renderer from 'lance/render/Renderer';
-import TwoVector from 'lance/serialize/TwoVector';
+import { Renderer, TwoVector } from 'lance-gg';
 import Wiggle from '../common/Wiggle';
 import Food from '../common/Food';
 

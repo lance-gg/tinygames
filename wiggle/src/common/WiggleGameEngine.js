@@ -1,6 +1,4 @@
-import GameEngine from 'lance/GameEngine';
-import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
-import TwoVector from 'lance/serialize/TwoVector';
+import { GameEngine, SimplePhysicsEngine, TwoVector } from 'lance-gg';
 import Wiggle from './Wiggle';
 import Food from './Food';
 
