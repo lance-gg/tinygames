@@ -245,9 +245,9 @@ function (_GameEngine) {
         instanceType: Paddle
       });
 
-      if (paddles[0].playerId === ev.id) {
+      if (paddles[0].playerId === ev.playerId) {
         paddles[0].playerId = 0;
-      } else if (paddles[1].playerId === ev.id) {
+      } else if (paddles[1].playerId === ev.playerId) {
         paddles[1].playerId = 0;
       }
     } //
