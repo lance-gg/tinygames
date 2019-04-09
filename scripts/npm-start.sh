@@ -5,7 +5,8 @@ cd /var/games/tinygames
 # arg 1: game name
 # arg 2: port name
 run-game () {
-    pkill -f $1 || true
+    pgrep node | xargs pwdx | grep $1 |awk '{print $1}' | sed s/://g > /tmp/killpid
+    kill -9 `cat /tmp/killpid` || true
     cd /var/games/tinygames/$1
     PORT=$2 npm start >$1.out 2>$1.err &
 }
