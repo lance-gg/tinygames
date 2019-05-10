@@ -16,7 +16,12 @@ export default class BrawlerRenderer extends Renderer {
     get ASSETPATHS() {
         return {
             background: 'assets/deserttileset/png/BG.png',
-            platform: 'assets/deserttileset/png/Tile/2.png',
+            groundLeft: 'assets/deserttileset/png/Tile/1.png',
+            groundMiddle: 'assets/deserttileset/png/Tile/2.png',
+            groundRight: 'assets/deserttileset/png/Tile/3.png',
+            platformLeft: 'assets/deserttileset/png/Tile/14.png',
+            platformMiddle: 'assets/deserttileset/png/Tile/15.png',
+            platformRight: 'assets/deserttileset/png/Tile/16.png',
             idleSheet: 'assets/adventure_girl/png/Idle.json',
             jumpSheet: 'assets/adventure_girl/png/Jump.json',
             meleeSheet: 'assets/adventure_girl/png/Melee.json',
@@ -102,15 +107,48 @@ export default class BrawlerRenderer extends Renderer {
         document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
+    platformTextures(obj) {
+        if (obj.y === 0) {
+            return {
+                left: PIXI.loader.resources.groundLeft.texture,
+                middle: PIXI.loader.resources.groundMiddle.texture,
+                right: PIXI.loader.resources.groundRight.texture
+            };
+        }
+        return {
+            left: PIXI.loader.resources.platformLeft.texture,
+            middle: PIXI.loader.resources.platformMiddle.texture,
+            right: PIXI.loader.resources.platformRight.texture
+        };
+    }
+
     // add a single platform game object
     addPlatform(obj) {
+
+        // create sprites for platform edges, and middle-section
+        let textures = this.platformTextures(obj);
+        let edgeWidth = game.platformUnit;
+        let middleWidth = obj.width - (2 * edgeWidth);
         let sprite = new PIXI.Container();
-        sprite.platformSprite = new PIXI.extras.TilingSprite(
-            PIXI.loader.resources.platform.texture,
-            obj.width * this.pixelsPerSpaceUnit,
-            obj.height * this.pixelsPerSpaceUnit
-        );
-        sprite.addChild(sprite.platformSprite);
+        let leftEdge = new PIXI.Sprite(textures.left);
+        let rightEdge = new PIXI.Sprite(textures.right);
+        let middle = new PIXI.extras.TilingSprite(textures.middle);
+        let middleHeight = edgeWidth / middle.texture.width * middle.texture.height;
+
+        // scale the sprites and tile, set the middle-section width
+        let scale = edgeWidth * this.pixelsPerSpaceUnit / leftEdge.width;
+        leftEdge.scale.set(scale, scale);
+        rightEdge.scale.set(scale, scale);
+        middle.tileScale.set(scale, scale);
+        middle.width = middleWidth * this.pixelsPerSpaceUnit;
+        middle.height = middleHeight * this.pixelsPerSpaceUnit;
+
+        // position the sprites inside container
+        middle.x = edgeWidth * this.pixelsPerSpaceUnit;
+        rightEdge.x = middle.x + middleWidth * this.pixelsPerSpaceUnit;
+        sprite.addChild(leftEdge);
+        sprite.addChild(middle);
+        sprite.addChild(rightEdge);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);

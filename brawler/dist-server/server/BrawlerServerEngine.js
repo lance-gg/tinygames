@@ -60,28 +60,28 @@ function (_ServerEngine) {
       game.addPlatform({
         x: 0,
         y: 0,
-        width: 160
+        width: game.platformUnit * 20
       }); // add platforms
 
       game.addPlatform({
         x: 10,
-        y: 25,
-        width: 20
+        y: 20,
+        width: game.platformUnit * 3
       });
       game.addPlatform({
         x: 50,
-        y: 35,
-        width: 20
+        y: 30,
+        width: game.platformUnit * 3
       });
       game.addPlatform({
         x: 90,
-        y: 35,
-        width: 20
+        y: 30,
+        width: game.platformUnit * 3
       });
       game.addPlatform({
         x: 130,
-        y: 25,
-        width: 20
+        y: 20,
+        width: game.platformUnit * 3
       }); // add dinos
 
       for (var i = 0; i < game.dinoCount; i++) {

@@ -15,13 +15,13 @@ export default class BrawlerServerEngine extends ServerEngine {
         super.start();
 
         // add floor
-        game.addPlatform({ x: 0, y: 0, width: 160 });
+        game.addPlatform({ x: 0, y: 0, width: game.platformUnit * 20 });
 
         // add platforms
-        game.addPlatform({ x: 10, y: 25, width: 20 });
-        game.addPlatform({ x: 50, y: 35, width: 20 });
-        game.addPlatform({ x: 90, y: 35, width: 20 });
-        game.addPlatform({ x: 130, y: 25, width: 20 });
+        game.addPlatform({ x: 10, y: 20, width: game.platformUnit * 3 });
+        game.addPlatform({ x: 50, y: 30, width: game.platformUnit * 3 });
+        game.addPlatform({ x: 90, y: 30, width: game.platformUnit * 3 });
+        game.addPlatform({ x: 130, y: 20, width: game.platformUnit * 3 });
 
         // add dinos
         for (let i = 0; i < game.dinoCount; i++) {

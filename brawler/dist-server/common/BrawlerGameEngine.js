@@ -53,10 +53,11 @@ function (_GameEngine) {
       spaceHeight: 90,
       fighterWidth: 10,
       fighterHeight: 12,
-      jumpSpeed: 2,
+      jumpSpeed: 1.5,
       walkSpeed: 0.6,
       killDistance: 18,
-      dinoKillDistance: 12
+      dinoKillDistance: 12,
+      platformUnit: 8
     });
     _this.physicsEngine = new _lanceGg.SimplePhysicsEngine({
       gravity: new _lanceGg.TwoVector(0, -0.05),
