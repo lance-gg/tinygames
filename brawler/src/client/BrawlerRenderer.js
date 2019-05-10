@@ -22,6 +22,11 @@ export default class BrawlerRenderer extends Renderer {
             platformLeft: 'assets/deserttileset/png/Tile/14.png',
             platformMiddle: 'assets/deserttileset/png/Tile/15.png',
             platformRight: 'assets/deserttileset/png/Tile/16.png',
+            desertStuff_0: 'assets/deserttileset/png/Objects/Bush (1).png',
+            desertStuff_1: 'assets/deserttileset/png/Objects/Tree.png',
+            desertStuff_2: 'assets/deserttileset/png/Objects/Cactus (1).png',
+            desertStuff_3: 'assets/deserttileset/png/Objects/Stone.png',
+            desertStuff_4: 'assets/deserttileset/png/Objects/Skeleton.png',
             idleSheet: 'assets/adventure_girl/png/Idle.json',
             jumpSheet: 'assets/adventure_girl/png/Jump.json',
             meleeSheet: 'assets/adventure_girl/png/Melee.json',
@@ -122,6 +127,10 @@ export default class BrawlerRenderer extends Renderer {
         };
     }
 
+    randomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
     // add a single platform game object
     addPlatform(obj) {
 
@@ -149,6 +158,17 @@ export default class BrawlerRenderer extends Renderer {
         sprite.addChild(leftEdge);
         sprite.addChild(middle);
         sprite.addChild(rightEdge);
+
+        // add desert stuff
+        let stuffCount = Math.max(1, obj.width / game.platformUnit / 4);
+        for (let i = 0; i < stuffCount; i++) {
+            let stuff = PIXI.loader.resources['desertStuff_' + this.randomInt(5)];
+            let stuffSprite = new PIXI.Sprite(stuff.texture);
+            stuffSprite.scale.set(scale, scale);
+            stuffSprite.x = this.randomInt(rightEdge.x);
+            stuffSprite.y = 0 - (stuffSprite.height);
+            sprite.addChild(stuffSprite);
+        }
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
         this.stage.addChild(sprite);
