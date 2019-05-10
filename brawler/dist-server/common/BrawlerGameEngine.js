@@ -57,7 +57,8 @@ function (_GameEngine) {
       walkSpeed: 0.6,
       killDistance: 18,
       dinoKillDistance: 12,
-      platformUnit: 8
+      platformUnit: 8,
+      platformHeight: 5
     });
     _this.physicsEngine = new _lanceGg.SimplePhysicsEngine({
       gravity: new _lanceGg.TwoVector(0, -0.05),
@@ -184,7 +185,7 @@ function (_GameEngine) {
         position: new _lanceGg.TwoVector(desc.x, desc.y)
       });
       p.width = desc.width;
-      p.height = 10;
+      p.height = this.platformHeight;
       p.isStatic = 1;
       this.addObjectToWorld(p);
       return p;

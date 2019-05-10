@@ -12,7 +12,7 @@ export default class BrawlerGameEngine extends GameEngine {
             dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
             fighterWidth: 10, fighterHeight: 12, jumpSpeed: 1.5,
             walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 12,
-            platformUnit: 8
+            platformUnit: 8, platformHeight: 5
         });
 
         this.physicsEngine = new SimplePhysicsEngine({
@@ -106,7 +106,7 @@ export default class BrawlerGameEngine extends GameEngine {
     addPlatform(desc) {
         let p = new Platform(this, null, { playerId: 0, position: new TwoVector(desc.x, desc.y) });
         p.width = desc.width;
-        p.height = 10;
+        p.height = this.platformHeight;
         p.isStatic = 1;
         this.addObjectToWorld(p);
         return p;
