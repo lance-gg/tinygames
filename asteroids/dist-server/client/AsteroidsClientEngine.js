@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
 var _AsteroidsRenderer = _interopRequireDefault(require("../client/AsteroidsRenderer"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -43,7 +43,7 @@ function (_ClientEngine) {
 
     _classCallCheck(this, AsteroidsClientEngine);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsClientEngine).call(this, gameEngine, options, _AsteroidsRenderer.default)); //  Game input
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsClientEngine).call(this, gameEngine, options, _AsteroidsRenderer["default"])); //  Game input
 
     if (isTouchDevice()) {
       document.querySelector('#instructionsMobile').classList.remove('hidden');
@@ -107,8 +107,8 @@ function (_ClientEngine) {
         steerValue = Math.max(-1, Math.min(1, gamma / gammaTiltThreshold)) * (flip ? -1 : 1);
       }
 
-      this.actions.delete('left');
-      this.actions.delete('right');
+      this.actions["delete"]('left');
+      this.actions["delete"]('right');
       if (steerValue < -steerThreshold) this.actions.add('left');else if (steerValue > steerThreshold) this.actions.add('right');
     } // our pre-step is to process inputs that are "currently pressed" during the game step
 
@@ -129,7 +129,7 @@ function (_ClientEngine) {
   return AsteroidsClientEngine;
 }(_lanceGg.ClientEngine);
 
-exports.default = AsteroidsClientEngine;
+exports["default"] = AsteroidsClientEngine;
 
 function isTouchDevice() {
   return 'ontouchstart' in window || navigator.maxTouchPoints;

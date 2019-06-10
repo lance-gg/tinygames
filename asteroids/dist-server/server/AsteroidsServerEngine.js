@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -13,7 +13,7 @@ var _Bullet = _interopRequireDefault(require("../common/Bullet"));
 
 var _Ship = _interopRequireDefault(require("../common/Ship"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -79,13 +79,13 @@ function (_ServerEngine) {
       this.gameEngine.trace.trace(function () {
         return "collision and     B=".concat(B.toString());
       });
-      if (A instanceof _Bullet.default && B instanceof _Asteroid.default) this.gameEngine.explode(B, A);
-      if (B instanceof _Bullet.default && A instanceof _Asteroid.default) this.gameEngine.explode(A, B);
-      if (A instanceof _Ship.default && B instanceof _Asteroid.default) this.kill(A);
-      if (B instanceof _Ship.default && A instanceof _Asteroid.default) this.kill(B); // restart game
+      if (A instanceof _Bullet["default"] && B instanceof _Asteroid["default"]) this.gameEngine.explode(B, A);
+      if (B instanceof _Bullet["default"] && A instanceof _Asteroid["default"]) this.gameEngine.explode(A, B);
+      if (A instanceof _Ship["default"] && B instanceof _Asteroid["default"]) this.kill(A);
+      if (B instanceof _Ship["default"] && A instanceof _Asteroid["default"]) this.kill(B); // restart game
 
       if (this.gameEngine.world.queryObjects({
-        instanceType: _Asteroid.default
+        instanceType: _Asteroid["default"]
       }).length === 0) this.gameEngine.addAsteroids();
     } // shooting creates a bullet
 
@@ -94,7 +94,7 @@ function (_ServerEngine) {
     value: function shoot(player) {
       var radius = player.physicsObj.shapes[0].radius;
       var angle = player.physicsObj.angle + Math.PI / 2;
-      var bullet = new _Bullet.default(this.gameEngine, {}, {
+      var bullet = new _Bullet["default"](this.gameEngine, {}, {
         mass: 0.05,
         position: new _lanceGg.TwoVector(radius * Math.cos(angle) + player.physicsObj.position[0], radius * Math.sin(angle) + player.physicsObj.position[1]),
         velocity: new _lanceGg.TwoVector(2 * Math.cos(angle) + player.physicsObj.velocity[0], 2 * Math.sin(angle) + player.physicsObj.velocity[1]),
@@ -147,8 +147,8 @@ function (_ServerEngine) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -162,5 +162,5 @@ function (_ServerEngine) {
   return AsteroidsServerEngine;
 }(_lanceGg.ServerEngine);
 
-exports.default = AsteroidsServerEngine;
+exports["default"] = AsteroidsServerEngine;
 //# sourceMappingURL=AsteroidsServerEngine.js.map

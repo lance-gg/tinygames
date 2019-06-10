@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -13,7 +13,7 @@ var _Bullet = _interopRequireDefault(require("./Bullet"));
 
 var _Ship = _interopRequireDefault(require("./Ship"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -95,9 +95,9 @@ function (_GameEngine) {
   }, {
     key: "registerClasses",
     value: function registerClasses(serializer) {
-      serializer.registerClass(_Ship.default);
-      serializer.registerClass(_Asteroid.default);
-      serializer.registerClass(_Bullet.default);
+      serializer.registerClass(_Ship["default"]);
+      serializer.registerClass(_Asteroid["default"]);
+      serializer.registerClass(_Bullet["default"]);
     }
   }, {
     key: "processInput",
@@ -107,7 +107,7 @@ function (_GameEngine) {
 
       var playerShip = this.world.queryObject({
         playerId: playerId,
-        instanceType: _Ship.default
+        instanceType: _Ship["default"]
       });
 
       if (playerShip) {
@@ -125,7 +125,7 @@ function (_GameEngine) {
   }, {
     key: "addShip",
     value: function addShip(playerId) {
-      var s = new _Ship.default(this, {}, {
+      var s = new _Ship["default"](this, {}, {
         playerId: playerId,
         mass: 10,
         angularVelocity: 0,
@@ -145,7 +145,7 @@ function (_GameEngine) {
       var vy = this.rand() * this.maxAsteroidSpeed;
       var va = this.rand() * this.maxAsteroidSpeed; // Create asteroid Body
 
-      var a = new _Asteroid.default(this, {}, {
+      var a = new _Asteroid["default"](this, {}, {
         mass: 10,
         position: new _lanceGg.TwoVector(x, y),
         velocity: new _lanceGg.TwoVector(vx, vy),
@@ -174,7 +174,7 @@ function (_GameEngine) {
 
         var _loop = function _loop(i) {
           var angle = Math.PI / 2 * i + angleDisturb;
-          var subAsteroid = new _Asteroid.default(_this3, {}, {
+          var subAsteroid = new _Asteroid["default"](_this3, {}, {
             mass: 10,
             position: new _lanceGg.TwoVector(x + r * Math.cos(angle), y + r * Math.sin(angle)),
             velocity: new _lanceGg.TwoVector(_this3.rand(), _this3.rand())
@@ -198,5 +198,5 @@ function (_GameEngine) {
   return AsteroidsGameEngine;
 }(_lanceGg.GameEngine);
 
-exports.default = AsteroidsGameEngine;
+exports["default"] = AsteroidsGameEngine;
 //# sourceMappingURL=AsteroidsGameEngine.js.map

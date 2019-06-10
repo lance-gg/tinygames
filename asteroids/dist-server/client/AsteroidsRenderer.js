@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -13,7 +13,7 @@ var _Bullet = _interopRequireDefault(require("./../common/Bullet"));
 
 var _Ship = _interopRequireDefault(require("./../common/Ship"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -90,7 +90,7 @@ function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof _Ship.default) _this2.drawShip(obj.physicsObj);else if (obj instanceof _Bullet.default) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _Asteroid.default) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _Asteroid["default"]) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -183,5 +183,5 @@ function (_Renderer) {
   return AsteroidsRenderer;
 }(_lanceGg.Renderer);
 
-exports.default = AsteroidsRenderer;
+exports["default"] = AsteroidsRenderer;
 //# sourceMappingURL=AsteroidsRenderer.js.map

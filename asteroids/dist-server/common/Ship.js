@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -114,5 +114,5 @@ function (_PhysicalObject2D) {
   return Ship;
 }(_lanceGg.PhysicalObject2D);
 
-exports.default = Ship;
+exports["default"] = Ship;
 //# sourceMappingURL=Ship.js.map

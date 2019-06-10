@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -86,5 +86,5 @@ function (_PhysicalObject2D) {
   return Bullet;
 }(_lanceGg.PhysicalObject2D);
 
-exports.default = Bullet;
+exports["default"] = Bullet;
 //# sourceMappingURL=Bullet.js.map
