@@ -108,7 +108,14 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     onDOMLoaded() {
-        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
+        let options = {
+            width: this.viewportWidth,
+            height: this.viewportHeight,
+            antialias: true,
+            autoResize: true,
+            resolution: window.devicePixelRatio || 1
+        };
+        this.renderer = PIXI.autoDetectRenderer(options);
         document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
@@ -177,7 +184,7 @@ export default class BrawlerRenderer extends Renderer {
     // add a single fighter game object
     addFighter(obj) {
         let sprite = new PIXI.Container();
-        sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE);
+        sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE,PIXI.SCALE_MODES.NEAREST);
         this.fighterSpriteScale = obj.height * this.pixelsPerSpaceUnit / sprite.fighterSprite.height;
         sprite.fighterSprite.scale.set(this.fighterSpriteScale, this.fighterSpriteScale);
         sprite.fighterSprite.anchor.set(0.2, 0.0);

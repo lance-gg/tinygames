@@ -125,7 +125,14 @@ function (_Renderer) {
   }, {
     key: "onDOMLoaded",
     value: function onDOMLoaded() {
-      this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
+      var options = {
+        width: this.viewportWidth,
+        height: this.viewportHeight,
+        antialias: true,
+        autoResize: true,
+        resolution: window.devicePixelRatio || 1
+      };
+      this.renderer = PIXI.autoDetectRenderer(options);
       document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
   }, {
@@ -197,7 +204,8 @@ function (_Renderer) {
     key: "addFighter",
     value: function addFighter(obj) {
       var sprite = new PIXI.Container();
-      sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE);
+      sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE, PIXI.SCALE_MODES.NEAREST); // sprite.fighterSprite.mipmap = true;
+
       this.fighterSpriteScale = obj.height * this.pixelsPerSpaceUnit / sprite.fighterSprite.height;
       sprite.fighterSprite.scale.set(this.fighterSpriteScale, this.fighterSpriteScale);
       sprite.fighterSprite.anchor.set(0.2, 0.0);
