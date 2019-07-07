@@ -187,7 +187,7 @@ export default class BrawlerRenderer extends Renderer {
         sprite.fighterSprite = new PIXI.extras.AnimatedSprite(this.textures.IDLE,PIXI.SCALE_MODES.NEAREST);
         this.fighterSpriteScale = obj.height * this.pixelsPerSpaceUnit / sprite.fighterSprite.height;
         sprite.fighterSprite.scale.set(this.fighterSpriteScale, this.fighterSpriteScale);
-        sprite.fighterSprite.anchor.set(0.2, 0.0);
+        sprite.fighterSprite.anchor.set(0.25, 0.0);
         sprite.addChild(sprite.fighterSprite);
         this.sprites[obj.id] = sprite;
         sprite.position.set(obj.position.x, obj.position.y);
@@ -221,11 +221,11 @@ export default class BrawlerRenderer extends Renderer {
                     spriteOffsetY = -1;
                 }
                 let textureCount = sprite.fighterSprite.textures.length;
-                let image = Math.floor((100 - obj.progress)/100 * textureCount);
+                let image = Math.floor((99 - obj.progress)/100 * textureCount);
                 sprite.fighterSprite.gotoAndStop(image);
 
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);
-                sprite.fighterSprite.anchor.x = obj.direction==1?0.2:0.8;
+                sprite.fighterSprite.anchor.x = obj.direction==1?0.25:0.75;
 
                 if (obj.playerId === this.gameEngine.playerId)
                     document.getElementById('killsStatus').innerHTML = `kills: ${obj.kills}`;

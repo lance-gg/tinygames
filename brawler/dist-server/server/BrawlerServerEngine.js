@@ -106,7 +106,7 @@ function (_ServerEngine) {
       if (dx <= killDistance && dy <= killDistance) {
         f1.kills++;
         f2.action = _Fighter.default.ACTIONS.indexOf('DIE');
-        f2.progress = 100;
+        f2.progress = 99;
       }
     } // handle Dino state change
 
@@ -117,7 +117,7 @@ function (_ServerEngine) {
       if (f1.action === _Fighter.default.ACTIONS.indexOf('RUN')) f1.position.x += game.walkSpeed * f1.direction; // end-of-action handling
 
       if (f1.progress === 0) {
-        f1.progress = 100; // end of dying sequence
+        f1.progress = 99; // end of dying sequence
 
         if (f1.action === _Fighter.default.ACTIONS.indexOf('DIE')) {
           // Dino fighters come back to life
@@ -147,7 +147,7 @@ function (_ServerEngine) {
       if (!inputApplied && f1.action === _Fighter.default.ACTIONS.indexOf('RUN')) f1.action = _Fighter.default.ACTIONS.indexOf('IDLE'); // end-of-action handling
 
       if (f1.progress === 0) {
-        f1.progress = 100; // end of dying sequence
+        f1.progress = 99; // end of dying sequence
 
         if (f1.action === _Fighter.default.ACTIONS.indexOf('DIE')) {
           game.removeObjectFromWorld(f1);

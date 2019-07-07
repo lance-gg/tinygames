@@ -52,7 +52,7 @@ export default class BrawlerServerEngine extends ServerEngine {
         if (dx <= killDistance && dy <= killDistance) {
             f1.kills++;
             f2.action = Fighter.ACTIONS.indexOf('DIE');
-            f2.progress = 100;
+            f2.progress = 99;
         }
     }
 
@@ -65,7 +65,7 @@ export default class BrawlerServerEngine extends ServerEngine {
 
         // end-of-action handling
         if (f1.progress === 0) {
-            f1.progress = 100;
+            f1.progress = 99;
 
             // end of dying sequence
             if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
@@ -100,7 +100,7 @@ export default class BrawlerServerEngine extends ServerEngine {
 
         // end-of-action handling
         if (f1.progress === 0) {
-            f1.progress = 100;
+            f1.progress = 99;
 
             // end of dying sequence
             if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {

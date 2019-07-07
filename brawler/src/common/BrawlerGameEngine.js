@@ -10,7 +10,7 @@ export default class BrawlerGameEngine extends GameEngine {
         // game variables
         Object.assign(this, {
             dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
-            fighterWidth: 10, fighterHeight: 12, jumpSpeed: 1.5,
+            fighterWidth: 7, fighterHeight: 12, jumpSpeed: 1.5,
             walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 12,
             platformUnit: 8, platformHeight: 5
         });
@@ -64,7 +64,7 @@ export default class BrawlerGameEngine extends GameEngine {
                 nextAction = Fighter.ACTIONS.indexOf('IDLE');
             }
             if (fighter.action !== nextAction)
-                fighter.progress = 100;
+                fighter.progress = 99;
             fighter.action = nextAction;
             fighter.refreshToPhysics();
 
@@ -84,7 +84,7 @@ export default class BrawlerGameEngine extends GameEngine {
 
         // update action progress
         for (let f1 of fighters) {
-            f1.progress -= 3;
+            f1.progress -= 6;
             if (f1.progress < 0) f1.progress = 0;
         }
     }

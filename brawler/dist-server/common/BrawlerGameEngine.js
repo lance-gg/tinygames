@@ -48,10 +48,10 @@ function (_GameEngine) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(BrawlerGameEngine).call(this, options)); // game variables
 
     Object.assign(_assertThisInitialized(_this), {
-      dinoCount: 2,
+      dinoCount: 0,
       spaceWidth: 160,
       spaceHeight: 90,
-      fighterWidth: 10,
+      fighterWidth: 7,
       fighterHeight: 12,
       jumpSpeed: 1.5,
       walkSpeed: 0.6,
@@ -117,7 +117,7 @@ function (_GameEngine) {
           nextAction = _Fighter.default.ACTIONS.indexOf('IDLE');
         }
 
-        if (fighter.action !== nextAction) fighter.progress = 100;
+        if (fighter.action !== nextAction) fighter.progress = 99;
         fighter.action = nextAction;
         fighter.refreshToPhysics(); // remember that an input was applied on this turn
 
@@ -141,7 +141,7 @@ function (_GameEngine) {
       try {
         for (var _iterator = fighters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var f1 = _step.value;
-          f1.progress -= 3;
+          f1.progress -= 6;
           if (f1.progress < 0) f1.progress = 0;
         }
       } catch (err) {

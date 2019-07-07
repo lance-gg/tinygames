@@ -11,6 +11,7 @@
     "babel-loader": "^8.0.5",
     "express": "^4.14.0",
     "lance-gg": "^4.0.8",
+    "nodemon": "^1.19.1",
     "pixi.js": "^4.2.3",
     "query-string": "^4.2.3",
     "socket.io": "^2.1.1",
