@@ -48,7 +48,7 @@ function (_GameEngine) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(BrawlerGameEngine).call(this, options)); // game variables
 
     Object.assign(_assertThisInitialized(_this), {
-      dinoCount: 0,
+      dinoCount: 2,
       spaceWidth: 160,
       spaceHeight: 90,
       fighterWidth: 7,
