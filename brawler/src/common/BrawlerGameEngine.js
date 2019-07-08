@@ -43,32 +43,43 @@ export default class BrawlerGameEngine extends GameEngine {
 
             // if fighter is dying or fighting, ignore actions
             if (fighter.action === Fighter.ACTIONS.indexOf('DIE') ||
-                fighter.action === Fighter.ACTIONS.indexOf('FIGHT'))
+                fighter.action === Fighter.ACTIONS.indexOf('FIGHT')) {
                 return;
-
-            let nextAction = null;
-            if (inputData.input === 'right') {
-                fighter.position.x += this.walkSpeed;
-                fighter.direction = 1;
-                nextAction = Fighter.ACTIONS.indexOf('RUN');
-            } else if (inputData.input === 'left') {
-                fighter.position.x -= this.walkSpeed;
-                fighter.direction = -1;
-                nextAction = Fighter.ACTIONS.indexOf('RUN');
-            } else if (inputData.input === 'up') {
-                if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
-                nextAction = Fighter.ACTIONS.indexOf('JUMP');
-            } else if (inputData.input === 'space') {
-                nextAction = Fighter.ACTIONS.indexOf('FIGHT');
+            } else if (fighter.action === Fighter.ACTIONS.indexOf('JUMP')) {
+                // else fighter is jumping, so fighter can move
+                if (inputData.input === 'right') {
+                    fighter.position.x += this.walkSpeed;
+                    fighter.direction = 1;
+                } else if (inputData.input === 'left') {
+                    fighter.position.x -= this.walkSpeed;
+                    fighter.direction = -1;
+                }
             } else {
-                nextAction = Fighter.ACTIONS.indexOf('IDLE');
+                // else fighter is either idle, or running
+                let nextAction = null;
+                if (inputData.input === 'right') {
+                    fighter.position.x += this.walkSpeed;
+                    fighter.direction = 1;
+                    nextAction = Fighter.ACTIONS.indexOf('RUN');
+                } else if (inputData.input === 'left') {
+                    fighter.position.x -= this.walkSpeed;
+                    fighter.direction = -1;
+                    nextAction = Fighter.ACTIONS.indexOf('RUN');
+                } else if (inputData.input === 'up') {
+                    if (fighter.velocity.length() === 0)
+                        fighter.velocity.y = this.jumpSpeed;
+                    nextAction = Fighter.ACTIONS.indexOf('JUMP');
+                } else if (inputData.input === 'space') {
+                    nextAction = Fighter.ACTIONS.indexOf('FIGHT');
+                } else {
+                    nextAction = Fighter.ACTIONS.indexOf('IDLE');
+                }
+                if (fighter.action !== nextAction)
+                    fighter.progress = 99;
+                fighter.action = nextAction;
             }
-            if (fighter.action !== nextAction)
-                fighter.progress = 99;
-            fighter.action = nextAction;
+            // update physics, and remember that an input was applied on this turn
             fighter.refreshToPhysics();
-
-            // remember that an input was applied on this turn
             this.inputsApplied.push(playerId);
         }
     }
@@ -86,6 +97,12 @@ export default class BrawlerGameEngine extends GameEngine {
         for (let f1 of fighters) {
             f1.progress -= 6;
             if (f1.progress < 0) f1.progress = 0;
+
+            // stop jumps
+            if (f1.action === Fighter.ACTIONS.indexOf('JUMP') &&
+                f1.velocity.y === 0) {
+                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+            }
         }
     }
 

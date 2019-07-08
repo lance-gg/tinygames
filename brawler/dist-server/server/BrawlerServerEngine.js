@@ -155,7 +155,7 @@ function (_ServerEngine) {
         } // if no input applied on this turn, switch to idle
 
 
-        if (!inputApplied) f1.action = _Fighter.default.ACTIONS.indexOf('IDLE');
+        if (!inputApplied && f1.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) f1.action = _Fighter.default.ACTIONS.indexOf('IDLE');
       }
     } // post-step state transitions
 

@@ -97,30 +97,44 @@ function (_GameEngine) {
 
       if (fighter) {
         // if fighter is dying or fighting, ignore actions
-        if (fighter.action === _Fighter.default.ACTIONS.indexOf('DIE') || fighter.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) return;
-        var nextAction = null;
-
-        if (inputData.input === 'right') {
-          fighter.position.x += this.walkSpeed;
-          fighter.direction = 1;
-          nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
-        } else if (inputData.input === 'left') {
-          fighter.position.x -= this.walkSpeed;
-          fighter.direction = -1;
-          nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
-        } else if (inputData.input === 'up') {
-          if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
-          nextAction = _Fighter.default.ACTIONS.indexOf('JUMP');
-        } else if (inputData.input === 'space') {
-          nextAction = _Fighter.default.ACTIONS.indexOf('FIGHT');
+        if (fighter.action === _Fighter.default.ACTIONS.indexOf('DIE') || fighter.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) {
+          return;
+        } else if (fighter.action === _Fighter.default.ACTIONS.indexOf('JUMP')) {
+          // else fighter is jumping, so fighter can move
+          if (inputData.input === 'right') {
+            fighter.position.x += this.walkSpeed;
+            fighter.direction = 1;
+          } else if (inputData.input === 'left') {
+            fighter.position.x -= this.walkSpeed;
+            fighter.direction = -1;
+          }
         } else {
-          nextAction = _Fighter.default.ACTIONS.indexOf('IDLE');
-        }
+          // else fighter is either idle, or running
+          var nextAction = null;
 
-        if (fighter.action !== nextAction) fighter.progress = 99;
-        fighter.action = nextAction;
-        fighter.refreshToPhysics(); // remember that an input was applied on this turn
+          if (inputData.input === 'right') {
+            fighter.position.x += this.walkSpeed;
+            fighter.direction = 1;
+            nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
+          } else if (inputData.input === 'left') {
+            fighter.position.x -= this.walkSpeed;
+            fighter.direction = -1;
+            nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
+          } else if (inputData.input === 'up') {
+            if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
+            nextAction = _Fighter.default.ACTIONS.indexOf('JUMP');
+          } else if (inputData.input === 'space') {
+            nextAction = _Fighter.default.ACTIONS.indexOf('FIGHT');
+          } else {
+            nextAction = _Fighter.default.ACTIONS.indexOf('IDLE');
+          }
 
+          if (fighter.action !== nextAction) fighter.progress = 99;
+          fighter.action = nextAction;
+        } // update physics, and remember that an input was applied on this turn
+
+
+        fighter.refreshToPhysics();
         this.inputsApplied.push(playerId);
       }
     } // logic for every game step
@@ -142,7 +156,11 @@ function (_GameEngine) {
         for (var _iterator = fighters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var f1 = _step.value;
           f1.progress -= 6;
-          if (f1.progress < 0) f1.progress = 0;
+          if (f1.progress < 0) f1.progress = 0; // stop jumps
+
+          if (f1.action === _Fighter.default.ACTIONS.indexOf('JUMP') && f1.velocity.y === 0) {
+            f1.action = _Fighter.default.ACTIONS.indexOf('IDLE');
+          }
         }
       } catch (err) {
         _didIteratorError = true;

@@ -109,7 +109,7 @@ export default class BrawlerServerEngine extends ServerEngine {
             }
 
             // if no input applied on this turn, switch to idle
-            if (!inputApplied)
+            if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('FIGHT'))
                 f1.action = Fighter.ACTIONS.indexOf('IDLE');
         }
     }

@@ -220,8 +220,15 @@ export default class BrawlerRenderer extends Renderer {
                     sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
                     spriteOffsetY = -1;
                 }
+
                 let textureCount = sprite.fighterSprite.textures.length;
-                let image = Math.floor((99 - obj.progress)/100 * textureCount);
+                let progress = (99 - obj.progress)/100;
+                if (obj.action === Fighter.ACTIONS.indexOf('JUMP')) {
+                    progress = (obj.velocity.y + this.gameEngine.jumpSpeed) / (this.gameEngine.jumpSpeed * 2);
+                    if (progress < 0) progress = 0;
+                    if (progress >= 1) progress = 0.99;
+                }
+                let image = Math.floor(progress * textureCount);
                 sprite.fighterSprite.gotoAndStop(image);
 
                 sprite.fighterSprite.scale.set(obj.direction * this.fighterSpriteScale, this.fighterSpriteScale);

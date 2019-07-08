@@ -248,7 +248,15 @@ function (_Renderer) {
           }
 
           var textureCount = sprite.fighterSprite.textures.length;
-          var image = Math.floor((99 - obj.progress) / 100 * textureCount);
+          var progress = (99 - obj.progress) / 100;
+
+          if (obj.action === _Fighter.default.ACTIONS.indexOf('JUMP')) {
+            progress = (obj.velocity.y + _this4.gameEngine.jumpSpeed) / (_this4.gameEngine.jumpSpeed * 2);
+            if (progress < 0) progress = 0;
+            if (progress >= 1) progress = 0.99;
+          }
+
+          var image = Math.floor(progress * textureCount);
           sprite.fighterSprite.gotoAndStop(image);
           sprite.fighterSprite.scale.set(obj.direction * _this4.fighterSpriteScale, _this4.fighterSpriteScale);
           sprite.fighterSprite.anchor.x = obj.direction == 1 ? 0.25 : 0.75;
