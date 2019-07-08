@@ -35,12 +35,12 @@ export default class BrawlerServerEngine extends ServerEngine {
     checkKills(f1, f2) {
 
         // if f2 is already dying, exit
-        if (f1 === f2 || f2.action === Fighter.ACTIONS.indexOf('DIE'))
+        if (f1 === f2 || f2.action === Fighter.ACTIONS.DIE)
             return;
 
         // kill distance is different for fighters and dino's
         let killDistance = null;
-        if (f1.action === Fighter.ACTIONS.indexOf('FIGHT'))
+        if (f1.action === Fighter.ACTIONS.FIGHT)
             killDistance = game.killDistance;
         else if (f1.isDino && !f2.isDino)
             killDistance = game.dinoKillDistance;
@@ -51,7 +51,7 @@ export default class BrawlerServerEngine extends ServerEngine {
         let dy = Math.abs(f1.position.y - f2.position.y);
         if (dx <= killDistance && dy <= killDistance) {
             f1.kills++;
-            f2.action = Fighter.ACTIONS.indexOf('DIE');
+            f2.action = Fighter.ACTIONS.DIE;
             f2.progress = 99;
         }
     }
@@ -60,7 +60,7 @@ export default class BrawlerServerEngine extends ServerEngine {
     updateDinoAction(f1) {
 
         // Dinos keep walking
-        if (f1.action === Fighter.ACTIONS.indexOf('RUN'))
+        if (f1.action === Fighter.ACTIONS.RUN)
             f1.position.x += game.walkSpeed * f1.direction;
 
         // end-of-action handling
@@ -68,7 +68,7 @@ export default class BrawlerServerEngine extends ServerEngine {
             f1.progress = 99;
 
             // end of dying sequence
-            if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
+            if (f1.action === Fighter.ACTIONS.DIE) {
 
                 // Dino fighters come back to life
                 if (f1.isDino) {
@@ -82,10 +82,10 @@ export default class BrawlerServerEngine extends ServerEngine {
 
             // choose direction and action
             if (Math.random() > 0.7) f1.direction *= -1;
-            let nextAction = Math.floor(Fighter.ACTIONS.length * Math.random());
-            if (nextAction !== Fighter.ACTIONS.indexOf('DIE') && nextAction !== Fighter.ACTIONS.indexOf('FIGHT'))
+            let nextAction = Math.floor(Object.values(Fighter.ACTIONS).length * Math.random());
+            if (nextAction !== Fighter.ACTIONS.DIE && nextAction !== Fighter.ACTIONS.FIGHT)
                 f1.action = nextAction;
-            if (nextAction === Fighter.ACTIONS.indexOf('JUMP') && f1.velocity.length() === 0)
+            if (nextAction === Fighter.ACTIONS.JUMP && f1.velocity.length() === 0)
                 f1.velocity.y = game.jumpSpeed;
         }
     }
@@ -95,22 +95,22 @@ export default class BrawlerServerEngine extends ServerEngine {
 
         // if no input applied and we were running, switch to idle
         let inputApplied = game.inputsApplied.indexOf(f1.playerId) >= 0;
-        if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('RUN'))
-            f1.action = Fighter.ACTIONS.indexOf('IDLE');
+        if (!inputApplied && f1.action === Fighter.ACTIONS.RUN)
+            f1.action = Fighter.ACTIONS.IDLE;
 
         // end-of-action handling
         if (f1.progress === 0) {
             f1.progress = 99;
 
             // end of dying sequence
-            if (f1.action === Fighter.ACTIONS.indexOf('DIE')) {
+            if (f1.action === Fighter.ACTIONS.DIE) {
                 game.removeObjectFromWorld(f1);
                 return;
             }
 
             // if no input applied on this turn, switch to idle
-            if (!inputApplied && f1.action === Fighter.ACTIONS.indexOf('FIGHT'))
-                f1.action = Fighter.ACTIONS.indexOf('IDLE');
+            if (!inputApplied && f1.action === Fighter.ACTIONS.FIGHT)
+                f1.action = Fighter.ACTIONS.IDLE;
         }
     }
 

@@ -95,17 +95,17 @@ function (_ServerEngine) {
     key: "checkKills",
     value: function checkKills(f1, f2) {
       // if f2 is already dying, exit
-      if (f1 === f2 || f2.action === _Fighter.default.ACTIONS.indexOf('DIE')) return; // kill distance is different for fighters and dino's
+      if (f1 === f2 || f2.action === _Fighter.default.ACTIONS.DIE) return; // kill distance is different for fighters and dino's
 
       var killDistance = null;
-      if (f1.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) killDistance = game.killDistance;else if (f1.isDino && !f2.isDino) killDistance = game.dinoKillDistance;
+      if (f1.action === _Fighter.default.ACTIONS.FIGHT) killDistance = game.killDistance;else if (f1.isDino && !f2.isDino) killDistance = game.dinoKillDistance;
       if (killDistance === null) return;
       var dx = Math.abs(f1.position.x - f2.position.x);
       var dy = Math.abs(f1.position.y - f2.position.y);
 
       if (dx <= killDistance && dy <= killDistance) {
         f1.kills++;
-        f2.action = _Fighter.default.ACTIONS.indexOf('DIE');
+        f2.action = _Fighter.default.ACTIONS.DIE;
         f2.progress = 99;
       }
     } // handle Dino state change
@@ -114,12 +114,12 @@ function (_ServerEngine) {
     key: "updateDinoAction",
     value: function updateDinoAction(f1) {
       // Dinos keep walking
-      if (f1.action === _Fighter.default.ACTIONS.indexOf('RUN')) f1.position.x += game.walkSpeed * f1.direction; // end-of-action handling
+      if (f1.action === _Fighter.default.ACTIONS.RUN) f1.position.x += game.walkSpeed * f1.direction; // end-of-action handling
 
       if (f1.progress === 0) {
         f1.progress = 99; // end of dying sequence
 
-        if (f1.action === _Fighter.default.ACTIONS.indexOf('DIE')) {
+        if (f1.action === _Fighter.default.ACTIONS.DIE) {
           // Dino fighters come back to life
           if (f1.isDino) {
             var f = game.addFighter(0);
@@ -133,9 +133,9 @@ function (_ServerEngine) {
 
 
         if (Math.random() > 0.7) f1.direction *= -1;
-        var nextAction = Math.floor(_Fighter.default.ACTIONS.length * Math.random());
-        if (nextAction !== _Fighter.default.ACTIONS.indexOf('DIE') && nextAction !== _Fighter.default.ACTIONS.indexOf('FIGHT')) f1.action = nextAction;
-        if (nextAction === _Fighter.default.ACTIONS.indexOf('JUMP') && f1.velocity.length() === 0) f1.velocity.y = game.jumpSpeed;
+        var nextAction = Math.floor(Object.values(_Fighter.default.ACTIONS).length * Math.random());
+        if (nextAction !== _Fighter.default.ACTIONS.DIE && nextAction !== _Fighter.default.ACTIONS.FIGHT) f1.action = nextAction;
+        if (nextAction === _Fighter.default.ACTIONS.JUMP && f1.velocity.length() === 0) f1.velocity.y = game.jumpSpeed;
       }
     } // handle fighter state change
 
@@ -144,18 +144,18 @@ function (_ServerEngine) {
     value: function updateFighterAction(f1) {
       // if no input applied and we were running, switch to idle
       var inputApplied = game.inputsApplied.indexOf(f1.playerId) >= 0;
-      if (!inputApplied && f1.action === _Fighter.default.ACTIONS.indexOf('RUN')) f1.action = _Fighter.default.ACTIONS.indexOf('IDLE'); // end-of-action handling
+      if (!inputApplied && f1.action === _Fighter.default.ACTIONS.RUN) f1.action = _Fighter.default.ACTIONS.IDLE; // end-of-action handling
 
       if (f1.progress === 0) {
         f1.progress = 99; // end of dying sequence
 
-        if (f1.action === _Fighter.default.ACTIONS.indexOf('DIE')) {
+        if (f1.action === _Fighter.default.ACTIONS.DIE) {
           game.removeObjectFromWorld(f1);
           return;
         } // if no input applied on this turn, switch to idle
 
 
-        if (!inputApplied && f1.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) f1.action = _Fighter.default.ACTIONS.indexOf('IDLE');
+        if (!inputApplied && f1.action === _Fighter.default.ACTIONS.FIGHT) f1.action = _Fighter.default.ACTIONS.IDLE;
       }
     } // post-step state transitions
 

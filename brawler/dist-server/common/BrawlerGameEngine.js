@@ -97,9 +97,9 @@ function (_GameEngine) {
 
       if (fighter) {
         // if fighter is dying or fighting, ignore actions
-        if (fighter.action === _Fighter.default.ACTIONS.indexOf('DIE') || fighter.action === _Fighter.default.ACTIONS.indexOf('FIGHT')) {
+        if (fighter.action === _Fighter.default.ACTIONS.DIE || fighter.action === _Fighter.default.ACTIONS.FIGHT) {
           return;
-        } else if (fighter.action === _Fighter.default.ACTIONS.indexOf('JUMP')) {
+        } else if (fighter.action === _Fighter.default.ACTIONS.JUMP) {
           // else fighter is jumping, so fighter can move
           if (inputData.input === 'right') {
             fighter.position.x += this.walkSpeed;
@@ -115,18 +115,18 @@ function (_GameEngine) {
           if (inputData.input === 'right') {
             fighter.position.x += this.walkSpeed;
             fighter.direction = 1;
-            nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
+            nextAction = _Fighter.default.ACTIONS.RUN;
           } else if (inputData.input === 'left') {
             fighter.position.x -= this.walkSpeed;
             fighter.direction = -1;
-            nextAction = _Fighter.default.ACTIONS.indexOf('RUN');
+            nextAction = _Fighter.default.ACTIONS.RUN;
           } else if (inputData.input === 'up') {
             if (fighter.velocity.length() === 0) fighter.velocity.y = this.jumpSpeed;
-            nextAction = _Fighter.default.ACTIONS.indexOf('JUMP');
+            nextAction = _Fighter.default.ACTIONS.JUMP;
           } else if (inputData.input === 'space') {
-            nextAction = _Fighter.default.ACTIONS.indexOf('FIGHT');
+            nextAction = _Fighter.default.ACTIONS.FIGHT;
           } else {
-            nextAction = _Fighter.default.ACTIONS.indexOf('IDLE');
+            nextAction = _Fighter.default.ACTIONS.IDLE;
           }
 
           if (fighter.action !== nextAction) fighter.progress = 99;
@@ -158,8 +158,8 @@ function (_GameEngine) {
           f1.progress -= 6;
           if (f1.progress < 0) f1.progress = 0; // stop jumps
 
-          if (f1.action === _Fighter.default.ACTIONS.indexOf('JUMP') && f1.velocity.y === 0) {
-            f1.action = _Fighter.default.ACTIONS.indexOf('IDLE');
+          if (f1.action === _Fighter.default.ACTIONS.JUMP && f1.velocity.y === 0) {
+            f1.action = _Fighter.default.ACTIONS.IDLE;
           }
         }
       } catch (err) {

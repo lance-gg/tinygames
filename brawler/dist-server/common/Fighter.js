@@ -29,6 +29,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+var ACTIONS = {
+  IDLE: 0,
+  JUMP: 1,
+  FIGHT: 2,
+  RUN: 3,
+  DIE: 4
+};
+
 var Fighter =
 /*#__PURE__*/
 function (_DynamicObject) {
@@ -74,6 +82,15 @@ function (_DynamicObject) {
       this.kills = other.kills;
     }
   }], [{
+    key: "getActionName",
+    value: function getActionName(a) {
+      for (var k in ACTIONS) {
+        if (ACTIONS[k] === a) return k;
+      }
+
+      return null;
+    }
+  }, {
     key: "netScheme",
     // direction is 1 or -1
     // action is one of: idle, jump, fight, run, die
@@ -100,7 +117,7 @@ function (_DynamicObject) {
   }, {
     key: "ACTIONS",
     get: function get() {
-      return ['IDLE', 'JUMP', 'FIGHT', 'RUN', 'DIE'];
+      return ACTIONS;
     }
   }]);
 

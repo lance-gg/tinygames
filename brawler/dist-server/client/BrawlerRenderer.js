@@ -240,17 +240,17 @@ function (_Renderer) {
 
         if (obj instanceof _Fighter.default) {
           if (obj.isDino) {
-            sprite.fighterSprite.textures = _this4.textures['DINO_' + _Fighter.default.ACTIONS[obj.action]];
+            sprite.fighterSprite.textures = _this4.textures["DINO_".concat(_Fighter.default.getActionName(obj.action))];
             spriteOffsetY = -3;
           } else {
-            sprite.fighterSprite.textures = _this4.textures[_Fighter.default.ACTIONS[obj.action]];
+            sprite.fighterSprite.textures = _this4.textures[_Fighter.default.getActionName(obj.action)];
             spriteOffsetY = -1;
           }
 
           var textureCount = sprite.fighterSprite.textures.length;
           var progress = (99 - obj.progress) / 100;
 
-          if (obj.action === _Fighter.default.ACTIONS.indexOf('JUMP')) {
+          if (obj.action === _Fighter.default.ACTIONS.JUMP) {
             progress = (obj.velocity.y + _this4.gameEngine.jumpSpeed) / (_this4.gameEngine.jumpSpeed * 2);
             if (progress < 0) progress = 0;
             if (progress >= 1) progress = 0.99;

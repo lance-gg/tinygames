@@ -1,5 +1,6 @@
 import { BaseTypes, DynamicObject, Renderer } from 'lance-gg';
 
+const ACTIONS = { IDLE: 0, JUMP: 1, FIGHT: 2, RUN: 3, DIE: 4 }
 export default class Fighter extends DynamicObject {
 
     // direction is 1 or -1
@@ -16,7 +17,15 @@ export default class Fighter extends DynamicObject {
     }
 
     static get ACTIONS() {
-        return ['IDLE', 'JUMP', 'FIGHT', 'RUN', 'DIE'];
+        return ACTIONS;
+    }
+
+    static getActionName(a) {
+        for (let k in ACTIONS) {
+            if (ACTIONS[k] === a)
+                return k;
+        }
+        return null;
     }
 
     onAddToWorld(gameEngine) {

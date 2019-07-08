@@ -214,16 +214,16 @@ export default class BrawlerRenderer extends Renderer {
             let spriteOffsetY = 0;
             if (obj instanceof Fighter) {
                 if (obj.isDino) {
-                    sprite.fighterSprite.textures = this.textures['DINO_' + Fighter.ACTIONS[obj.action]];
+                    sprite.fighterSprite.textures = this.textures[`DINO_${Fighter.getActionName(obj.action)}`]
                     spriteOffsetY = -3;
                 } else {
-                    sprite.fighterSprite.textures = this.textures[Fighter.ACTIONS[obj.action]];
+                    sprite.fighterSprite.textures = this.textures[Fighter.getActionName(obj.action)];
                     spriteOffsetY = -1;
                 }
 
                 let textureCount = sprite.fighterSprite.textures.length;
                 let progress = (99 - obj.progress)/100;
-                if (obj.action === Fighter.ACTIONS.indexOf('JUMP')) {
+                if (obj.action === Fighter.ACTIONS.JUMP) {
                     progress = (obj.velocity.y + this.gameEngine.jumpSpeed) / (this.gameEngine.jumpSpeed * 2);
                     if (progress < 0) progress = 0;
                     if (progress >= 1) progress = 0.99;
