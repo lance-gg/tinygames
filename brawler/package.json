@@ -14,7 +14,7 @@
     "nodemon": "^1.19.1",
     "pixi.js": "^4.2.3",
     "query-string": "^4.2.3",
-    "socket.io": "^2.1.1",
+    "socket.io": "^2.4.0",
     "webpack": "^3.8.1"
   },
   "devDependencies": {
