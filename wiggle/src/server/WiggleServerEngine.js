@@ -56,9 +56,15 @@ export default class WiggleServerEngine extends ServerEngine {
 
   wiggleHitWiggle(w1, w2) {
     if (!(w2.id in this.gameEngine.world.objects) || !(w1.id in this.gameEngine.world.objects)) return;
-    w2.bodyLength += w1.bodyLength / 2;
+    w2.bodyLength += w1.bodyLength / 4;
     this.gameEngine.removeObjectFromWorld(w1);
     if (w1.AI) this.addAI();
+  }
+
+  wiggleStarved(w) {
+    if (!(w.id in this.gameEngine.world.objects)) return;
+    this.gameEngine.removeObjectFromWorld(w);
+    if (w.AI) this.addAI();
   }
 
   stepLogic() {
@@ -81,6 +87,12 @@ export default class WiggleServerEngine extends ServerEngine {
         if (distance.length() < this.gameEngine.eatDistance) {
           this.wiggleEatFood(w, f);
         }
+      }
+
+      // Slowly (and somewhat randomly) reduce length to prevent just sitting
+      if (Math.random() < 0.03) {
+        w.bodyLength -= w.bodyLength * this.gameEngine.hungerTick;
+        if (w.bodyLength < 1) this.wiggleStarved(w);
       }
 
       // move AI wiggles
