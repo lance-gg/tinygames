@@ -1,6 +1,7 @@
 import { ServerEngine } from "lance-gg";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
+const nameGenerator = require("./NameGenerator");
 
 export default class WiggleServerEngine extends ServerEngine {
   constructor(io, gameEngine, inputOptions) {
@@ -25,6 +26,7 @@ export default class WiggleServerEngine extends ServerEngine {
     newAI.turnDirection = 1;
     newAI.bodyLength = this.gameEngine.startBodyLength;
     newAI.playerId = 0;
+    newAI.name = nameGenerator("general") + "Bot";
     this.gameEngine.addObjectToWorld(newAI);
   }
 
@@ -34,6 +36,7 @@ export default class WiggleServerEngine extends ServerEngine {
     player.direction = 0;
     player.bodyLength = this.gameEngine.startBodyLength;
     player.playerId = socket.playerId;
+    player.name = nameGenerator("general");
     this.gameEngine.addObjectToWorld(player);
   }
 

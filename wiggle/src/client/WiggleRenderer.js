@@ -78,6 +78,9 @@ export default class WiggleRenderer extends Renderer {
     ctx.fillStyle = "black";
     this.drawCircle(eye1.x, eye1.y, game.eyeRadius, true);
     this.drawCircle(eye2.x, eye2.y, game.eyeRadius, true);
+
+    ctx.font = "0.25px Arial";
+    ctx.fillText(w.name, x - 0.5, y - 0.2);
     ctx.fillStyle = "white";
 
     // update status
