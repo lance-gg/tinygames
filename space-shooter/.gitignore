@@ -1,0 +1,11 @@
+node_modules
+dist/bundle.js
+.idea/*
+
+*.trace
+yarn.lock
+
+.env
+.yalc
+
+dist-server
