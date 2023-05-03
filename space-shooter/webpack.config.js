@@ -24,7 +24,6 @@ module.exports = {
           path.resolve(__dirname, "node_modules/lance-gg/"),
           path.resolve(__dirname, "../RTSDKComponents/"),
           fs.realpathSync("./node_modules/lance-gg/"),
-          fs.realpathSync("../RTSDKComponents/"),
         ],
         loader: "babel-loader",
         options: {
