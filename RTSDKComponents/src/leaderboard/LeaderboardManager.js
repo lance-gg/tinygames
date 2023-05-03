@@ -90,7 +90,7 @@ export const showLeaderboard = async ({ InteractiveAsset, assetId, getAssetAndDa
   }, 500);
 };
 
-export const hideLeaderboard = async (World, req) => {
+export const hideLeaderboard = async ({ World, req }) => {
   const { assetId, urlSlug } = req.body;
   try {
     const world = World.create(urlSlug, { credentials: req.body });

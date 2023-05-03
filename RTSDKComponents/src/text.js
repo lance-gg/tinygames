@@ -58,7 +58,7 @@ export const updateText = ({ World, req, text, textOptions = {}, uniqueName }) =
     } catch (e) {
       // Don't need this console log.  Include it for dx, but it'll hit pretty frequently.
       // console.log("Error updating text", e);
-      console.log("Error updating text", e.data.errors || e);
+      console.log("Error updating text", e.data ? e.data.errors : e);
       rej();
     }
   });

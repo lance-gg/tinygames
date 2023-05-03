@@ -5751,7 +5751,7 @@ const updateText = ({ World, req, text, textOptions = {}, uniqueName }) => {
     } catch (e) {
       // Don't need this console log.  Include it for dx, but it'll hit pretty frequently.
       // console.log("Error updating text", e);
-      console.log("Error updating text", e.data.errors || e);
+      console.log("Error updating text", e.data ? e.data.errors : e);
       rej();
     }
   });
@@ -5867,7 +5867,7 @@ const showLeaderboard = async ({ InteractiveAsset, assetId, getAssetAndDataObjec
   }, 500);
 };
 
-const hideLeaderboard = async (World, req) => {
+const hideLeaderboard = async ({ World, req }) => {
   const { assetId, urlSlug } = req.body;
   try {
     const world = World.create(urlSlug, { credentials: req.body });
@@ -5921,10 +5921,10 @@ const updateLeaderboard = async ({ World, getAssetAndDataObject, leaderboardArra
     });
   }
 
-  updateHighScores(World, getAssetAndDataObject, req, sanitizedArray);
+  updateHighScores({ World, getAssetAndDataObject, req, sanitizedArray });
 };
 
-const updateHighScores = async (World, getAssetAndDataObject, req, sanitizedArray) => {
+const updateHighScores = async ({ World, getAssetAndDataObject, req, sanitizedArray }) => {
   const arcadeAsset = await getAssetAndDataObject(req); // This seems to be creating issues with API
   if (!arcadeAsset) return;
   const { dataObject } = arcadeAsset;
@@ -6000,4 +6000,45 @@ function dedupe(arr) {
   });
 }
 
-export { hideLeaderboard, resetLeaderboard, showLeaderboard, updateLeaderboard };
+// import { Visitor } from "../../space-shooter/rtsdk";
+// import "regenerator-runtime/runtime";
+
+const roomBasedOn = "assetId";
+
+const getRoomAndUsername = async ({ Visitor, query }) => {
+  const { isAdmin, username } = await checkWhetherVisitorInWorld(Visitor, query);
+  return { isAdmin, roomName: query[roomBasedOn], username };
+};
+
+const checkWhetherVisitorInWorld = async (Visitor, query) => {
+  // Check whether have access to interactive nonce, which means visitor is in world.
+  const { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId } = query;
+
+  try {
+    const visitor = await Visitor.get(visitorId, urlSlug, {
+      credentials: {
+        assetId,
+        interactiveNonce,
+        interactivePublicKey,
+        visitorId,
+      },
+    });
+    if (!visitor || !visitor.username) throw "Not in world";
+
+    const { privateZoneId, username, isAdmin } = visitor;
+
+    if (!privateZoneId || privateZoneId !== assetId) {
+      // Not in the private Zone.  Can watch ships fly around, but can't play.
+      return { username: null, isAdmin };
+    } else {
+      return { isAdmin, username };
+    }
+  } catch (e) {
+    // Not actually in the world.  Should prevent from seeing game.
+    if (e && e.data && e.data.errors) console.log("Error getting visitor", e?.data?.errors);
+    else if (e) console.log("Error visitor", e);
+    return { isAdmin: false, username: -1 };
+  }
+};
+
+export { getRoomAndUsername, hideLeaderboard, resetLeaderboard, roomBasedOn, showLeaderboard, updateLeaderboard };

@@ -3,7 +3,7 @@
 
 export const roomBasedOn = "assetId";
 
-export const getRoomAndUsername = async (Visitor, query) => {
+export const getRoomAndUsername = async ({ Visitor, query }) => {
   const { isAdmin, username } = await checkWhetherVisitorInWorld(Visitor, query);
   return { isAdmin, roomName: query[roomBasedOn], username };
 };

@@ -23,7 +23,6 @@ export default {
     commonjs({
       exclude: "node_modules",
     }),
-
     nodeResolve({ preferBuiltins: true, extensions: [".svg", ".js"] }),
     json(),
     resolve(),

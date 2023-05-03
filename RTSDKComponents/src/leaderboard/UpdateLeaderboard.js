@@ -33,10 +33,10 @@ export const updateLeaderboard = async ({ World, getAssetAndDataObject, leaderbo
     });
   }
 
-  updateHighScores(World, getAssetAndDataObject, req, sanitizedArray);
+  updateHighScores({ World, getAssetAndDataObject, req, sanitizedArray });
 };
 
-const updateHighScores = async (World, getAssetAndDataObject, req, sanitizedArray) => {
+const updateHighScores = async ({ World, getAssetAndDataObject, req, sanitizedArray }) => {
   const arcadeAsset = await getAssetAndDataObject(req); // This seems to be creating issues with API
   if (!arcadeAsset) return;
   const { dataObject } = arcadeAsset;
