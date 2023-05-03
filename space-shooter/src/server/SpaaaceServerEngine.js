@@ -1,12 +1,5 @@
 import { debounce } from "throttle-debounce";
-import { InteractiveAsset, getAssetAndDataObject, Visitor, World } from "../rtsdk";
-import {
-  hideLeaderboard,
-  getRoomAndUsername,
-  showLeaderboard,
-  updateLeaderboard,
-  // resetLeaderboard,
-} from "../../../RTSDKComponents/dist/index.cjs";
+import { Leaderboard, VisitorInfo } from "../rtsdk";
 import { ServerEngine } from "lance-gg";
 import url from "url";
 
@@ -60,19 +53,17 @@ export default class SpaaaceServerEngine extends ServerEngine {
       3000,
       (leaderboardArray, req, username) => {
         console.log(`${username} updating leaderboard`, leaderboardArray);
-        updateLeaderboard({ World, getAssetAndDataObject, leaderboardArray, req });
+        Leaderboard.update({ leaderboardArray, req });
       },
       { atBegin: false },
     );
 
-    const { isAdmin, roomName, username } = await getRoomAndUsername({ Visitor, query });
+    const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
-      socket.on("showLeaderboard", () =>
-        showLeaderboard({ InteractiveAsset, assetId, getAssetAndDataObject, req, urlSlug }),
-      );
-      socket.on("hideLeaderboard", () => hideLeaderboard({ World, req }));
+      socket.on("showLeaderboard", () => Leaderboard.show({ assetId, req, urlSlug }));
+      socket.on("hideLeaderboard", () => Leaderboard.hide({ req }));
       // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
     }
 

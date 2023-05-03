@@ -4,7 +4,7 @@ import SpaaaceRenderer from "../client/SpaaaceRenderer";
 import MobileControls from "./MobileControls";
 import Ship from "../common/Ship";
 import Utils from "../common/Utils";
-import { roomBasedOn } from "../../../RTSDKComponents/dist/index.cjs";
+import { VisitorInfo } from "../rtsdk";
 
 export default class SpaaaceClientEngine extends ClientEngine {
   constructor(gameEngine, options) {
@@ -139,7 +139,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
         const params = new Proxy(new URLSearchParams(window.location.search), {
           get: (searchParams, prop) => searchParams.get(prop),
         });
-        let value = params[roomBasedOn];
+        let value = params[VisitorInfo.roomBasedOn];
         this.renderer.updateScore(e[value]);
 
         let scoreArray = [];
