@@ -31,14 +31,14 @@ export default class WiggleServerEngine extends ServerEngine {
     newAI.name = nameGenerator("general") + "Bot";
     newAI.roomName = roomName;
     this.gameEngine.addObjectToWorld(newAI);
-    // this.assignObjectToRoom(newAI, roomName);
+    this.assignObjectToRoom(newAI, roomName);
   }
 
   addFood(roomName) {
     let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
     newF.roomName = roomName;
     this.gameEngine.addObjectToWorld(newF);
-    // this.assignObjectToRoom(newF, roomName);
+    this.assignObjectToRoom(newF, roomName);
   }
 
   generateRoom(roomName) {
@@ -110,7 +110,7 @@ export default class WiggleServerEngine extends ServerEngine {
       await super.createRoom(roomName);
     }
 
-    // super.assignPlayerToRoom(socket.playerId, roomName);
+    super.assignPlayerToRoom(socket.playerId, roomName);
     this.roomTracker[roomName] = this.roomTracker[roomName] || 0;
     if (this.roomTracker[roomName] === 0) this.generateRoom(roomName);
     this.roomTracker[roomName]++;
@@ -133,7 +133,7 @@ export default class WiggleServerEngine extends ServerEngine {
       player.roomName = roomName;
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
-      // this.assignObjectToRoom(player, roomName);
+      this.assignObjectToRoom(player, roomName);
 
       // this.updateScore();
 

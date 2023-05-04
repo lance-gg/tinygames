@@ -1,11 +1,6 @@
-const cluster = require("cluster");
 import path from "path";
 import express from "express";
 import socketIO from "socket.io";
-import url from "url";
-// const http = require("http");
-// const { Server } = require("socket.io");
-// const { IPCAdapter } = require("socket.io-adapter-ipc");
 import { Lib } from "lance-gg";
 import WiggleServerEngine from "./server/WiggleServerEngine";
 import WiggleGameEngine from "./common/WiggleGameEngine";
@@ -13,100 +8,19 @@ import WiggleGameEngine from "./common/WiggleGameEngine";
 const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, "../dist/index.html");
 
-const numWorkers = require("os").cpus().length;
+// define routes and socket
+const server = express();
+server.get("/", function (req, res) {
+  res.sendFile(INDEX);
+});
+server.use("/", express.static(path.join(__dirname, "../dist/")));
+let requestHandler = server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+const io = socketIO(requestHandler);
 
-if (cluster.isMaster) {
-  console.log("Master process is running");
+// Game Instances
+// const gameEngine = new WiggleGameEngine({ traceLevel: 1 });
+const gameEngine = new WiggleGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
+const serverEngine = new WiggleServerEngine(io, gameEngine, { debug: {}, updateRate: 3 });
 
-  for (let i = 0; i < numWorkers; i++) {
-    cluster.fork();
-  }
-
-  const roomToWorkerMap = {};
-
-  cluster.on("message", (worker, { type, room }) => {
-    if (type === "roomRequest") {
-      if (!roomToWorkerMap[room]) {
-        const workerIndex = Object.keys(roomToWorkerMap).length % numWorkers;
-        roomToWorkerMap[room] = cluster.workers[workerIndex];
-      }
-      worker.send({ type: "roomAssignment", workerPid: roomToWorkerMap[room].process.pid });
-    }
-  });
-} else {
-  // define routes and socket
-  const server = express();
-  server.get("/", function (req, res) {
-    res.sendFile(INDEX);
-  });
-  server.use("/", express.static(path.join(__dirname, "../dist/")));
-  let requestHandler = server.listen(PORT, () => console.log(`Listening on ${PORT}`));
-  const io = socketIO(requestHandler);
-
-  // const httpServer = http.createServer();
-
-  // const io = new Server(requestHandler, {
-  //   adapter: IPCAdapter(),
-  // });
-
-  // const io = new Server(requestHandler);
-  const gameEngine = new WiggleGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
-  const serverEngine = new WiggleServerEngine(io, gameEngine, { debug: {}, updateRate: 6 });
-
-  serverEngine.start();
-
-  // httpServer.listen(0, () => {
-  //   console.log(`Worker ${process.pid} is running and listening on port ${httpServer.address().port}`);
-  // });
-
-  io.on("connection", (socket) => {
-    // const room = socket.handshake.query.assetId;
-    const URL = socket.handshake.headers.referer;
-    const parts = url.parse(URL, true);
-    const query = parts.query;
-    const room = query.assetId;
-
-    // Join the room
-    socket.join(room);
-
-    // Emit a welcome message to the client
-    socket.emit("hello", `Welcome to room ${room}!`);
-
-    process.send({ type: "roomRequest", room });
-
-    // Handle messages from the client
-    socket.on("message", ({ type, workerId }) => {
-      if (type === "roomAssignment" && workerId === cluster.worker.id) {
-        // Join the room
-        socket.join(room);
-
-        // Emit a welcome message to the client
-        socket.emit("hello", `Welcome to room ${room}!`);
-
-        // Handle messages from the client
-        socket.on("message", (data) => {
-          console.log(`Received message from client in room ${room}:`, data);
-
-          // Broadcast the message to all clients in the room
-          io.to(room).emit("message", `Client in room ${room} says: ${data}`);
-        });
-
-        // Handle disconnection
-        socket.on("disconnect", () => {
-          console.log(`Client disconnected from room ${room}`);
-        });
-
-        // Lance connection handling
-        serverEngine.onPlayerConnected(socket);
-        socket.on("disconnect", () => {
-          serverEngine.onPlayerDisconnected(socket);
-        });
-      }
-    });
-
-    // Handle disconnection
-    socket.on("disconnect", () => {
-      console.log(`Client disconnected from room ${room}`);
-    });
-  });
-}
+// start the game
+serverEngine.start();
