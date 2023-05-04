@@ -11,19 +11,17 @@ export default class WiggleServerEngine extends ServerEngine {
     super(io, gameEngine, inputOptions);
     this.gameEngine.on("postStep", this.stepLogic.bind(this));
     this.scoreData = {};
+    this.aiTracker = {}; // Add AI when person is first to enter room.  Remove when last to leave.
+    this.foodTracker = {}; // Add food when person is first to enter room.  Remove when last to leave.
+    this.roomTracker = {}; // Used to add and remove AIs from used / unused worlds.
   }
 
   // create food and AI robots
   start() {
     super.start();
-    for (let f = 0; f < this.gameEngine.foodCount; f++) {
-      let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
-      this.gameEngine.addObjectToWorld(newF);
-    }
-    for (let ai = 0; ai < this.gameEngine.aiCount; ai++) this.addAI();
   }
 
-  addAI() {
+  addAI(roomName) {
     let newAI = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
     newAI.AI = true;
     newAI.direction = 0;
@@ -31,7 +29,21 @@ export default class WiggleServerEngine extends ServerEngine {
     newAI.bodyLength = this.gameEngine.startBodyLength;
     newAI.playerId = 0;
     newAI.name = nameGenerator("general") + "Bot";
+    newAI.roomName = roomName;
     this.gameEngine.addObjectToWorld(newAI);
+    this.assignObjectToRoom(newAI, roomName);
+  }
+
+  addFood(roomName) {
+    let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
+    newF.roomName = roomName;
+    this.gameEngine.addObjectToWorld(newF);
+    this.assignObjectToRoom(newF, roomName);
+  }
+
+  generateRoom(roomName) {
+    for (let f = 0; f < this.gameEngine.foodCount; f++) this.addFood(roomName);
+    for (let ai = 0; ai < this.gameEngine.aiCount; ai++) this.addAI(roomName);
   }
 
   onPlayerConnected(socket) {
@@ -45,6 +57,11 @@ export default class WiggleServerEngine extends ServerEngine {
     const query = parts.query;
     const { assetId, urlSlug } = query;
     const req = { body: query }; // Used for interactive assets
+
+    const gameStatus = this.gameStatus();
+    const rooms = this.rooms;
+    // console.log("Game Status", gameStatus);
+    // console.log("Rooms", rooms);
 
     // Only update leaderboard once every 5 seconds.
     const debounceLeaderboard = debounce(
@@ -70,9 +87,14 @@ export default class WiggleServerEngine extends ServerEngine {
       return;
     }
 
-    if (!this.rooms || !this.rooms[roomName]) await super.createRoom(roomName);
+    if (!this.rooms || !this.rooms[roomName]) {
+      await super.createRoom(roomName);
+    }
 
     super.assignPlayerToRoom(socket.playerId, roomName);
+    this.roomTracker[roomName] = this.roomTracker[roomName] || 0;
+    if (this.roomTracker[roomName] === 0) this.generateRoom(roomName);
+    this.roomTracker[roomName]++;
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     if (username === -1) {
@@ -88,7 +110,8 @@ export default class WiggleServerEngine extends ServerEngine {
       player.direction = 0;
       player.bodyLength = this.gameEngine.startBodyLength;
       player.playerId = socket.playerId;
-      player.name = nameGenerator("general");
+      player.name = username;
+      // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
       this.assignObjectToRoom(player, roomName);
 
@@ -106,31 +129,32 @@ export default class WiggleServerEngine extends ServerEngine {
   onPlayerDisconnected(socketId, playerId) {
     super.onPlayerDisconnected(socketId, playerId);
     let playerWiggle = this.gameEngine.world.queryObject({ playerId });
-    if (playerWiggle) this.gameEngine.removeObjectFromWorld(playerWiggle.id);
+    if (playerWiggle) {
+      console.log("Player left room", playerWiggle.roomName);
+      this.roomTracker[playerWiggle.roomName]--;
+      this.gameEngine.removeObjectFromWorld(playerWiggle.id);
+    }
   }
 
   // Eating Food:
   // increase body length, and remove the food
   wiggleEatFood(w, f) {
     if (!(f.id in this.gameEngine.world.objects)) return;
-
-    w.bodyLength++;
     this.gameEngine.removeObjectFromWorld(f);
-    let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
-    this.gameEngine.addObjectToWorld(newF);
+    w.bodyLength++;
+    this.addFood(f.roomName);
   }
 
   wiggleHitWiggle(w1, w2) {
     if (!(w2.id in this.gameEngine.world.objects) || !(w1.id in this.gameEngine.world.objects)) return;
     w2.bodyLength += w1.bodyLength / 4;
-    this.gameEngine.removeObjectFromWorld(w1);
-    if (w1.AI) this.addAI();
+    this.wiggleDestroyed(w1);
   }
 
-  wiggleStarved(w) {
+  wiggleDestroyed(w) {
     if (!(w.id in this.gameEngine.world.objects)) return;
     this.gameEngine.removeObjectFromWorld(w);
-    if (w.AI) this.addAI();
+    if (w.AI) this.addAI(w.roomName);
   }
 
   stepLogic() {
@@ -158,7 +182,7 @@ export default class WiggleServerEngine extends ServerEngine {
       // Slowly (and somewhat randomly) reduce length to prevent just sitting
       if (Math.random() < 0.03) {
         w.bodyLength -= w.bodyLength * this.gameEngine.hungerTick;
-        if (w.bodyLength < 1) this.wiggleStarved(w);
+        if (w.bodyLength < 1) this.wiggleDestroyed(w);
       }
 
       // move AI wiggles
