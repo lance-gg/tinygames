@@ -7,3 +7,5 @@ npm-debug.log
 *.trace
 **/*.png
 stats.json
+
+.env

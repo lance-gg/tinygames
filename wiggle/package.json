@@ -8,11 +8,16 @@
   "main": "src/main.js",
   "dependencies": {
     "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@rtsdk/topia": "^0.0.30",
+    "@rtsdk/topiacomponents": "^0.0.2",
     "babel-loader": "^8.0.5",
+    "dotenv": "^16.0.3",
     "express": "^4.14.0",
     "lance-gg": "^4.0.3",
     "query-string": "^4.2.3",
     "socket.io": "^2.5.0",
+    "throttle-debounce": "^5.0.0",
     "webpack": "^3.8.1"
   },
   "devDependencies": {
@@ -29,7 +34,11 @@
     "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
     "build": "webpack && babel src --source-maps --out-dir dist-server",
     "stats": "webpack --env production --profile --json > stats.json",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "link-sdk": "yalc link @rtsdk/topia",
+    "link-sdkcomponents": "yalc link @rtsdk/topiacomponents",
+    "unlink-sdk": "yalc remove @rtsdk/topia",
+    "unlink-sdkcomponents": "yalc remove @rtsdk/topia"
   },
   "repository": {
     "type": "git",

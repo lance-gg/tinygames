@@ -1,12 +1,16 @@
 import { ServerEngine } from "lance-gg";
+import { debounce } from "throttle-debounce";
+import url from "url";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
+import { Leaderboard, VisitorInfo } from "../rtsdk";
 const nameGenerator = require("./NameGenerator");
 
 export default class WiggleServerEngine extends ServerEngine {
   constructor(io, gameEngine, inputOptions) {
     super(io, gameEngine, inputOptions);
     this.gameEngine.on("postStep", this.stepLogic.bind(this));
+    this.scoreData = {};
   }
 
   // create food and AI robots
@@ -32,12 +36,71 @@ export default class WiggleServerEngine extends ServerEngine {
 
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
-    let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
-    player.direction = 0;
-    player.bodyLength = this.gameEngine.startBodyLength;
-    player.playerId = socket.playerId;
-    player.name = nameGenerator("general");
-    this.gameEngine.addObjectToWorld(player);
+    this.joinRoom(socket);
+  }
+
+  async joinRoom(socket) {
+    const URL = socket.handshake.headers.referer;
+    const parts = url.parse(URL, true);
+    const query = parts.query;
+    const { assetId, urlSlug } = query;
+    const req = { body: query }; // Used for interactive assets
+
+    // Only update leaderboard once every 5 seconds.
+    const debounceLeaderboard = debounce(
+      3000,
+      (leaderboardArray, req, username) => {
+        console.log(`${username} updating leaderboard`, leaderboardArray);
+        Leaderboard.update({ leaderboardArray, req });
+      },
+      { atBegin: false },
+    );
+
+    const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
+
+    if (isAdmin) {
+      socket.emit("isadmin"); // Shows admin controls on landing page
+      socket.on("showLeaderboard", () => Leaderboard.show({ assetId, req, urlSlug }));
+      socket.on("hideLeaderboard", () => Leaderboard.hide({ req }));
+      // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
+    }
+
+    if (!roomName) {
+      socket.emit("notinroom");
+      return;
+    }
+
+    if (!this.rooms || !this.rooms[roomName]) await super.createRoom(roomName);
+
+    super.assignPlayerToRoom(socket.playerId, roomName);
+    this.scoreData[roomName] = this.scoreData[roomName] || {};
+
+    if (username === -1) {
+      socket.emit("error");
+      return;
+    }
+
+    if (username) {
+      socket.on("updateLeaderboard", (leaderboardArray) => debounceLeaderboard(leaderboardArray, req, username));
+      socket.emit("inzone");
+
+      let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
+      player.direction = 0;
+      player.bodyLength = this.gameEngine.startBodyLength;
+      player.playerId = socket.playerId;
+      player.name = nameGenerator("general");
+      this.gameEngine.addObjectToWorld(player);
+      this.assignObjectToRoom(player, roomName);
+
+      // this.updateScore();
+
+      // handle client restart requests
+      // socket.on("requestRestart", makePlayerShip);
+    } else {
+      // User is spectating because not in private zone
+      socket.emit("spectating");
+      // this.updateScore();
+    }
   }
 
   onPlayerDisconnected(socketId, playerId) {
