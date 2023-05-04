@@ -8,7 +8,8 @@ import {
   updateLeaderboard,
   roomBasedOn,
   // resetLeaderboard,
-} from "../../../RTSDKComponents/dist/index.cjs";
+  // } from "../../../RTSDKComponents/dist/index.cjs";
+} from "@rtsdk/topiacomponents/dist/index.cjs";
 
 export const Leaderboard = {
   show: (props) => showLeaderboard({ ...props, InteractiveAsset, getAssetAndDataObject }),

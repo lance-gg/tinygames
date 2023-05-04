@@ -3,6 +3,9 @@
   "packages": {
     "@rtsdk/topia": {
       "signature": "41e069e2e7dc81a65bbfd99873dbfae3"
+    },
+    "@rtsdk/topiacomponents": {
+      "signature": "0f570c85657ed009754366f3ca432930"
     }
   }
 }
