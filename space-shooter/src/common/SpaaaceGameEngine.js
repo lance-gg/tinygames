@@ -105,11 +105,11 @@ export default class SpaaaceGameEngine extends GameEngine {
     missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
     missile.density = 1;
 
-    console.log("BEFORE", playerShip.velocity);
-    // Slow down ship by a little bit when shoot missile because physics
-    playerShip.velocity.x -= Math.cos(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
-    playerShip.velocity.y -= Math.sin(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
-    console.log("AFTER", playerShip.velocity);
+    // console.log("BEFORE", playerShip.velocity);
+    // // Slow down ship by a little bit when shoot missile because physics
+    // playerShip.velocity.x -= Math.cos(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
+    // playerShip.velocity.y -= Math.sin(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
+    // console.log("AFTER", playerShip.velocity);
 
     this.trace.trace(() => `missile[${missile.id}] created vel=${missile.velocity}`);
 
