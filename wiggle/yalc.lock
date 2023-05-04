@@ -1,0 +1,8 @@
+{
+  "version": "v1",
+  "packages": {
+    "@rtsdk/lance-topia": {
+      "signature": "cb9065224852ce223f27c1544d6931e4"
+    }
+  }
+}

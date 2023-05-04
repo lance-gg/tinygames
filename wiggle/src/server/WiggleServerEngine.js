@@ -1,4 +1,4 @@
-import { ServerEngine } from "lance-gg";
+import { ServerEngine } from "@rtsdk/lance-topia";
 import { debounce } from "throttle-debounce";
 import url from "url";
 import Wiggle from "../common/Wiggle";
@@ -93,6 +93,8 @@ export default class WiggleServerEngine extends ServerEngine {
     );
 
     const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
+
+    console.log("RoomName", roomName);
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page

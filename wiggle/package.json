@@ -11,6 +11,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@rtsdk/topia": "^0.0.30",
     "@rtsdk/topiacomponents": "^0.0.2",
+    "@rtsdk/lance-topia": "^0.0.1",
     "babel-loader": "^8.0.5",
     "dotenv": "^16.0.3",
     "express": "^4.14.0",
@@ -36,9 +37,11 @@
     "stats": "webpack --env production --profile --json > stats.json",
     "dev": "webpack --watch",
     "link-sdk": "yalc link @rtsdk/topia",
-    "link-sdkcomponents": "yalc link @rtsdk/topiacomponents",
     "unlink-sdk": "yalc remove @rtsdk/topia",
-    "unlink-sdkcomponents": "yalc remove @rtsdk/topia"
+    "link-sdkcomponents": "yalc link @rtsdk/topiacomponents",
+    "unlink-sdkcomponents": "yalc remove @rtsdk/topia",
+    "link-lancetopia": "yalc link @rtsdk/lance-topia",
+    "unlink-lancetopia": "yalc remove @rtsdk/lance-topia"
   },
   "repository": {
     "type": "git",

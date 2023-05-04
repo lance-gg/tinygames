@@ -1,4 +1,4 @@
-import { BaseTypes, DynamicObject } from "lance-gg";
+import { BaseTypes, DynamicObject } from "@rtsdk/lance-topia";
 
 export default class Wiggle extends DynamicObject {
   static get netScheme() {

@@ -9,3 +9,5 @@ npm-debug.log
 stats.json
 
 .env
+
+*/.yalc/*

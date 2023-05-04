@@ -1,4 +1,4 @@
-import { Renderer, TwoVector } from "lance-gg";
+import { Renderer, TwoVector } from "@rtsdk/lance-topia";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
 

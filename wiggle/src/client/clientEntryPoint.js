@@ -1,5 +1,5 @@
 import querystring from "query-string";
-import { Lib } from "lance-gg";
+import { Lib } from "@rtsdk/lance-topia";
 import WiggleClientEngine from "../client/WiggleClientEngine";
 import WiggleGameEngine from "../common/WiggleGameEngine";
 const qsOptions = querystring.parse(location.search);

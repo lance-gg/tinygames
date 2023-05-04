@@ -1,4 +1,4 @@
-import { GameEngine, SimplePhysicsEngine, TwoVector } from "lance-gg";
+import { GameEngine, SimplePhysicsEngine, TwoVector } from "@rtsdk/lance-topia";
 import Wiggle from "./Wiggle";
 import Food from "./Food";
 

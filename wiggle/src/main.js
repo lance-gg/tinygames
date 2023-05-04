@@ -1,7 +1,7 @@
 import path from "path";
 import express from "express";
 import socketIO from "socket.io";
-import { Lib } from "lance-gg";
+import { Lib } from "@rtsdk/lance-topia";
 import WiggleServerEngine from "./server/WiggleServerEngine";
 import WiggleGameEngine from "./common/WiggleGameEngine";
 
@@ -20,7 +20,7 @@ const io = socketIO(requestHandler);
 // Game Instances
 // const gameEngine = new WiggleGameEngine({ traceLevel: 1 });
 const gameEngine = new WiggleGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
-const serverEngine = new WiggleServerEngine(io, gameEngine, { debug: {}, updateRate: 3 });
+const serverEngine = new WiggleServerEngine(io, gameEngine, { debug: {}, updateRate: 6 });
 
 // start the game
 serverEngine.start();
