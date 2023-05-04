@@ -9,7 +9,7 @@
   "dependencies": {
     "@babel/node": "^7.8.7",
     "@rtsdk/topia": "^0.0.30",
-    "@rtsdk/topiacomponents": "^0.0.1",
+    "@rtsdk/topiacomponents": "^0.0.2",
     "axios": "^1.3.4",
     "babel-loader": "^8.1.0",
     "breakpoint-sass": "^2.7.1",
@@ -63,7 +63,8 @@
     "dev": "webpack --watch",
     "link-sdk": "yalc link @rtsdk/topia",
     "link-sdkcomponents": "yalc link @rtsdk/topiacomponents",
-    "unlink-sdk": "yalc remove @rtsdk/topia"
+    "unlink-sdk": "yalc remove @rtsdk/topia",
+    "unlink-sdkcomponents": "yalc remove @rtsdk/topia"
   },
   "repository": {
     "type": "git",
