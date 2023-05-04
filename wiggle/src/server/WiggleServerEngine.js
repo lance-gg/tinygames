@@ -46,6 +46,25 @@ export default class WiggleServerEngine extends ServerEngine {
     for (let ai = 0; ai < this.gameEngine.aiCount; ai++) this.addAI(roomName);
   }
 
+  destroyRoom(roomName) {
+    let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle });
+    let foodObjects = this.gameEngine.world.queryObjects({ instanceType: Food });
+
+    for (let w of wiggles) {
+      if (w.roomName === roomName) {
+        if (!(w.id in this.gameEngine.world.objects)) return;
+        this.gameEngine.removeObjectFromWorld(w);
+      }
+    }
+
+    for (let f of foodObjects) {
+      if (f.roomName === roomName) {
+        if (!(f.id in this.gameEngine.world.objects)) return;
+        this.gameEngine.removeObjectFromWorld(f);
+      }
+    }
+  }
+
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
     this.joinRoom(socket);
@@ -58,8 +77,8 @@ export default class WiggleServerEngine extends ServerEngine {
     const { assetId, urlSlug } = query;
     const req = { body: query }; // Used for interactive assets
 
-    const gameStatus = this.gameStatus();
-    const rooms = this.rooms;
+    // const gameStatus = this.gameStatus();
+    // const rooms = this.rooms;
     // console.log("Game Status", gameStatus);
     // console.log("Rooms", rooms);
 
@@ -111,6 +130,7 @@ export default class WiggleServerEngine extends ServerEngine {
       player.bodyLength = this.gameEngine.startBodyLength;
       player.playerId = socket.playerId;
       player.name = username;
+      player.roomName = roomName;
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
       this.assignObjectToRoom(player, roomName);
@@ -129,10 +149,26 @@ export default class WiggleServerEngine extends ServerEngine {
   onPlayerDisconnected(socketId, playerId) {
     super.onPlayerDisconnected(socketId, playerId);
     let playerWiggle = this.gameEngine.world.queryObject({ playerId });
+    // console.log(this.connectedPlayers)
+
     if (playerWiggle) {
-      console.log("Player left room", playerWiggle.roomName);
+      console.log("Player disconnected from room", playerWiggle.roomName);
       this.roomTracker[playerWiggle.roomName]--;
       this.gameEngine.removeObjectFromWorld(playerWiggle.id);
+      if (this.roomTracker[playerWiggle.roomName] === 0) {
+        this.destroyRoom(playerWiggle.roomName);
+      }
+    }
+  }
+
+  // THis isn't working properly
+  onPlayerRoomUpdate(playerId, from, to) {
+    let playerWiggle = this.gameEngine.world.queryObject({ playerId });
+    console.log("Player room", playerWiggle.roomName);
+    console.log("Player left room", from);
+    this.roomTracker[from]--;
+    if (this.roomTracker[from] === 0) {
+      this.destroyRoom(from);
     }
   }
 
@@ -140,8 +176,6 @@ export default class WiggleServerEngine extends ServerEngine {
   // increase body length, and remove the food
   wiggleEatFood(w, f) {
     if (!(f.id in this.gameEngine.world.objects)) return;
-    // console.log("Object eaten", this.gameEngine.world.objects[f.id]);
-    console.log("Server Engine", this);
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
     this.addFood(f.roomName);
@@ -150,6 +184,7 @@ export default class WiggleServerEngine extends ServerEngine {
   wiggleHitWiggle(w1, w2) {
     if (!(w2.id in this.gameEngine.world.objects) || !(w1.id in this.gameEngine.world.objects)) return;
     w2.bodyLength += w1.bodyLength / 4;
+    // console.log(Object.keys(this.gameEngine.world.objects).length);
     this.wiggleDestroyed(w1);
   }
 
@@ -162,7 +197,10 @@ export default class WiggleServerEngine extends ServerEngine {
   stepLogic() {
     let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle });
     let foodObjects = this.gameEngine.world.queryObjects({ instanceType: Food });
+
     for (let w of wiggles) {
+      // Skip if that room doesn't have anyone in it
+      if (!this.roomTracker[w.roomName] || this.roomTracker[w.roomName] === 0) continue;
       // check for collision
       for (let w2 of wiggles) {
         if (w === w2) continue;
