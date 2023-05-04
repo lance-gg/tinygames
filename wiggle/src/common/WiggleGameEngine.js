@@ -24,11 +24,11 @@ export default class WiggleGameEngine extends GameEngine {
       spaceHeight: 20,
       //   spaceHeight: 14,
       moveDist: 0.06,
-      foodCount: 30,
+      foodCount: 25,
       eatDistance: 0.3,
       collideDistance: 0.3,
       startBodyLength: 10,
-      aiCount: 40,
+      aiCount: 4,
       directionStop: 100,
       hungerTick: 0.01,
     });
