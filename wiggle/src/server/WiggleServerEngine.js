@@ -140,6 +140,8 @@ export default class WiggleServerEngine extends ServerEngine {
   // increase body length, and remove the food
   wiggleEatFood(w, f) {
     if (!(f.id in this.gameEngine.world.objects)) return;
+    // console.log("Object eaten", this.gameEngine.world.objects[f.id]);
+    console.log("Server Engine", this);
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
     this.addFood(f.roomName);
