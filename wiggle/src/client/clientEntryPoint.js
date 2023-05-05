@@ -19,6 +19,10 @@ const defaults = {
   //   },
 
   syncOptions: {
+    // Using interpolate because sending fullSyncRate every 5 steps on server.  Extrapolate would try to predict and then undo.
+    // Interpolate waits for the server instead of predicting, so there's less teleporting.
+    // If increase fullSyncRate, might want to use extrapolate so has some prediction between server updates.
+    // However, if have lots of collision in game and need that to be snappy, need to have low fullSyncRate as server controls collision.
     sync: qsOptions.sync || "interpolate",
     localObjBending: 0.6,
     remoteObjBending: 0.6,
