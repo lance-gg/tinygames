@@ -19,7 +19,7 @@ export default class WiggleServerEngine extends ServerEngine {
   // create food and AI robots
   start() {
     super.start();
-    this.generateRoom(roomName);
+    this.generateRoom();
   }
 
   addAI(roomName) {
