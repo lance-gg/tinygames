@@ -182,10 +182,10 @@ export default class WiggleServerEngine extends ServerEngine {
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
     this.addFood(f.roomName);
-    if (f.id % 5 === 0) {
-      // get scores of wiggles that aren't AI in f.roomName
-      debounceLeaderboard(leaderboardArray, req, username);
-    }
+    // if (f.id % 5 === 0) {
+    //   // get scores of wiggles that aren't AI in f.roomName
+    //   debounceLeaderboard(leaderboardArray, req, username);
+    // }
   }
 
   wiggleHitWiggle(w1, w2) {
