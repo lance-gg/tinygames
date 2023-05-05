@@ -95,7 +95,7 @@ export default class WiggleServerEngine extends ServerEngine {
 
     const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
 
-    console.log("RoomName", roomName);
+    // console.log("RoomName", roomName);
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
@@ -207,7 +207,7 @@ export default class WiggleServerEngine extends ServerEngine {
 
     for (let w of wiggles) {
       // Skip if that room doesn't have anyone in it
-      if (!this.roomTracker[w.roomName] || this.roomTracker[w.roomName] === 0) continue;
+      // if (!this.roomTracker[w.roomName] || this.roomTracker[w.roomName] === 0) continue;
       // check for collision
       for (let w2 of wiggles) {
         if (w === w2) continue;

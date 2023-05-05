@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@rtsdk/lance-topia": {
-      "signature": "cb9065224852ce223f27c1544d6931e4"
+      "signature": "0c76650a2b08c9c643d9dca0749b416e"
     }
   }
 }
