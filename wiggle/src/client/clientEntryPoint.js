@@ -10,20 +10,20 @@ const defaults = {
   traceLevel: Lib.Trace.TRACE_NONE,
   delayInputCount: 5,
   scheduler: "render-schedule",
+  //   syncOptions: {
+  //     sync: qsOptions.sync || "extrapolate",
+  //     // sync: qsOptions.sync || "frameSync",
+  //     localObjBending: 0.2,
+  //     remoteObjBending: 0.2,
+  //     bendingIncrements: 6,
+  //   },
+
   syncOptions: {
-    sync: qsOptions.sync || "extrapolate",
-    // sync: qsOptions.sync || "frameSync",
+    sync: qsOptions.sync || "interpolate",
     localObjBending: 0.6,
     remoteObjBending: 0.6,
     bendingIncrements: 6,
   },
-
-  // syncOptions: {
-  //     sync: qsOptions.sync || "extrapolate",
-  //     localObjBending: 1,
-  //     remoteObjBending: 1,
-  //     bendingIncrements: 20,
-  //   },
 };
 let options = Object.assign(defaults, qsOptions);
 
