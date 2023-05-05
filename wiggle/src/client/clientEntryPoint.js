@@ -11,10 +11,10 @@ const defaults = {
   delayInputCount: 5,
   scheduler: "render-schedule",
   syncOptions: {
-    sync: qsOptions.sync || "extrapolate",
-    // sync: qsOptions.sync || "frameSync",
-    localObjBending: 1,
-    remoteObjBending: 1,
+    // sync: qsOptions.sync || "extrapolate",
+    sync: qsOptions.sync || "frameSync",
+    localObjBending: 0.6,
+    remoteObjBending: 0.6,
     bendingIncrements: 6,
   },
 
