@@ -11,7 +11,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@rtsdk/topia": "^0.0.30",
     "@rtsdk/topiacomponents": "^0.0.2",
-    "@rtsdk/lance-topia": "^0.0.2",
+    "@rtsdk/lance-topia": "^0.0.5",
     "babel-loader": "^8.0.5",
     "dotenv": "^16.0.3",
     "express": "^4.14.0",

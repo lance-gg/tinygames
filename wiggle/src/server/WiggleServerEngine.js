@@ -29,6 +29,8 @@ export default class WiggleServerEngine extends ServerEngine {
     newAI.turnDirection = 1;
     newAI.bodyLength = this.gameEngine.startBodyLength;
     newAI.playerId = 0;
+    newAI.score = 0;
+    newAI.foodEaten = 0;
     newAI.name = nameGenerator("general") + "Bot";
     newAI.roomName = roomName;
     this.gameEngine.addObjectToWorld(newAI);
@@ -71,6 +73,17 @@ export default class WiggleServerEngine extends ServerEngine {
     this.joinRoom(socket);
   }
 
+  debounceLeaderboard() {
+    debounce(
+      3000,
+      (leaderboardArray, req, username) => {
+        console.log(`${username} updating leaderboard`, leaderboardArray);
+        Leaderboard.update({ leaderboardArray, req });
+      },
+      { atBegin: false },
+    );
+  }
+
   async joinRoom(socket) {
     const URL = socket.handshake.headers.referer;
     const parts = url.parse(URL, true);
@@ -84,14 +97,6 @@ export default class WiggleServerEngine extends ServerEngine {
     // console.log("Rooms", rooms);
 
     // Only update leaderboard once every 5 seconds.
-    const debounceLeaderboard = debounce(
-      3000,
-      (leaderboardArray, req, username) => {
-        console.log(`${username} updating leaderboard`, leaderboardArray);
-        Leaderboard.update({ leaderboardArray, req });
-      },
-      { atBegin: false },
-    );
 
     const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
 
@@ -132,7 +137,10 @@ export default class WiggleServerEngine extends ServerEngine {
       player.direction = 0;
       player.bodyLength = this.gameEngine.startBodyLength;
       player.playerId = socket.playerId;
+      player.score = 0;
+      player.foodEaten = 0;
       player.name = username;
+      player.req = req;
       player.roomName = roomName;
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
@@ -181,6 +189,7 @@ export default class WiggleServerEngine extends ServerEngine {
     if (!(f.id in this.gameEngine.world.objects)) return;
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
+    w.foodEaten++;
     this.addFood(f.roomName);
     // if (f.id % 5 === 0) {
     //   // get scores of wiggles that aren't AI in f.roomName
@@ -188,10 +197,23 @@ export default class WiggleServerEngine extends ServerEngine {
     // }
   }
 
-  wiggleHitWiggle(w1, w2) {
+  async wiggleHitWiggle(w1, w2) {
+    // w2 is the winner
     if (!(w2.id in this.gameEngine.world.objects) || !(w1.id in this.gameEngine.world.objects)) return;
-    w2.bodyLength += w1.bodyLength / 4;
+
+    if (!w1.AI) {
+      w2.score++;
+      w2.bodyLength += w1.bodyLength / 2; // Blocking other player steals more length
+    } else {
+      w2.bodyLength += w1.bodyLength / 4;
+    }
     // console.log(Object.keys(this.gameEngine.world.objects).length);
+    if (!w2.AI && !w1.AI) {
+      // if (!w2.AI) {
+      // Only update if both in collision are players
+      const leaderboardArray = await this.getLeaderboardArray(w2.roomName);
+      this.debounceLeaderboard(leaderboardArray, w2.req, w2.name);
+    }
     this.wiggleDestroyed(w1);
   }
 
@@ -199,6 +221,26 @@ export default class WiggleServerEngine extends ServerEngine {
     if (!(w.id in this.gameEngine.world.objects)) return;
     this.gameEngine.removeObjectFromWorld(w);
     if (w.AI) this.addAI(w.roomName);
+  }
+
+  async getLeaderboardArray(roomName) {
+    let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle, roomName, AI: false });
+    let leaderboardArray = wiggles
+      .map((wiggle) => {
+        const data = { kills: wiggle.score, name: wiggle.name };
+        return { id: wiggle.id, data };
+      })
+      .sort((a, b) => {
+        return b.score - a.score;
+      });
+
+    // for (const id in this.connectedPlayers) {
+    //   const player = this.connectedPlayers[id];
+    //   if (player.roomName === roomName) leaderboardArray.push(player);
+    // }
+    // console.log(leaderboardArray);
+
+    return leaderboardArray;
   }
 
   stepLogic() {
