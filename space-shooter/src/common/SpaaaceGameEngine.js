@@ -82,7 +82,7 @@ export default class SpaaaceGameEngine extends GameEngine {
     });
 
     ship.playerId = playerId;
-    ship.density = 10;
+
     this.addObjectToWorld(ship);
     console.log(`ship added: ${ship.toString()}`);
 
@@ -103,20 +103,16 @@ export default class SpaaaceGameEngine extends GameEngine {
     missile.inputId = inputId; // this enables usage of the missile shadow object
     missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
     missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
-    missile.density = 1;
 
-    // console.log("BEFORE", playerShip.velocity);
-    // // Slow down ship by a little bit when shoot missile because physics
-    // playerShip.velocity.x -= Math.cos(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
-    // playerShip.velocity.y -= Math.sin(missile.angle * (Math.PI / 180)) * (missile.density / playerShip.density);
-    // console.log("AFTER", playerShip.velocity);
+    playerShip.velocity.x -= Math.cos(missile.angle * (Math.PI / 180)) * 0.1;
+    playerShip.velocity.y -= Math.sin(missile.angle * (Math.PI / 180)) * 0.1;
 
     this.trace.trace(() => `missile[${missile.id}] created vel=${missile.velocity}`);
 
     let obj = this.addObjectToWorld(missile);
 
     // if the object was added successfully to the game world, destroy the missile after some game ticks
-    if (obj) this.timer.add(5, this.destroyMissile, this, [obj.id]);
+    if (obj) this.timer.add(20, this.destroyMissile, this, [obj.id]);
     // if (obj) this.timer.add(20, this.destroyMissile, this, [obj.id]);
 
     return missile;
