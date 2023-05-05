@@ -19,6 +19,7 @@ export default class WiggleServerEngine extends ServerEngine {
   // create food and AI robots
   start() {
     super.start();
+    this.generateRoom(roomName);
   }
 
   addAI(roomName) {
@@ -31,14 +32,14 @@ export default class WiggleServerEngine extends ServerEngine {
     newAI.name = nameGenerator("general") + "Bot";
     newAI.roomName = roomName;
     this.gameEngine.addObjectToWorld(newAI);
-    this.assignObjectToRoom(newAI, roomName);
+    // this.assignObjectToRoom(newAI, roomName);
   }
 
   addFood(roomName) {
     let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
     newF.roomName = roomName;
     this.gameEngine.addObjectToWorld(newF);
-    this.assignObjectToRoom(newF, roomName);
+    // this.assignObjectToRoom(newF, roomName);
   }
 
   generateRoom(roomName) {
@@ -112,7 +113,7 @@ export default class WiggleServerEngine extends ServerEngine {
       await super.createRoom(roomName);
     }
 
-    super.assignPlayerToRoom(socket.playerId, roomName);
+    // super.assignPlayerToRoom(socket.playerId, roomName);
     this.roomTracker[roomName] = this.roomTracker[roomName] || 0;
     if (this.roomTracker[roomName] === 0) this.generateRoom(roomName);
     this.roomTracker[roomName]++;
@@ -124,7 +125,7 @@ export default class WiggleServerEngine extends ServerEngine {
     }
 
     if (username) {
-      socket.on("updateLeaderboard", (leaderboardArray) => debounceLeaderboard(leaderboardArray, req, username));
+      // socket.on("updateLeaderboard", (leaderboardArray) => debounceLeaderboard(leaderboardArray, req, username));
       socket.emit("inzone");
 
       let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
@@ -135,7 +136,7 @@ export default class WiggleServerEngine extends ServerEngine {
       player.roomName = roomName;
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
-      this.assignObjectToRoom(player, roomName);
+      // this.assignObjectToRoom(player, roomName);
 
       // this.updateScore();
 
@@ -181,6 +182,10 @@ export default class WiggleServerEngine extends ServerEngine {
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
     this.addFood(f.roomName);
+    if (f.id % 5 === 0) {
+      // get scores of wiggles that aren't AI in f.roomName
+      debounceLeaderboard(leaderboardArray, req, username);
+    }
   }
 
   wiggleHitWiggle(w1, w2) {
