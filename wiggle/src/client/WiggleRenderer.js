@@ -86,7 +86,7 @@ export default class WiggleRenderer extends Renderer {
     // update status
     if (isPlayer) {
       document.getElementById("wiggle-length").innerHTML = "Your Length: " + w.bodyParts.length;
-      document.getElementById("score").innerHTML = "Your score: " + w.score;
+      document.getElementById("score").innerHTML = "Your Score: " + w.score;
     }
   }
 

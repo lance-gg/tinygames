@@ -22,7 +22,7 @@
         position: absolute;
       }
       .textBox {
-        margin: 10px;
+        margin: 10px 10px 0px 10px;
         display: inline-block;
       }
       .textBox.bottomRight {
@@ -40,7 +40,6 @@
         pointer-events: none;
         border-radius: 4px;
         transform: translateX(-50%) translateY(-50%);
-        position: absolute;
         background-color: rgba(#68b2f8, 0.2);
         padding: 0.2rem 1.8rem 0.1rem 1.8rem;
         font-size: 1.2rem;
@@ -64,10 +63,26 @@
         width: 200;
         position: absolute;
         left: 50%;
-        bottom: 0%;
+        bottom: 2%;
         opacity: 1;
-        pointer-events: none;
         transform: translateX(-50%) translateY(-50%);
+      }
+      .adminButton {
+        font-family: "Courier", Courier, sans-serif;
+        font-size: 20px;
+        opacity: 1;
+        border-radius: 4px;
+        background-color: rgba(#68b2f8, 0.2);
+        padding: 0.2rem 1.8rem 0.1rem 1.8rem;
+        font-size: 1rem;
+        transition: all 0.5s ease-out;
+        border: 1;
+        border-style: solid;
+        box-shadow: none;
+        background-color: transparent;
+        color: white;
+        outline: none;
+        white-space: nowrap;
       }
     </style>
   </head>
