@@ -19,7 +19,8 @@ const io = socketIO(requestHandler);
 const gameEngine = new SpaaaceGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
 const serverEngine = new SpaaaceServerEngine(io, gameEngine, {
   debug: {},
-  updateRate: 3,
+  updateRate: 2,
+  fullSyncRate: 5,
   timeoutInterval: 0, // no timeout
 });
 serverEngine.start();
