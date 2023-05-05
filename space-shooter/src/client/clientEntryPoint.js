@@ -10,16 +10,16 @@ const defaults = {
   traceLevel: Lib.Trace.TRACE_NONE,
   delayInputCount: 8,
   scheduler: "render-schedule",
-  // syncOptions: {
-  //     sync: qsOptions.sync || 'extrapolate',
-  //     localObjBending: 0.2,
-  //     remoteObjBending: 0.5
-  // }
   syncOptions: {
-    sync: qsOptions.sync || "interpolate",
+    sync: qsOptions.sync || "extrapolate",
     localObjBending: 0.2,
     remoteObjBending: 0.5,
   },
+  //   syncOptions: {
+  //     sync: qsOptions.sync || "interpolate",
+  //     localObjBending: 0.2,
+  //     remoteObjBending: 0.5,
+  //   },
 };
 let options = Object.assign(defaults, qsOptions);
 
