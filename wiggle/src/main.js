@@ -20,7 +20,12 @@ const io = socketIO(requestHandler);
 // Game Instances
 // const gameEngine = new WiggleGameEngine({ traceLevel: 1 });
 const gameEngine = new WiggleGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
-const serverEngine = new WiggleServerEngine(io, gameEngine, { debug: {}, updateRate: 2, fullSyncRate: 5 });
+const serverEngine = new WiggleServerEngine(io, gameEngine, {
+  debug: {},
+  updateRate: 2,
+  fullSyncRate: 5,
+  timeoutInterval: 600,
+});
 
 // start the game
 serverEngine.start();

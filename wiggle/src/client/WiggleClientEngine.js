@@ -56,7 +56,7 @@ export default class WiggleClientEngine extends ClientEngine {
     return super.connect().then(() => {
       this.socket.on("spectating", () => {
         console.log("spectating");
-        // document.querySelector("#introText").innerHTML = "Enter the Game Zone to Participate";
+        document.querySelector("#spectating").className = "showOpaque";
         // document.querySelector("#joinGame").innerHTML = "Spectating";
       });
 
@@ -69,6 +69,7 @@ export default class WiggleClientEngine extends ClientEngine {
 
       this.socket.on("inzone", () => {
         console.log("inzone");
+        document.querySelector("#spectating").className = "hidden";
         // document.querySelector("#introText").innerHTML = "You are in the Game Zone. Click Join Game to play";
         // document.querySelector("#joinGame").innerHTML = "Join Game";
       });
