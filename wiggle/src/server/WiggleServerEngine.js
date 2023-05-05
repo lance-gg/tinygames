@@ -14,6 +14,14 @@ export default class WiggleServerEngine extends ServerEngine {
     this.aiTracker = {}; // Add AI when person is first to enter room.  Remove when last to leave.
     this.foodTracker = {}; // Add food when person is first to enter room.  Remove when last to leave.
     this.roomTracker = {}; // Used to add and remove AIs from used / unused worlds.
+    this.debounceLeaderboard = debounce(
+      3000,
+      (leaderboardArray, req, username) => {
+        console.log(`${username} updating leaderboard`, leaderboardArray);
+        Leaderboard.update({ leaderboardArray, req });
+      },
+      { atBegin: false },
+    );
   }
 
   // create food and AI robots
@@ -71,17 +79,6 @@ export default class WiggleServerEngine extends ServerEngine {
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
     this.joinRoom(socket);
-  }
-
-  debounceLeaderboard() {
-    debounce(
-      3000,
-      (leaderboardArray, req, username) => {
-        console.log(`${username} updating leaderboard`, leaderboardArray);
-        Leaderboard.update({ leaderboardArray, req });
-      },
-      { atBegin: false },
-    );
   }
 
   async joinRoom(socket) {
@@ -198,6 +195,8 @@ export default class WiggleServerEngine extends ServerEngine {
   async wiggleHitWiggle(w1, w2) {
     // w2 is the winner
     if (!(w2.id in this.gameEngine.world.objects) || !(w1.id in this.gameEngine.world.objects)) return;
+    if (w1.destroyed) return;
+    w1.destroyed = true; // Handles race condition that happens when multiple body parts get hit
 
     if (!w1.AI) {
       w2.score++;
@@ -229,7 +228,7 @@ export default class WiggleServerEngine extends ServerEngine {
         return { id: wiggle.id, data };
       })
       .sort((a, b) => {
-        return b.score - a.score;
+        return a.score - b.score;
       });
 
     // for (const id in this.connectedPlayers) {
@@ -254,7 +253,10 @@ export default class WiggleServerEngine extends ServerEngine {
 
         for (let i = 0; i < w2.bodyParts.length; i++) {
           let distance = w2.bodyParts[i].clone().subtract(w.position);
-          if (distance.length() < this.gameEngine.collideDistance) this.wiggleHitWiggle(w, w2);
+          if (distance.length() < this.gameEngine.collideDistance) {
+            this.wiggleHitWiggle(w, w2);
+            continue;
+          }
         }
       }
 
@@ -266,8 +268,8 @@ export default class WiggleServerEngine extends ServerEngine {
         }
       }
 
-      // Slowly (and somewhat randomly) reduce length to prevent just sitting
-      if (Math.random() < 0.03) {
+      // Slowly (and somewhat randomly) reduce length to prevent just sitting and hiding
+      if (Math.random() < 0.02) {
         w.bodyLength -= w.bodyLength * this.gameEngine.hungerTick;
         if (w.bodyLength < 1) this.wiggleDestroyed(w);
       }
