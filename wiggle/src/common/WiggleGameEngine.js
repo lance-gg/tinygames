@@ -26,7 +26,7 @@ export default class WiggleGameEngine extends GameEngine {
       moveDist: 0.06,
       foodCount: 25,
       eatDistance: 0.3,
-      collideDistance: 0.3,
+      collideDistance: 0.1,
       startBodyLength: 10,
       aiCount: 4,
       directionStop: 100,

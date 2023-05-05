@@ -57,12 +57,26 @@
         opacity: 1;
         pointer-events: all;
       }
+      #adminControls {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        width: 200;
+        position: absolute;
+        left: 50%;
+        bottom: 0%;
+        opacity: 1;
+        pointer-events: none;
+        transform: translateX(-50%) translateY(-50%);
+      }
     </style>
   </head>
   <body>
     <div id="logo" class="textBox bottomRight"></div>
     <div id="wiggle-length" class="textBox"></div>
+    <div id="score" class="textBox"></div>
     <button id="tryAgain" disabled>Try Again ?</button>
     <script src="bundle.js" type="text/javascript"></script>
+    <div id="adminControls"></div>
   </body>
 </html>
