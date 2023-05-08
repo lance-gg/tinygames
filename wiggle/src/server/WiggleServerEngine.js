@@ -3,7 +3,7 @@ import { debounce } from "throttle-debounce";
 import url from "url";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
-import { Leaderboard, VisitorInfo } from "../rtsdk";
+import { Leaderboard, VisitorInfo, Stats } from "../rtsdk";
 const nameGenerator = require("./NameGenerator");
 
 export default class WiggleServerEngine extends ServerEngine {
@@ -95,7 +95,10 @@ export default class WiggleServerEngine extends ServerEngine {
 
     // Only update leaderboard once every 5 seconds.
 
-    const { isAdmin, roomName, username } = await VisitorInfo.getRoomAndUsername({ query });
+    const { isAdmin, roomName, username, profileId } = await VisitorInfo.getRoomAndUsername({ query });
+    await VisitorInfo.updateLastVisited({ query }); // Have to do this first to make sure a data object exists on the User
+    const stats = await Stats.getStats({ profileId });
+    console.log("Stats", stats);
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
@@ -137,6 +140,7 @@ export default class WiggleServerEngine extends ServerEngine {
       player.name = username;
       player.req = req;
       player.roomName = roomName;
+      player.profileId = profileId;
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
       this.assignObjectToRoom(player, roomName);
@@ -185,6 +189,7 @@ export default class WiggleServerEngine extends ServerEngine {
     this.gameEngine.removeObjectFromWorld(f);
     w.bodyLength++;
     w.foodEaten++;
+    if (!w.AI) Stats.incrementStat({ profileId: w.profileId, statKey: "foodEaten", incrementAmount: 1 });
     this.addFood(f.roomName);
     // if (f.id % 5 === 0) {
     //   // get scores of wiggles that aren't AI in f.roomName
