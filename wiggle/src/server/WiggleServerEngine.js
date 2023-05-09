@@ -103,7 +103,10 @@ export default class WiggleServerEngine extends ServerEngine {
       socket.on("showLeaderboard", () => Leaderboard.show({ assetId, req, urlSlug }));
       socket.on("hideLeaderboard", () => Leaderboard.hide({ req }));
 
-      socket.on("showStatsBoard", () => StatsBoard.show({ assetId, req, urlSlug }));
+      socket.on("showStatsBoard", async () => {
+        await StatsBoard.show({ assetId, req, urlSlug });
+        setTimeout(() => this.updateStats(roomName, req), 3000);
+      });
       socket.on("hideStatsBoard", () => StatsBoard.hide({ req }));
       // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
     }
@@ -148,10 +151,8 @@ export default class WiggleServerEngine extends ServerEngine {
       this.assignObjectToRoom(player, roomName);
 
       await Stats.incrementStat({ profileId, statKey: "games", incrementAmount: 1 });
+      await this.updateStats(roomName, req);
 
-      const leaderboardArray = await this.updateStats(roomName);
-      console.log(leaderboardArray);
-      StatsBoard.update({ leaderboardArray, req });
       // this.updateScore();
 
       // handle client restart requests
@@ -163,7 +164,7 @@ export default class WiggleServerEngine extends ServerEngine {
     }
   }
 
-  async updateStats(roomName) {
+  async updateStats(roomName, req) {
     let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle, roomName, AI: false });
 
     const wiggleList = await Promise.all(
@@ -172,16 +173,24 @@ export default class WiggleServerEngine extends ServerEngine {
         const { xpPerBlock, xpPerFood, xpLevelConstant } = this.gameEngine;
         let stats = await Stats.getStats({ profileId });
         const { blocks, foodEaten, games } = stats;
-        stats.XP = stats.blocks * xpPerBlock + stats.foodEaten * xpPerFood;
-        stats.level = Math.floor(xpLevelConstant * Math.sqrt(stats.XP));
-        stats.blocksPerGame = (blocks / games).toFixed(1);
-        stats.foodPerGame = (foodEaten / games).toFixed(1);
-        return { id: profileId, data: stats };
+        const blocksXP = stats.blocks ? stats.blocks * xpPerBlock : 0;
+        const foodEatenXP = stats.foodEaten ? stats.foodEaten * xpPerFood : 0;
+        const XP = blocksXP + foodEatenXP;
+        stats.XP = XP.toLocaleString();
+        stats.level = stats.XP ? Math.floor(xpLevelConstant * Math.sqrt(XP) + 1).toString() : "1";
+        stats.blocksPerGame = blocks ? (blocks / games).toFixed(1) : "-";
+        stats.foodPerGame = foodEaten ? (foodEaten / games).toFixed(1) : "-";
+        stats.blocks = blocks ? blocks.toLocaleString() : "-";
+        stats.foodEaten = foodEaten ? foodEaten.toLocaleString() : "-";
+        stats.name = wiggle.name;
+        return { id: profileId, data: stats, XP };
       }),
     );
-    return wiggleList.sort((a, b) => {
-      return a.xp - b.xp;
+    const boardArray = wiggleList.sort((a, b) => {
+      return b.XP - a.XP;
     });
+
+    StatsBoard.update({ boardArray, req });
 
     // console.log(wiggleList);
 

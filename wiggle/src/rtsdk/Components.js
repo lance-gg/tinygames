@@ -58,7 +58,7 @@ export const StatsBoard = {
       namePrefix,
       InteractiveAsset,
       getAssetAndDataObject,
-      yOffset: -200,
+      yOffset: -375,
     }),
   hide: (props) => hideBoard({ ...props, namePrefix, World }),
   update: (props) =>
