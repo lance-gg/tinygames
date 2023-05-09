@@ -148,9 +148,10 @@ export default class WiggleServerEngine extends ServerEngine {
       this.assignObjectToRoom(player, roomName);
 
       await Stats.incrementStat({ profileId, statKey: "games", incrementAmount: 1 });
-      const stats = await Stats.getStats({ profileId });
-      console.log("Stats", stats);
-      Stats.updateStats;
+
+      const leaderboardArray = await this.updateStats(roomName);
+      console.log(leaderboardArray);
+      StatsBoard.update({ leaderboardArray, req });
       // this.updateScore();
 
       // handle client restart requests
@@ -160,6 +161,35 @@ export default class WiggleServerEngine extends ServerEngine {
       socket.emit("spectating");
       // this.updateScore();
     }
+  }
+
+  async updateStats(roomName) {
+    let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle, roomName, AI: false });
+
+    const wiggleList = await Promise.all(
+      wiggles.map(async (wiggle) => {
+        const { profileId } = wiggle;
+        const { xpPerBlock, xpPerFood, xpLevelConstant } = this.gameEngine;
+        let stats = await Stats.getStats({ profileId });
+        const { blocks, foodEaten, games } = stats;
+        stats.XP = stats.blocks * xpPerBlock + stats.foodEaten * xpPerFood;
+        stats.level = Math.floor(xpLevelConstant * Math.sqrt(stats.XP));
+        stats.blocksPerGame = (blocks / games).toFixed(1);
+        stats.foodPerGame = (foodEaten / games).toFixed(1);
+        return { id: profileId, data: stats };
+      }),
+    );
+    return wiggleList.sort((a, b) => {
+      return a.xp - b.xp;
+    });
+
+    // console.log(wiggleList);
+
+    // for (const id in this.connectedPlayers) {
+    //   const player = this.connectedPlayers[id];
+    //   if (player.roomName === roomName) leaderboardArray.push(player);
+    // }
+    // console.log(leaderboardArray);
   }
 
   onPlayerDisconnected(socketId, playerId) {

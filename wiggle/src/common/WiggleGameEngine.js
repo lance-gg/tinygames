@@ -31,6 +31,9 @@ export default class WiggleGameEngine extends GameEngine {
       aiCount: 4,
       directionStop: 100,
       hungerTick: 0.01,
+      xpPerBlock: 100,
+      xpPerFood: 1,
+      xpLevelConstant: 0.04,
     });
   }
 

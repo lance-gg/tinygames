@@ -40,7 +40,7 @@ const namePrefix = "multiplayer_statsboard";
 const statKeys = [
   "name",
   "level",
-  "points",
+  "XP",
   "blocks",
   { blocksPerGame: "Blocks / Game" },
   { foodEaten: "Food Eaten" },
@@ -58,7 +58,7 @@ export const StatsBoard = {
       namePrefix,
       InteractiveAsset,
       getAssetAndDataObject,
-      yOffset: -500,
+      yOffset: -200,
     }),
   hide: (props) => hideBoard({ ...props, namePrefix, World }),
   update: (props) =>
