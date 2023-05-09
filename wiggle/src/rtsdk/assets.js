@@ -18,6 +18,6 @@ export const InteractiveAsset = async ({ id, req, position, uniqueName, urlSlug 
       });
     return droppedAsset;
   } catch (e) {
-    console.log("Error creating interactive asset", e?.data?.errors);
+    console.log("Error creating interactive asset", e.data ? e.data.errors : e);
   }
 };

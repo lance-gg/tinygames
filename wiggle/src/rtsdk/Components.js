@@ -7,6 +7,9 @@ import {
   showLeaderboard,
   updateLeaderboard,
   roomBasedOn,
+  showBoard,
+  updateBoard,
+  hideBoard,
   // saveStat
   // resetLeaderboard,
   // } from "../../../RTSDKComponents/dist/index.cjs";
@@ -31,11 +34,41 @@ export const Stats = {
   saveStat: (props) => saveStat({ ...props, User }),
   incrementStat: (props) => incrementStat({ ...props, User }),
   getStats: (props) => getStats({ ...props, User }),
+};
 
-  // saveStat: (props) => saveStat({...props, Visitor})
-  // showStats: (props) => showStats({ ...props, Visitor }),
-  // hideStats: (props) => hideStats({ ...props, Visitor }),
-  // updateStats: (props) => updateStats({ ...props, Visitor }),
+const namePrefix = "multiplayer_statsboard";
+const statKeys = [
+  "name",
+  "level",
+  "points",
+  "blocks",
+  { blocksPerGame: "Blocks / Game" },
+  { foodEaten: "Food Eaten" },
+  { foodPerGame: "Food / Game" },
+];
+
+export const StatsBoard = {
+  show: (props) =>
+    showBoard({
+      ...props,
+      contentWidth: 475,
+      distBetweenRows: 25,
+      frameId: "ydAK6dqB3w9Q7qqVmSrS",
+      keysArray: statKeys,
+      namePrefix,
+      InteractiveAsset,
+      getAssetAndDataObject,
+      yOffset: -500,
+    }),
+  hide: (props) => hideBoard({ ...props, namePrefix, World }),
+  update: (props) =>
+    updateBoard({
+      ...props,
+      World,
+      getAssetAndDataObject,
+      keysArray: statKeys,
+      namePrefix,
+    }),
 };
 
 // TO MOVE TO RTSDK COMPONENTS
@@ -73,11 +106,12 @@ const updateLastVisited = async ({ Visitor, query }) => {
       },
     });
     if (!visitor || !visitor.username) throw "Not in world";
-    visitor.updateVisitorDataObject({ lastVisited: Date.now() });
+    await visitor.updateVisitorDataObject({ lastVisited: Date.now() });
+    return visitor;
   } catch (e) {
     // Not actually in the world.  Should prevent from seeing game.
-    if (e && e.data && e.data.errors) console.log("Error updating last played", e?.data?.errors);
-    else if (e) console.log("Error updating last played", e);
+    if (e && e.data && e.data.errors) console.log("Error updating last visited", e?.data?.errors);
+    else if (e) console.log("Error updating last visited", e);
   }
 };
 
@@ -88,7 +122,8 @@ const saveStat = async ({ User, profileId, stat }) => {
     const user = await User.create({ profileId });
     const dataObject = await user.fetchUserDataObject();
     const stats = dataObject.stats || {};
-    user.updateUserDataObject({ stats: { ...stats, stat } });
+    await user.updateUserDataObject({ stats: { ...stats, stat } });
+    return user;
   } catch (e) {
     console.log("Error saving stat", e);
   }
@@ -105,7 +140,8 @@ const incrementStat = async ({ User, profileId, statKey, incrementAmount }) => {
     let quantity = stats[statKey] || 0;
     quantity += incrementAmount;
     stats[statKey] = quantity;
-    user.updateUserDataObject({ stats });
+    await user.updateUserDataObject({ stats });
+    return stats;
   } catch (e) {
     console.log("Error incrementing stat", e);
   }

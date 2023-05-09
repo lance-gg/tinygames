@@ -91,6 +91,14 @@ export default class WiggleClientEngine extends ClientEngine {
           document.querySelector("#adminControls"),
           "<button id='hideLeaderboard' class='adminButton'>Hide Scores</button>",
         );
+        appendHtml(
+          document.querySelector("#adminControls"),
+          "<button id='showStatsBoard' class='adminButton'>Show Stats</button>",
+        );
+        appendHtml(
+          document.querySelector("#adminControls"),
+          "<button id='hideStatsBoard' class='adminButton'>Hide Stats</button>",
+        );
         // appendHtml(
         //   document.querySelector("#adminControls"),
         //   "<button id='resetLeaderboard'>Reset Leaderboard</button>",
@@ -102,6 +110,13 @@ export default class WiggleClientEngine extends ClientEngine {
           });
           document.querySelector("#hideLeaderboard").addEventListener("click", (clickEvent) => {
             this.socket.emit("hideLeaderboard");
+          });
+
+          document.querySelector("#showStatsBoard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("showStatsBoard");
+          });
+          document.querySelector("#hideStatsBoard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("hideStatsBoard");
           });
           //   document.querySelector("#resetLeaderboard").addEventListener("click", (clickEvent) => {
           //     this.socket.emit("resetLeaderboard");

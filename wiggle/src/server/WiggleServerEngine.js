@@ -3,7 +3,7 @@ import { debounce } from "throttle-debounce";
 import url from "url";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
-import { Leaderboard, VisitorInfo, Stats } from "../rtsdk";
+import { Leaderboard, VisitorInfo, Stats, StatsBoard } from "../rtsdk";
 const nameGenerator = require("./NameGenerator");
 
 export default class WiggleServerEngine extends ServerEngine {
@@ -97,13 +97,14 @@ export default class WiggleServerEngine extends ServerEngine {
 
     const { isAdmin, roomName, username, profileId } = await VisitorInfo.getRoomAndUsername({ query });
     await VisitorInfo.updateLastVisited({ query }); // Have to do this first to make sure a data object exists on the User
-    const stats = await Stats.getStats({ profileId });
-    console.log("Stats", stats);
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
       socket.on("showLeaderboard", () => Leaderboard.show({ assetId, req, urlSlug }));
       socket.on("hideLeaderboard", () => Leaderboard.hide({ req }));
+
+      socket.on("showStatsBoard", () => StatsBoard.show({ assetId, req, urlSlug }));
+      socket.on("hideStatsBoard", () => StatsBoard.hide({ req }));
       // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
     }
 
@@ -141,10 +142,15 @@ export default class WiggleServerEngine extends ServerEngine {
       player.req = req;
       player.roomName = roomName;
       player.profileId = profileId;
+
       // player.name = nameGenerator("general");
       this.gameEngine.addObjectToWorld(player);
       this.assignObjectToRoom(player, roomName);
 
+      await Stats.incrementStat({ profileId, statKey: "games", incrementAmount: 1 });
+      const stats = await Stats.getStats({ profileId });
+      console.log("Stats", stats);
+      Stats.updateStats;
       // this.updateScore();
 
       // handle client restart requests
@@ -215,6 +221,7 @@ export default class WiggleServerEngine extends ServerEngine {
       // Only update if both in collision are players
       const leaderboardArray = await this.getLeaderboardArray(w2.roomName);
       this.debounceLeaderboard(leaderboardArray, w2.req, w2.name);
+      Stats.incrementStat({ profileId: w2.profileId, statKey: "blocks", incrementAmount: 1 });
     }
     this.wiggleDestroyed(w1);
   }
