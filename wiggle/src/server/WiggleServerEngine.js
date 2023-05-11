@@ -213,6 +213,7 @@ export default class WiggleServerEngine extends ServerEngine {
       if (this.roomTracker[playerWiggle.roomName] === 0) {
         this.destroyRoom(playerWiggle.roomName);
       }
+      this.updateStats(playerWiggle.roomName, playerWiggle.req);
     }
   }
 
@@ -300,7 +301,7 @@ export default class WiggleServerEngine extends ServerEngine {
       // if (!this.roomTracker[w.roomName] || this.roomTracker[w.roomName] === 0) continue;
       // check for collision
       for (let w2 of wiggles) {
-        if (w === w2) continue;
+        if (w === w2 || w.roomName !== w2.roomName) continue;
 
         for (let i = 0; i < w2.bodyParts.length; i++) {
           let distance = w2.bodyParts[i].clone().subtract(w.position);
@@ -313,6 +314,7 @@ export default class WiggleServerEngine extends ServerEngine {
 
       // check for food-eating
       for (let f of foodObjects) {
+        if (w.roomName !== f.roomName) continue;
         let distance = w.position.clone().subtract(f.position);
         if (distance.length() < this.gameEngine.eatDistance) {
           this.wiggleEatFood(w, f);
