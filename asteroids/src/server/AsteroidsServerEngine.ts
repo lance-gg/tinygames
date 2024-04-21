@@ -1,19 +1,22 @@
-import { ServerEngine, TwoVector } from 'lance-gg';
-import Asteroid from '../common/Asteroid';
-import Bullet from '../common/Bullet';
-import Ship from '../common/Ship';
+import { ServerEngine, ServerEngineOptions, TwoVector } from 'lance-gg';
+import Asteroid from '../common/Asteroid.js';
+import Bullet from '../common/Bullet.js';
+import Ship from '../common/Ship.js';
+import AsteroidsGameEngine from '../common/AsteroidsGameEngine.js';
 
 export default class AsteroidsServerEngine extends ServerEngine {
+    asteroidGameEngine: AsteroidsGameEngine;
 
-    constructor(io, gameEngine, inputOptions) {
+    constructor(io: any, gameEngine: AsteroidsGameEngine, inputOptions: ServerEngineOptions) {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
+        this.asteroidGameEngine = (<AsteroidsGameEngine> this.gameEngine)
     }
 
     start() {
         super.start();
-        this.gameEngine.addAsteroids();
+        this.asteroidGameEngine.addAsteroids();
     }
 
     // handle a collision on server only
@@ -31,13 +34,13 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if (!A || !B) return;
         this.gameEngine.trace.trace(() => `collision between A=${A.toString()}`);
         this.gameEngine.trace.trace(() => `collision and     B=${B.toString()}`);
-        if (A instanceof Bullet && B instanceof Asteroid) this.gameEngine.explode(B, A);
-        if (B instanceof Bullet && A instanceof Asteroid) this.gameEngine.explode(A, B);
+        if (A instanceof Bullet && B instanceof Asteroid) this.asteroidGameEngine.explode(B, A);
+        if (B instanceof Bullet && A instanceof Asteroid) this.asteroidGameEngine.explode(A, B);
         if (A instanceof Ship && B instanceof Asteroid) this.kill(A);
         if (B instanceof Ship && A instanceof Asteroid) this.kill(B);
 
         // restart game
-        if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.gameEngine.addAsteroids();
+        if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.asteroidGameEngine.addAsteroids();
     }
 
     // shooting creates a bullet
@@ -55,10 +58,11 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 2 * Math.cos(angle) + player.physicsObj.velocity[0],
                 2 * Math.sin(angle) + player.physicsObj.velocity[1]
             ),
+            angle: 0,
             angularVelocity: 0
         });
         let obj = this.gameEngine.addObjectToWorld(bullet);
-        this.gameEngine.timer.add(this.gameEngine.bulletLifeTime, this.destroyBullet, this, [obj.id]);
+        this.gameEngine.timer.add(this.asteroidGameEngine.bulletLifeTime, this.destroyBullet, this, [obj.id]);
     }
 
     // destroy the missile if it still exists
@@ -75,7 +79,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
-        this.gameEngine.addShip(socket.playerId);
+        this.asteroidGameEngine.addShip(socket.playerId);
     }
 
     onPlayerDisconnected(socketId, playerId) {

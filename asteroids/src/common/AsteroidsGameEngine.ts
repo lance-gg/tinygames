@@ -1,14 +1,37 @@
-import { GameEngine, P2PhysicsEngine, TwoVector } from 'lance-gg';
+import { GameEngine, P2PhysicsEngine, TwoVector, InputDesc } from 'lance-gg';
 import Asteroid from './Asteroid.js';
 import Bullet from './Bullet.js';
 import Ship from './Ship.js';
+
 export default class AsteroidsGameEngine extends GameEngine {
+    public lives: number;
+    public shipSize: number;
+    private shipTurnSpeed: number;
+    private shipSpeed: number;
+    public bulletRadius: number;
+    public bulletLifeTime: number;
+    public asteroidRadius: number;
+    public numAsteroidLevels: number;
+    public numAsteroidVerts: number;
+    private maxAsteroidSpeed: number;
+    public spaceWidth: number;
+    public spaceHeight: number;
+    public w: number;
+    public h: number;
+    public zoom: number;
+    public SHIP: number;
+    public BULLET: number;
+    public ASTEROID: number;
+    public p2PhysicsEngine: P2PhysicsEngine;
+
     constructor(options) {
         super(options);
+
         // create physics with no friction; wrap positions after each step
         this.physicsEngine = this.p2PhysicsEngine = new P2PhysicsEngine({ gameEngine: this });
         this.physicsEngine.world.defaultContactMaterial.friction = 0;
         this.on('postStep', this.warpAll.bind(this));
+
         // game variables
         Object.assign(this, {
             lives: 3, shipSize: 0.3, shipTurnSpeed: 0.05, shipSpeed: 2, bulletRadius: 0.03, bulletLifeTime: 60,
@@ -16,59 +39,59 @@ export default class AsteroidsGameEngine extends GameEngine {
             spaceWidth: 16, spaceHeight: 9, SHIP: Math.pow(2, 1), BULLET: Math.pow(2, 2), ASTEROID: Math.pow(2, 3)
         });
     }
+
     // If the body is out of space bounds, warp it to the other side
     warpAll() {
         this.world.forEachObject((id, obj) => {
             let p = obj.position;
-            if (p.x > this.spaceWidth / 2)
-                p.x = -this.spaceWidth / 2;
-            if (p.y > this.spaceHeight / 2)
-                p.y = -this.spaceHeight / 2;
-            if (p.x < -this.spaceWidth / 2)
-                p.x = this.spaceWidth / 2;
-            if (p.y < -this.spaceHeight / 2)
-                p.y = this.spaceHeight / 2;
+            if(p.x > this.spaceWidth/2) p.x = -this.spaceWidth/2;
+            if(p.y > this.spaceHeight/2) p.y = -this.spaceHeight/2;
+            if(p.x < -this.spaceWidth /2) p.x = this.spaceWidth/2;
+            if(p.y < -this.spaceHeight/2) p.y = this.spaceHeight/2;
             obj.refreshToPhysics();
         });
     }
+
     registerClasses(serializer) {
         serializer.registerClass(Ship);
         serializer.registerClass(Asteroid);
         serializer.registerClass(Bullet);
     }
-    processInput(inputData, playerId, isServer) {
+
+    processInput(inputData: InputDesc, playerId: number, isServer: boolean) {
+
         super.processInput(inputData, playerId, isServer);
+
         // handle keyboard presses
         let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
         if (playerShip) {
-            if (inputData.input === 'ArrowUp')
-                playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
-            else if (inputData.input === 'ArrowRight')
-                playerShip.physicsObj.angle -= this.shipTurnSpeed;
-            else if (inputData.input === 'ArrowLeft')
-                playerShip.physicsObj.angle += this.shipTurnSpeed;
-            else if (inputData.input === 'Space')
-                this.emit('shoot', playerShip);
+            if (inputData.input === 'ArrowUp') playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+            else if (inputData.input === 'ArrowRight') playerShip.physicsObj.angle -= this.shipTurnSpeed;
+            else if (inputData.input === 'ArrowLeft') playerShip.physicsObj.angle += this.shipTurnSpeed;
+            else if (inputData.input === 'Space') this.emit('shoot', playerShip);
             playerShip.refreshFromPhysics();
         }
     }
+
     // returns a random number between -0.5 and 0.5
     rand() {
         return Math.random() - 0.5;
     }
+
     // create ship
     addShip(playerId) {
         let s = new Ship(this, {}, {
             playerId: playerId,
-            mass: 10,
+            mass: 10, 
             angle: 0,
             angularVelocity: 0,
-            position: new TwoVector(0, 0),
+            position: new TwoVector(0, 0), 
             velocity: new TwoVector(0, 0)
         });
         s.lives = this.lives;
         this.addObjectToWorld(s);
     }
+
     // create asteroids
     addAsteroids() {
         let x = this.rand() * this.spaceWidth;
@@ -76,6 +99,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         let vx = this.rand() * this.maxAsteroidSpeed;
         let vy = this.rand() * this.maxAsteroidSpeed;
         let va = this.rand() * this.maxAsteroidSpeed;
+
         // Create asteroid Body
         let a = new Asteroid(this, {}, {
             mass: 10,
@@ -87,8 +111,10 @@ export default class AsteroidsGameEngine extends GameEngine {
         a.level = 0;
         this.addObjectToWorld(a);
     }
+
     // asteroid explosion
     explode(asteroid, bullet) {
+
         // Remove asteroid and bullet
         let asteroidBody = asteroid.physicsObj;
         let level = asteroid.level;
@@ -97,11 +123,12 @@ export default class AsteroidsGameEngine extends GameEngine {
         let r = this.asteroidRadius * (this.numAsteroidLevels - level) / this.numAsteroidLevels;
         this.removeObjectFromWorld(asteroid);
         this.removeObjectFromWorld(bullet);
+
         // Add new sub-asteroids
         if (level < 3) {
-            let angleDisturb = Math.PI / 2 * Math.random();
-            for (let i = 0; i < 4; i++) {
-                let angle = Math.PI / 2 * i + angleDisturb;
+            let angleDisturb = Math.PI/2 * Math.random();
+            for (let i=0; i<4; i++) {
+                let angle = Math.PI/2 * i + angleDisturb;
                 let subAsteroid = new Asteroid(this, {}, {
                     mass: 10,
                     angle: 0,
