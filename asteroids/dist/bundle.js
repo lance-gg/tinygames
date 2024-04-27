@@ -46,6 +46,10 @@ class GameWorld {
         this.idCount = possibleId + 1;
         return possibleId;
     }
+    queryOneObject(query) {
+        let objs = this.queryObjects(query);
+        return objs.length > 0 ? objs[0] : null;
+    }
     queryObjects(query) {
         let queriedObjects = [];
         this.forEachObject((id, object) => {
@@ -64,9 +68,6 @@ class GameWorld {
                     return false;
             }
         });
-        if (query.returnSingle) {
-            return queriedObjects.length > 0 ? queriedObjects[0] : null;
-        }
         return queriedObjects;
     }
     queryObject(query) {
@@ -14298,8 +14299,7 @@ var BaseTypes;
 var BaseTypes$1 = BaseTypes;
 
 class Serializable {
-    constructor() {
-    }
+    constructor() { }
     netScheme() {
         return {};
     }
@@ -14987,7 +14987,7 @@ let dx = new TwoVector(0, 0);
 class SimplePhysicsEngine extends PhysicsEngine {
     constructor(options) {
         super(options);
-        if (options.collisions && options.collisions.type === 'HSHG') {
+        if (options.collisions && options.collisionsType === 'HSHG') {
             this.collisionDetection = new HSHGCollisionDetection(options.collisions);
         }
         else {
@@ -14996,7 +14996,7 @@ class SimplePhysicsEngine extends PhysicsEngine {
         this.gravity = new TwoVector(0, 0);
         if (options.gravity)
             this.gravity.copy(options.gravity);
-        let collisionOptions = Object.assign({ gameEngine: this.gameEngine }, options.collisionOptions);
+        let collisionOptions = Object.assign({ gameEngine: this.gameEngine }, options.collisions);
         this.collisionDetection.init(collisionOptions);
     }
     objectStep(o, dt) {
@@ -34591,7 +34591,7 @@ class AsteroidsRenderer extends lance_gg__WEBPACK_IMPORTED_MODULE_0__.Renderer {
         ctx.restore();
     }
     updateStatus() {
-        let playerShip = game.world.queryObject({ playerId: game.playerId });
+        let playerShip = game.world.queryOneObject({ playerId: game.playerId });
         if (!playerShip) {
             if (game.lives !== undefined)
                 document.getElementById('gameover').classList.remove('hidden');
@@ -34783,17 +34783,17 @@ class AsteroidsGameEngine extends lance_gg__WEBPACK_IMPORTED_MODULE_0__.GameEngi
     processInput(inputData, playerId, isServer) {
         super.processInput(inputData, playerId, isServer);
         // handle keyboard presses
-        let playerShip = this.world.queryObject({ playerId: playerId, instanceType: _Ship_js__WEBPACK_IMPORTED_MODULE_3__["default"] });
-        if (playerShip) {
+        let ship = this.world.queryOneObject({ playerId: playerId, instanceType: _Ship_js__WEBPACK_IMPORTED_MODULE_3__["default"] });
+        if (ship) {
             if (inputData.input === 'ArrowUp')
-                playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+                ship.physicsObj.applyForceLocal([0, this.shipSpeed]);
             else if (inputData.input === 'ArrowRight')
-                playerShip.physicsObj.angle -= this.shipTurnSpeed;
+                ship.physicsObj.angle -= this.shipTurnSpeed;
             else if (inputData.input === 'ArrowLeft')
-                playerShip.physicsObj.angle += this.shipTurnSpeed;
+                ship.physicsObj.angle += this.shipTurnSpeed;
             else if (inputData.input === 'Space')
-                this.emit('shoot', playerShip);
-            playerShip.refreshFromPhysics();
+                this.emit('shoot', ship);
+            ship.refreshFromPhysics();
         }
     }
     // returns a random number between -0.5 and 0.5

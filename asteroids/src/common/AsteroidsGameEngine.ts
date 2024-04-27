@@ -63,13 +63,13 @@ export default class AsteroidsGameEngine extends GameEngine {
         super.processInput(inputData, playerId, isServer);
 
         // handle keyboard presses
-        let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
-        if (playerShip) {
-            if (inputData.input === 'ArrowUp') playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
-            else if (inputData.input === 'ArrowRight') playerShip.physicsObj.angle -= this.shipTurnSpeed;
-            else if (inputData.input === 'ArrowLeft') playerShip.physicsObj.angle += this.shipTurnSpeed;
-            else if (inputData.input === 'Space') this.emit('shoot', playerShip);
-            playerShip.refreshFromPhysics();
+        let ship = <Ship> this.world.queryOneObject({ playerId: playerId, instanceType: Ship });
+        if (ship) {
+            if (inputData.input === 'ArrowUp') ship.physicsObj.applyForceLocal([0, this.shipSpeed]);
+            else if (inputData.input === 'ArrowRight') ship.physicsObj.angle -= this.shipTurnSpeed;
+            else if (inputData.input === 'ArrowLeft') ship.physicsObj.angle += this.shipTurnSpeed;
+            else if (inputData.input === 'Space') this.emit('shoot', ship);
+            ship.refreshFromPhysics();
         }
     }
 

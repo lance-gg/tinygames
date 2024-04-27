@@ -17,7 +17,7 @@ app.use('/', express.static(path.join(__dirname, '../dist/')));
 let requestHandler = server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = new Server(server);
 // Game Instances
-const gameEngine = new AsteroidsGameEngine({ traceLevel: Lib.Trace.TRACE_ALL });
+const gameEngine = new AsteroidsGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
 const serverEngine = new AsteroidsServerEngine(io, gameEngine, { tracesPath: './' });
 // start the game
 serverEngine.start();

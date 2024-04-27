@@ -50,7 +50,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.restore();
     }
     updateStatus() {
-        let playerShip = game.world.queryObject({ playerId: game.playerId });
+        let playerShip = game.world.queryOneObject({ playerId: game.playerId });
         if (!playerShip) {
             if (game.lives !== undefined)
                 document.getElementById('gameover').classList.remove('hidden');

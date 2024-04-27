@@ -84,7 +84,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
-        for (let o of this.gameEngine.world.queryObjects({ playerId }))
+        let players = this.gameEngine.world.queryObjects({ playerId });
+        for (let o of players)
             this.gameEngine.removeObjectFromWorld(o.id);
     }
 }

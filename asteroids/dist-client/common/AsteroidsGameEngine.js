@@ -39,17 +39,17 @@ export default class AsteroidsGameEngine extends GameEngine {
     processInput(inputData, playerId, isServer) {
         super.processInput(inputData, playerId, isServer);
         // handle keyboard presses
-        let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
-        if (playerShip) {
+        let ship = this.world.queryOneObject({ playerId: playerId, instanceType: Ship });
+        if (ship) {
             if (inputData.input === 'ArrowUp')
-                playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+                ship.physicsObj.applyForceLocal([0, this.shipSpeed]);
             else if (inputData.input === 'ArrowRight')
-                playerShip.physicsObj.angle -= this.shipTurnSpeed;
+                ship.physicsObj.angle -= this.shipTurnSpeed;
             else if (inputData.input === 'ArrowLeft')
-                playerShip.physicsObj.angle += this.shipTurnSpeed;
+                ship.physicsObj.angle += this.shipTurnSpeed;
             else if (inputData.input === 'Space')
-                this.emit('shoot', playerShip);
-            playerShip.refreshFromPhysics();
+                this.emit('shoot', ship);
+            ship.refreshFromPhysics();
         }
     }
     // returns a random number between -0.5 and 0.5

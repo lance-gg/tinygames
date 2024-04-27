@@ -59,7 +59,7 @@ export default class AsteroidsRenderer extends Renderer {
 
     updateStatus() {
 
-        let playerShip = game.world.queryObject({ playerId: game.playerId });
+        let playerShip = <Ship> game.world.queryOneObject({ playerId: game.playerId });
 
         if (!playerShip) {
             if (game.lives !== undefined)
