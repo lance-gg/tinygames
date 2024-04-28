@@ -31,7 +31,7 @@ export default class AsteroidsRenderer extends Renderer {
         setTimeout(this.removeInstructions.bind(this), 5000);
     }
 
-    draw(t, dt) {
+    draw(t: number, dt: number) {
         super.draw(t, dt);
 
         // Clear the canvas

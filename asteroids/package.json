@@ -9,9 +9,10 @@
   "type": "module",
   "dependencies": {
     "express": "^4.14.0",
-    "lance-gg": "file:../../lance",
+    "lance-gg": "^5.0.0",
     "query-string": "^9.0.0",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "nodemon": "^1.19.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

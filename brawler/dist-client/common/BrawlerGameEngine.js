@@ -1,77 +1,79 @@
 import { GameEngine, SimplePhysicsEngine, TwoVector } from 'lance-gg';
-import Fighter from './Fighter';
-import Platform from './Platform';
-
+import Fighter from './Fighter.js';
+import Platform from './Platform.js';
 export default class BrawlerGameEngine extends GameEngine {
-
     constructor(options) {
         super(options);
-
-        // game variables
-        Object.assign(this, {
-            dinoCount: 2, spaceWidth: 160, spaceHeight: 90,
-            fighterWidth: 7, fighterHeight: 12, jumpSpeed: 1.5,
-            walkSpeed: 0.6, killDistance: 18, dinoKillDistance: 12,
-            platformUnit: 8, platformHeight: 5
-        });
-
+        this.walkSpeed = 0.6;
+        this.dinoCount = 2;
+        this.spaceWidth = 160;
+        this.spaceHeight = 90;
+        this.fighterWidth = 7;
+        this.fighterHeight = 12;
+        this.jumpSpeed = 1.5;
+        this.killDistance = 18;
+        this.dinoKillDistance = 12;
+        this.platformUnit = 8;
+        this.platformHeight = 5;
         this.physicsEngine = new SimplePhysicsEngine({
+            gameEngine: this,
             gravity: new TwoVector(0, -0.05),
-            collisions: { type: 'bruteForce', autoResolve: true },
-            gameEngine: this
+            collisionsType: 'bruteForce',
+            collisions: { autoResolve: true },
         });
-
         this.inputsApplied = [];
         this.on('preStep', this.moveAll.bind(this));
     }
-
     registerClasses(serializer) {
         serializer.registerClass(Platform);
         serializer.registerClass(Fighter);
     }
-
-    processInput(inputData, playerId) {
-
-        super.processInput(inputData, playerId);
-
+    processInput(inputData, playerId, isServer) {
+        super.processInput(inputData, playerId, isServer);
         // handle keyboard presses:
         // right, left - set direction and move fighter in that direction.
         // up          - start jump sequence
         // space       - start the fight sequence
-        let fighter = this.world.queryObject({ playerId: playerId, instanceType: Fighter });
+        let fighter = this.world.queryOneObject({ playerId: playerId, instanceType: Fighter });
         if (fighter) {
-
             // if fighter is dying or fighting, ignore actions
             if (fighter.action === Fighter.ACTIONS.DIE ||
                 fighter.action === Fighter.ACTIONS.FIGHT) {
                 return;
-            } else if (fighter.action === Fighter.ACTIONS.JUMP) {
+            }
+            else if (fighter.action === Fighter.ACTIONS.JUMP) {
                 // else fighter is jumping, so fighter can move
-                if (inputData.input === 'right') {
+                if (inputData.input === 'ArrowRight') {
                     fighter.position.x += this.walkSpeed;
                     fighter.direction = 1;
-                } else if (inputData.input === 'left') {
+                }
+                else if (inputData.input === 'ArrowLeft') {
                     fighter.position.x -= this.walkSpeed;
                     fighter.direction = -1;
                 }
-            } else {
+            }
+            else {
                 // else fighter is either idle, or running
-                let nextAction = null;
-                if (inputData.input === 'right') {
+                let nextAction;
+                if (inputData.input === 'ArrowRight') {
                     fighter.position.x += this.walkSpeed;
                     fighter.direction = 1;
                     nextAction = Fighter.ACTIONS.RUN;
-                } else if (inputData.input === 'left') {
+                }
+                else if (inputData.input === 'ArrowLeft') {
                     fighter.position.x -= this.walkSpeed;
                     fighter.direction = -1;
                     nextAction = Fighter.ACTIONS.RUN;
-                } else if (inputData.input === 'up') {
+                }
+                else if (inputData.input === 'ArrowUp') {
                     if (fighter.velocity.length() === 0)
                         fighter.velocity.y = this.jumpSpeed;
                     nextAction = Fighter.ACTIONS.JUMP;
-                } else if (inputData.input === 'space') {
+                }
+                else if (inputData.input === 'Space') {
                     nextAction = Fighter.ACTIONS.FIGHT;
-                } else {
+                }
+                else {
                     nextAction = Fighter.ACTIONS.IDLE;
                 }
                 if (fighter.action !== nextAction)
@@ -83,21 +85,17 @@ export default class BrawlerGameEngine extends GameEngine {
             this.inputsApplied.push(playerId);
         }
     }
-
     // logic for every game step
     moveAll(stepInfo) {
-
         if (stepInfo.isReenact)
             return;
-
         // advance animation progress for all fighters
         let fighters = this.world.queryObjects({ instanceType: Fighter });
-
         // update action progress
         for (let f1 of fighters) {
             f1.progress -= 6;
-            if (f1.progress < 0) f1.progress = 0;
-
+            if (f1.progress < 0)
+                f1.progress = 0;
             // stop jumps
             if (f1.action === Fighter.ACTIONS.JUMP &&
                 f1.velocity.y === 0) {
@@ -105,32 +103,34 @@ export default class BrawlerGameEngine extends GameEngine {
             }
         }
     }
-
     // create fighter
     addFighter(playerId) {
-        let f = new Fighter(this, null, { playerId, position: this.randomPosition() });
-        f.height = this.fighterHeight;
-        f.width = this.fighterWidth;
-        f.direction = 1;
-        f.progress = 0;
-        f.action = 0;
+        let f = new Fighter(this, {}, {
+            position: this.randomPosition(),
+            velocity: new TwoVector(0, 0),
+            width: this.fighterWidth,
+            height: this.fighterHeight,
+            isStatic: 0,
+            playerId
+        });
         f.kills = 0;
         this.addObjectToWorld(f);
         return f;
     }
-
     // create a platform
     addPlatform(desc) {
-        let p = new Platform(this, null, { playerId: 0, position: new TwoVector(desc.x, desc.y) });
-        p.width = desc.width;
-        p.height = this.platformHeight;
-        p.isStatic = 1;
+        let p = new Platform(this, { id: 0 }, {
+            position: new TwoVector(desc.x, desc.y),
+            velocity: new TwoVector(0, 0),
+            width: desc.width,
+            height: this.platformHeight,
+            isStatic: 1
+        });
         this.addObjectToWorld(p);
         return p;
     }
-
     // random position for new object
     randomPosition() {
-        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth/2, 70);
+        return new TwoVector(this.spaceWidth / 4 + Math.random() * this.spaceWidth / 2, 70);
     }
 }

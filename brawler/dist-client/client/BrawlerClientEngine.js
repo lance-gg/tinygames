@@ -1,11 +1,13 @@
-import { ClientEngine, KeyboardControls } from 'lance-gg';
-import BrawlerRenderer from '../client/BrawlerRenderer';
-
+import { ClientEngine, ExtrapolateStrategy, KeyboardControls } from 'lance-gg';
+import BrawlerRenderer from './BrawlerRenderer.js';
+const extrapolateSyncStrategyOptions = {
+    localObjBending: 0.8,
+    remoteObjBending: 1.0,
+    bendingIncrements: 6
+};
 export default class BrawlerClientEngine extends ClientEngine {
-
     constructor(gameEngine, options) {
-        super(gameEngine, options, BrawlerRenderer);
-
+        super(gameEngine, new ExtrapolateStrategy(extrapolateSyncStrategyOptions), options, new BrawlerRenderer(gameEngine));
         // show try-again button
         gameEngine.on('objectDestroyed', (obj) => {
             if (obj.playerId === gameEngine.playerId) {
@@ -13,24 +15,19 @@ export default class BrawlerClientEngine extends ClientEngine {
                 document.querySelector('#tryAgain').disabled = false;
             }
         });
-
         // remove instructions
         setTimeout(() => {
             document.querySelector('#instructions').classList.add('hidden');
         }, 5000);
-
         // restart game
         document.querySelector('#tryAgain').addEventListener('click', () => {
             window.location.reload();
         });
-
         this.controls = new KeyboardControls(this);
-        this.controls.bindKey('up', 'up', { repeat: true } );
-        this.controls.bindKey('down', 'down', { repeat: true } );
-        this.controls.bindKey('left', 'left', { repeat: true } );
-        this.controls.bindKey('right', 'right', { repeat: true } );
-        this.controls.bindKey('space', 'space');
+        this.controls.bindKey('ArrowUp', 'ArrowUp', { repeat: true });
+        this.controls.bindKey('ArrowDown', 'ArrowDown', { repeat: true });
+        this.controls.bindKey('ArrowLeft', 'ArrowLeft', { repeat: true });
+        this.controls.bindKey('ArrowRight', 'ArrowRight', { repeat: true });
+        this.controls.bindKey('Space', 'Space');
     }
-
-
 }

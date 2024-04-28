@@ -1,11 +1,12 @@
-import { ServerEngine } from 'lance-gg';
-import Fighter from '../common/Fighter';
+import { ServerEngine, ServerEngineOptions } from 'lance-gg';
+import Fighter from '../common/Fighter.js';
+import BrawlerGameEngine from '../common/BrawlerGameEngine.js';
 
-let game = null;
+let game: BrawlerGameEngine;
 
 export default class BrawlerServerEngine extends ServerEngine {
 
-    constructor(io, gameEngine, inputOptions) {
+    constructor(io: any, gameEngine: BrawlerGameEngine, inputOptions: ServerEngineOptions) {
         super(io, gameEngine, inputOptions);
         game = gameEngine;
         game.on('postStep', this.postStep.bind(this));
@@ -32,14 +33,14 @@ export default class BrawlerServerEngine extends ServerEngine {
     }
 
     // check if fighter f1 killed f2
-    checkKills(f1, f2) {
+    checkKills(f1: Fighter, f2: Fighter) {
 
         // if f2 is already dying, exit
         if (f1 === f2 || f2.action === Fighter.ACTIONS.DIE)
             return;
 
         // kill distance is different for fighters and dino's
-        let killDistance = null;
+        let killDistance: number | null = null;
         if (f1.action === Fighter.ACTIONS.FIGHT)
             killDistance = game.killDistance;
         else if (f1.isDino && !f2.isDino)
@@ -117,7 +118,7 @@ export default class BrawlerServerEngine extends ServerEngine {
     // post-step state transitions
     postStep() {
 
-        let fighters = game.world.queryObjects({ instanceType: Fighter });
+        let fighters = <Fighter[]> game.world.queryObjects({ instanceType: Fighter });
         for (let f1 of fighters) {
 
             // updates to action

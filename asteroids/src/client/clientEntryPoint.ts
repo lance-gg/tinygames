@@ -9,12 +9,7 @@ const qsOptions = querystring.parse(location.search);
 const defaults = {
     traceLevel: Lib.Trace.TRACE_NONE,
     delayInputCount: 5,
-    scheduler: 'render-schedule',
-    syncOptions: {
-        localObjBending: 0.8,
-        remoteObjBending: 1.0,
-        bendingIncrements: 6
-    }
+    scheduler: 'render-schedule'
 };
 let options = Object.assign(defaults, qsOptions);
 

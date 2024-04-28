@@ -1,32 +1,23 @@
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
-    entry: './src/client/clientEntryPoint.js',
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default {
+    entry: './dist-client/client/clientEntryPoint.js',
+    mode: 'development',
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['.js']
+    },
+    module: {
+        rules: [{
+            test: /\.css$/i,
+            use: ["style-loader", "css-loader"],
+        },],
+    },
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js'
-    },
-    devtool: 'source-map',
-    module: {
-        loaders: [
-            { test: /\.css$/, loader: 'style!css' },
-            {
-                test: /\.scss$/,
-                loaders: ['style-loader', 'raw-loader', 'sass-loader']
-            },
-            {
-                test: /\.js$/,
-                include: [
-                    path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'node_modules/lance-gg/'),
-                    fs.realpathSync('./node_modules/lance-gg/')
-                ],
-                loader: 'babel-loader',
-                query: {
-                    presets: ['@babel/preset-env'].map(require.resolve)
-                }
-            }
-        ]
     }
-};
+}

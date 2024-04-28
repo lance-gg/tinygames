@@ -19,7 +19,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
     private controls: KeyboardControls;
 
     constructor(gameEngine, options) {
-        super(gameEngine, new FrameSyncStrategy({}), options, new AsteroidsRenderer(gameEngine));
+        super(gameEngine, new ExtrapolateStrategy(extrapolateSyncStrategyOptions), options, new AsteroidsRenderer(gameEngine));
 
         //  Game input
         if (isTouchDevice()) {

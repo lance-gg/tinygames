@@ -1,14 +1,15 @@
 import { DynamicObject, Renderer } from 'lance-gg';
+import BrawlerRenderer from '../client/BrawlerRenderer.js';
 
 export default class Platform extends DynamicObject {
 
-    static get netScheme() {
-        return super.netScheme;
+    netScheme() {
+        return super.netScheme();
     }
 
     onAddToWorld(gameEngine) {
-        if (Renderer)
-            Renderer.getInstance().addPlatform(this);
+        let brawlerRenderer = (<BrawlerRenderer> Renderer.getInstance());
+        brawlerRenderer?.addPlatform(this);
     }
 
     syncTo(other) {
