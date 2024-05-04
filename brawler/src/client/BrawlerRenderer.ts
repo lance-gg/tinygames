@@ -79,16 +79,12 @@ export default class BrawlerRenderer extends Renderer {
 
     async init(): Promise<void> {
 
-        console.log("init started");
         this.setDimensions();
-
         await this.pixiApp.init({ 
             antialias: true,
             background: '#1099bb',
             resizeTo: window 
         });
-        console.log("pixiApp ready");
-
         if (document.readyState === 'complete' || document.readyState === 'interactive')
             this.onDOMLoaded();
         else
@@ -98,15 +94,11 @@ export default class BrawlerRenderer extends Renderer {
             Assets.add({ alias, src })
         }
         this.textures = await Assets.load(Object.keys(ASSETPATHS));
-        console.log("assets loaded");
-
         this.isReady = true;
         this.setupStage();
         if (isTouchDevice()) document.body.classList.add('touch');
         else if (isMacintosh()) document.body.classList.add('mac');
         else if (isWindows()) document.body.classList.add('pc');
-        console.log("about to emit renderer.ready");
-
         this.gameEngine.emit('renderer.ready');
     }
 
@@ -114,7 +106,6 @@ export default class BrawlerRenderer extends Renderer {
     setupStage() {
         window.addEventListener('resize', () => {
             this.setDimensions();
-            // this.pixiApp.resize(this.viewportWidth, this.viewportHeight);
             this.pixiApp.resize();
         });
         let backgroundSprite = new Sprite(this.textures.background);
@@ -124,11 +115,6 @@ export default class BrawlerRenderer extends Renderer {
     }
 
     onDOMLoaded() {
-
-        // this.pixiRenderer = PIXI.autoDetectRenderer(options);
-        // document.body.appendChild(this.pixiApp.canvas);
-        console.log("dom is loaded, adding the pixi container");
-
         document.body.querySelector('.pixiContainer')!.appendChild(this.pixiApp.canvas);
         this.pixiApp.resizeTo = <HTMLElement> document.body.querySelector('.pixiContainer')!;
     }
@@ -154,8 +140,6 @@ export default class BrawlerRenderer extends Renderer {
 
     // add a single platform game object
     addPlatform(obj) {
-
-        console.log("adding platform");
 
         // create sprites for platform edges, and middle-section
         let textures = this.platformTextures(obj);
@@ -199,13 +183,7 @@ export default class BrawlerRenderer extends Renderer {
 
     // add a single fighter game object
     addFighter(obj) {
-
-        console.log("adding fighter");
-
-
         let container = new Container();
-        // let fighterSprite = new AnimatedSprite(this.textures.IDLE,PIXI.SCALE_MODES.NEAREST);
-        // let textures = <Texture[]> Object.values(this.textures.idleSheet.textures);
         let fighterSprite = new AnimatedSprite(<Texture[]>Object.values(this.textures.idleSheet.textures));
         this.fighterSpriteScale = obj.height * this.pixelsPerSpaceUnit / fighterSprite.height;
         fighterSprite.scale.set(this.fighterSpriteScale, this.fighterSpriteScale);
@@ -214,9 +192,6 @@ export default class BrawlerRenderer extends Renderer {
         this.containers[obj.id] = container;
         container.position.set(obj.position.x, obj.position.y);
         this.pixiApp.stage.addChild(container);
-        console.log(`adding fighter ${obj.id} ${obj.position.x} ${obj.position.y}`);
-        
-
     }
 
     // remove a fighter

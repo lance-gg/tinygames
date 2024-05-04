@@ -1,5 +1,6 @@
-import { ClientEngine, KeyboardControls, ExtrapolateStrategy, ExtrapolateSyncStrategyOptions, FrameSyncStrategy } from 'lance-gg';
+import { ClientEngine, KeyboardControls, ExtrapolateStrategy, ExtrapolateSyncStrategyOptions, FrameSyncStrategy, ClientEngineOptions, GameEngine } from 'lance-gg';
 import AsteroidsRenderer from './AsteroidsRenderer.js';
+import AsteroidsGameEngine from '../common/AsteroidsGameEngine.js';
 
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;
@@ -18,7 +19,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
     private boostButton: any;
     private controls: KeyboardControls;
 
-    constructor(gameEngine, options) {
+    constructor(gameEngine: AsteroidsGameEngine, options: ClientEngineOptions) {
         super(gameEngine, new ExtrapolateStrategy(extrapolateSyncStrategyOptions), options, new AsteroidsRenderer(gameEngine));
 
         //  Game input

@@ -1,4 +1,4 @@
-import { ClientEngine, KeyboardControls, FrameSyncStrategy } from 'lance-gg';
+import { ClientEngine, KeyboardControls, ExtrapolateStrategy } from 'lance-gg';
 import AsteroidsRenderer from './AsteroidsRenderer.js';
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;
@@ -10,7 +10,7 @@ const extrapolateSyncStrategyOptions = {
 };
 export default class AsteroidsClientEngine extends ClientEngine {
     constructor(gameEngine, options) {
-        super(gameEngine, new FrameSyncStrategy({}), options, new AsteroidsRenderer(gameEngine));
+        super(gameEngine, new ExtrapolateStrategy(extrapolateSyncStrategyOptions), options, new AsteroidsRenderer(gameEngine));
         //  Game input
         if (isTouchDevice()) {
             document.querySelector('#instructionsMobile').classList.remove('hidden');

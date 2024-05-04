@@ -1,33 +1,35 @@
 {
   "name": "lance-pong",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "engines": {
-    "node": ">=11.0.0"
+    "node": ">=21.0.0"
   },
   "description": "An HTML5 multiplayer pong game based on Lance",
-  "main": "src/main.js",
+  "main": "main.js",
+  "type": "module",
   "dependencies": {
-    "@babel/node": "^7.2.2",
-    "babel-loader": "^8.0.5",
     "express": "^4.14.0",
-    "lance-gg": "^4.0.3",
-    "query-string": "^4.2.3",
-    "socket.io": "^2.5.0",
-    "webpack": "^3.8.1"
+    "lance-gg": "^5.0.0",
+    "nodemon": "^3.1.0",
+    "query-string": "^9.0.0",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "eslint": "^3.16.1",
-    "eslint-config-google": "^0.7.1"
+    "@types/express": "^4.17.21",
+    "eslint": "^9.1.1",
+    "eslint-config-google": "^0.7.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "start": "node dist-server/main.js",
     "start-debug": "node --inspect-brk dist-server/main.js",
     "start-dev": "nodemon dist-server/main.js",
-    "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
-    "build": "webpack && babel src --source-maps --out-dir dist-server",
+    "build-server": "tsc --project tsconfig.server.json",
+    "build-client": "tsc --project tsconfig.client.json && webpack",
+    "build": "npm run build-server && npm run build-client",
     "stats": "webpack --env production --profile --json > stats.json",
     "dev": "webpack --watch"
   },

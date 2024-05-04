@@ -9,10 +9,9 @@
   "type": "module",
   "dependencies": {
     "express": "^4.14.0",
-    "lance-gg": "file:../../lance/",
+    "lance-gg": "^5.0.0",
     "nodemon": "^3.1.0",
     "pixi.js": "^8.1.0",
-    "query-string": "^9.0.0",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
@@ -28,7 +27,6 @@
     "start": "node dist-server/main.js",
     "start-debug": "node --inspect-brk dist-server/main.js",
     "start-dev": "nodemon dist-server/main.js",
-    "postinstall": "webpack",
     "build-server": "tsc --project tsconfig.server.json",
     "build-client": "tsc --project tsconfig.client.json && webpack",
     "build": "npm run build-server && npm run build-client",

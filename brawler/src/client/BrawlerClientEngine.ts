@@ -1,5 +1,6 @@
-import { ClientEngine, ExtrapolateStrategy, KeyboardControls } from 'lance-gg';
+import { ClientEngine, ClientEngineOptions, ExtrapolateStrategy, KeyboardControls } from 'lance-gg';
 import BrawlerRenderer from './BrawlerRenderer.js';
+import BrawlerGameEngine from '../common/BrawlerGameEngine.js';
 
 const extrapolateSyncStrategyOptions = {
     localObjBending: 0.8,
@@ -11,7 +12,7 @@ export default class BrawlerClientEngine extends ClientEngine {
 
     private controls: KeyboardControls;
 
-    constructor(gameEngine, options) {
+    constructor(gameEngine: BrawlerGameEngine, options: ClientEngineOptions) {
         super(gameEngine, new ExtrapolateStrategy(extrapolateSyncStrategyOptions), options, new BrawlerRenderer(gameEngine));
 
         // show try-again button
