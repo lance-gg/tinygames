@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "outDir": "./dist-server/",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
+    "allowJs": true
+  },
+  "include": ["src/main.ts", "src/server/**/*", "src/common/**/*"]
+}

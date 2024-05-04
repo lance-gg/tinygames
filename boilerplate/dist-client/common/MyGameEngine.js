@@ -1,64 +1,49 @@
 import { GameEngine, BaseTypes, DynamicObject, SimplePhysicsEngine } from 'lance-gg';
-
 // /////////////////////////////////////////////////////////
 //
 // GAME OBJECTS
 //
 // /////////////////////////////////////////////////////////
-class YourGameObject extends DynamicObject {
-
+class MyGameObject extends DynamicObject {
     constructor(gameEngine, options, props) {
         super(gameEngine, options, props);
     }
-
-    static get netScheme() {
+    netScheme() {
         return Object.assign({
-            health: { type: BaseTypes.TYPES.INT16 }
-        }, super.netScheme);
+            health: { type: BaseTypes.Int16 }
+        }, super.netScheme());
     }
-
     syncTo(other) {
         super.syncTo(other);
     }
 }
-
-
 // /////////////////////////////////////////////////////////
 //
 // GAME ENGINE
 //
 // /////////////////////////////////////////////////////////
-export default class Game extends GameEngine {
-
+export default class MyGameEngine extends GameEngine {
     constructor(options) {
         super(options);
         this.physicsEngine = new SimplePhysicsEngine({ gameEngine: this });
-
         // common code
         this.on('postStep', this.gameLogic.bind(this));
-
         // server-only code
         this.on('server__init', this.serverSideInit.bind(this));
         this.on('server__playerJoined', this.serverSidePlayerJoined.bind(this));
         this.on('server__playerDisconnected', this.serverSidePlayerDisconnected.bind(this));
-
         // client-only code
         this.on('client__rendererReady', this.clientSideInit.bind(this));
         this.on('client__draw', this.clientSideDraw.bind(this));
     }
-
     registerClasses(serializer) {
-        serializer.registerClass(YourGameObject);
+        serializer.registerClass(MyGameObject);
     }
-
     gameLogic() {
     }
-
-    processInput(inputData, playerId) {
-        super.processInput(inputData, playerId);
+    processInput(inputData, playerId, isServer) {
+        super.processInput(inputData, playerId, isServer);
     }
-
-
     // /////////////////////////////////////////////////////////
     //
     // SERVER ONLY CODE
@@ -66,14 +51,10 @@ export default class Game extends GameEngine {
     // /////////////////////////////////////////////////////////
     serverSideInit() {
     }
-
     serverSidePlayerJoined(ev) {
     }
-
     serverSidePlayerDisconnected(ev) {
     }
-
-
     // /////////////////////////////////////////////////////////
     //
     // CLIENT ONLY CODE
@@ -81,7 +62,6 @@ export default class Game extends GameEngine {
     // /////////////////////////////////////////////////////////
     clientSideInit() {
     }
-
     clientSideDraw() {
     }
 }
