@@ -1,51 +1,57 @@
 import { Renderer, TwoVector } from 'lance-gg';
-import Wiggle from '../common/Wiggle';
-import Food from '../common/Food';
+import Wiggle from '../common/Wiggle.js';
+import Food from '../common/Food.js';
+import WiggleGameEngine from '../common/WiggleGameEngine.js';
+import WiggleClientEngine from './WiggleClientEngine.js';
 
-let ctx = null;
-let canvas = null;
-let game = null;
+let ctx: CanvasRenderingContext2D;
+let canvas: HTMLCanvasElement;
+let game: WiggleGameEngine;
+let clientEngine: WiggleClientEngine;
+let width: number;
+let height: number;
 let c = 0;
 
 export default class WiggleRenderer extends Renderer {
+    zoom: number;
 
-    constructor(gameEngine, clientEngine) {
-        super(gameEngine, clientEngine);
+    constructor(gameEngine: WiggleGameEngine) {
+        super(gameEngine);
         game = gameEngine;
+        clientEngine = <WiggleClientEngine> this.clientEngine;
         canvas = document.createElement('canvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         document.body.insertBefore(canvas, document.getElementById('logo'));
-        game.w = canvas.width;
-        game.h = canvas.height;
-        clientEngine.zoom = game.h / game.spaceHeight;
-        if (game.w / game.spaceWidth < clientEngine.zoom) clientEngine.zoom = game.w / game.spaceWidth;
-        ctx = canvas.getContext('2d');
-        ctx.lineWidth = 2 / clientEngine.zoom;
+        width = canvas.width;
+        height = canvas.height;
+        this.zoom = height / game.spaceHeight;
+        if (width / game.spaceWidth < this.zoom) this.zoom = width / game.spaceWidth;
+        ctx = canvas.getContext('2d')!;
+        ctx.lineWidth = 2 / this.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
     }
 
-    draw(t, dt) {
+    draw(t: number, dt: number) {
         super.draw(t, dt);
 
         // Clear the canvas
-        ctx.clearRect(0, 0, game.w, game.h);
+        ctx.clearRect(0, 0, width, height);
 
         // Transform the canvas
         // Note that we need to flip the y axis since Canvas pixel coordinates
         // goes from top to bottom, while physics does the opposite.
         ctx.save();
-        ctx.translate(game.w/2, game.h/2); // Translate to the center
-        ctx.scale(this.clientEngine.zoom, this.clientEngine.zoom);  // Zoom in and flip y axis
+        ctx.translate(width/2, height/2); // Translate to the center
+        ctx.scale(this.zoom, this.zoom);  // Zoom in and flip y axis
 
         // Draw all things
-        game.world.forEachObject((id, obj) => {
-            if (obj instanceof Wiggle) this.drawWiggle(obj);
-            else if (obj instanceof Food) this.drawFood(obj);
-        });
+        let wiggles = (<Wiggle[]> game.world.queryObjects({ instanceType: Wiggle }));
+        wiggles.forEach((w) => this.drawWiggle(w));
+        let foods = (<Food[]> game.world.queryObjects({ instanceType: Food }));
+        foods.forEach((f) => this.drawFood(f));
 
         ctx.restore();
-
     }
 
     rainbowColors() {
@@ -84,7 +90,7 @@ export default class WiggleRenderer extends Renderer {
 
         // update status
         if (isPlayer) {
-            document.getElementById('wiggle-length').innerHTML = 'Wiggle Length: ' + w.bodyParts.length;
+            document.getElementById('wiggle-length')!.innerHTML = 'Wiggle Length: ' + w.bodyParts.length;
         }
     }
 

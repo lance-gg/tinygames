@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "outDir": "./dist-client/",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
+    "allowJs": true
+  },
+  "include": ["src/client/**/*", "src/common/**/*"]
+}

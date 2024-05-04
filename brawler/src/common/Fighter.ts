@@ -57,7 +57,7 @@ export default class Fighter extends DynamicObject {
         return `${fighterType}::${super.toString()} direction=${this.direction} action=${this.action} progress=${this.progress}`;
     }
 
-    syncTo(other) {
+    syncTo(other: Fighter) {
         super.syncTo(other);
         this.direction = other.direction;
         this.action = other.action;

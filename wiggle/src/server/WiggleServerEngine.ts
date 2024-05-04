@@ -1,10 +1,12 @@
-import { ServerEngine } from 'lance-gg';
-import Wiggle from '../common/Wiggle';
-import Food from '../common/Food';
+import { ServerEngine, ServerEngineOptions } from 'lance-gg';
+import Wiggle from '../common/Wiggle.js';
+import Food from '../common/Food.js';
+import WiggleGameEngine from '../common/WiggleGameEngine.js';
 
 export default class WiggleServerEngine extends ServerEngine {
+    gameEngine: WiggleGameEngine;
 
-    constructor(io, gameEngine, inputOptions) {
+    constructor(io: any, gameEngine: WiggleGameEngine, inputOptions: ServerEngineOptions) {
         super(io, gameEngine, inputOptions);
         this.gameEngine.on('postStep', this.stepLogic.bind(this));
     }
@@ -13,15 +15,20 @@ export default class WiggleServerEngine extends ServerEngine {
     start() {
         super.start();
         for (let f = 0; f < this.gameEngine.foodCount; f++) {
-            let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
+            let newF = new Food(this.gameEngine, {}, { 
+                position: this.gameEngine.randPos() 
+            });
             this.gameEngine.addObjectToWorld(newF);
         }
-        for (let ai = 0; ai < this.gameEngine.aiCount; ai++)
+        for (let ai = 0; ai < this.gameEngine.aiCount; ai++) {
             this.addAI();
+        }
     }
 
     addAI() {
-        let newAI = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
+        let newAI = new Wiggle(this.gameEngine, {}, { 
+            position: this.gameEngine.randPos() 
+        });
         newAI.AI = true;
         newAI.direction = 0;
         newAI.turnDirection = 1;
@@ -32,7 +39,7 @@ export default class WiggleServerEngine extends ServerEngine {
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
-        let player = new Wiggle(this.gameEngine, null, { position: this.gameEngine.randPos() });
+        let player = new Wiggle(this.gameEngine, {}, { position: this.gameEngine.randPos() });
         player.direction = 0;
         player.bodyLength = this.gameEngine.startBodyLength;
         player.playerId = socket.playerId;
@@ -41,19 +48,19 @@ export default class WiggleServerEngine extends ServerEngine {
 
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
-        let playerWiggle = this.gameEngine.world.queryObject({ playerId });
+        let playerWiggle = <Wiggle> this.gameEngine.world.queryOneObject({ playerId });
         if (playerWiggle) this.gameEngine.removeObjectFromWorld(playerWiggle.id);
     }
 
     // Eating Food:
     // increase body length, and remove the food
-    wiggleEatFood(w, f) {
-        if (!(f.id in this.gameEngine.world.objects))
+    wiggleEatFood(w: Wiggle, f: Food) {
+        if (!f.id || !(f.id in this.gameEngine.world.objects))
             return;
 
         w.bodyLength++;
         this.gameEngine.removeObjectFromWorld(f);
-        let newF = new Food(this.gameEngine, null, { position: this.gameEngine.randPos() });
+        let newF = new Food(this.gameEngine, {}, { position: this.gameEngine.randPos() });
         this.gameEngine.addObjectToWorld(newF);
     }
 
@@ -66,8 +73,8 @@ export default class WiggleServerEngine extends ServerEngine {
     }
 
     stepLogic() {
-        let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle });
-        let foodObjects = this.gameEngine.world.queryObjects({ instanceType: Food });
+        let wiggles = <Wiggle[]> this.gameEngine.world.queryObjects({ instanceType: Wiggle });
+        let foodObjects = <Food[]> this.gameEngine.world.queryObjects({ instanceType: Food });
         for (let w of wiggles) {
 
             // check for collision

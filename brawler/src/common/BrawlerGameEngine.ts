@@ -30,7 +30,7 @@ export default class BrawlerGameEngine extends GameEngine {
         this.on('preStep', this.moveAll.bind(this));
     }
 
-    registerClasses(serializer) {
+    registerClasses(serializer: Serializer) {
         serializer.registerClass(Platform);
         serializer.registerClass(Fighter);
     }
@@ -90,7 +90,7 @@ export default class BrawlerGameEngine extends GameEngine {
     }
 
     // logic for every game step
-    moveAll(stepInfo) {
+    moveAll(stepInfo: PreStepDesc) {
 
         if (stepInfo.isReenact)
             return;
@@ -115,10 +115,8 @@ export default class BrawlerGameEngine extends GameEngine {
     addFighter(playerId) {
         let f = new Fighter(this, {}, { 
             position: this.randomPosition(),
-            velocity: new TwoVector(0, 0),
             width: this.fighterWidth,
             height: this.fighterHeight,
-            isStatic: 0,
             playerId
         });
         f.kills = 0;
@@ -130,7 +128,6 @@ export default class BrawlerGameEngine extends GameEngine {
     addPlatform(desc) {
         let p = new Platform(this, { id: 0 }, { 
             position: new TwoVector(desc.x, desc.y),
-            velocity: new TwoVector(0, 0),
             width: desc.width,
             height: this.platformHeight,
             isStatic: 1

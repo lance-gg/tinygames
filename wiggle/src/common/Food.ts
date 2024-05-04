@@ -2,18 +2,13 @@ import { DynamicObject } from 'lance-gg';
 
 export default class Food extends DynamicObject {
 
-    static get netScheme() {
+    netScheme() {
         return Object.assign({
             // add serializable properties here
-        }, super.netScheme);
+        }, super.netScheme());
     }
 
-    syncTo(other) {
+    syncTo(other: Food) {
         super.syncTo(other);
     }
-
-    constructor(gameEngine, options, props) {
-        super(gameEngine, options, props);
-        this.class = Food;
-    };
 }
